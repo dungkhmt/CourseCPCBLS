@@ -36,8 +36,8 @@ public class MultiKnapsack {
 		this.numBins = input.getBins().length;
 		System.out.println("the number of items : " + this.numItems);
 		System.out.println("the number of bins :  " + this.numBins);
-		this.numBins = 100;
-		this.numItems = 1000;
+		this.numBins = 10;
+		this.numItems = 100;
 	}
 
 	public void stateModel() {
@@ -127,7 +127,11 @@ public class MultiKnapsack {
 	
 	public void search() {
 		TabuSearch tabu = new TabuSearch();
-		tabu.search(this.S, 100, 1000, 500, 100);
+		int tabulen = 100;
+		int maxIter = 5000;
+		int maxTime = 1000;
+		int maxStable = 100;
+		tabu.search(this.S, tabulen, maxTime, maxIter, maxStable);
 	}
 	
 	private int findNumTypeItem(MinMaxTypeMultiKnapsackInputItem[] items) {
