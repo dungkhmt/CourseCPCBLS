@@ -1,4 +1,4 @@
-package khmtk60.miniprojects.G3;
+package khmtk60.miniprojects.G4;
 
 public class MinMaxTypeMultiKnapsackInputItem {
 	private double w;

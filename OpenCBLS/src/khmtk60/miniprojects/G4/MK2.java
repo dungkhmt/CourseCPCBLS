@@ -1,4 +1,4 @@
-package khmtk60.miniprojects.G3;
+package khmtk60.miniprojects.G4;
 
 import localsearch.constraints.basic.LessOrEqual;
 import localsearch.functions.conditionalsum.ConditionalSum;
