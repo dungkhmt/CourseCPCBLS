@@ -7,6 +7,7 @@ import localsearch.constraints.basic.LessOrEqual;
 import localsearch.functions.conditionalsum.ConditionalSum;
 import localsearch.functions.sum.Sum;
 import localsearch.model.ConstraintSystem;
+import localsearch.model.IFunction;
 import localsearch.model.LocalSearchManager;
 import localsearch.model.VarIntLS;
 import localsearch.search.TabuSearch;
@@ -36,8 +37,8 @@ public class MultiKnapsack {
 		this.numBins = input.getBins().length;
 		System.out.println("the number of items : " + this.numItems);
 		System.out.println("the number of bins :  " + this.numBins);
-		this.numBins = 10;
-		this.numItems = 100;
+//		this.numBins = 10;
+//		this.numItems = 100;
 	}
 
 	public void stateModel() {
@@ -72,41 +73,37 @@ public class MultiKnapsack {
 		// Constraints
 		S = new ConstraintSystem(mgr);
 		
-		// 1
-		int[] itemWeight = new int[this.numItems];
-		for (int i = 0; i < this.numItems; i++) {
-			itemWeight[i] = (int) this.input.getItems()[i].getW()*this.alpha;
-		}
+		// Weight
+		int[] w = new int[this.numItems];
+		for (int i = 0; i < this.numItems; i++)
+			w[i] = (int) this.input.getItems()[i].getW()*this.alpha;
+		
 		for (int i = 0; i < this.numBins; i++) {
-			S.post(new LessOrEqual((int) (this.input.getBins()[i].getMinLoad()*this.alpha),
-									new ConditionalSum(this.X[i], itemWeight, 1))
-				);
-			S.post(new LessOrEqual(new ConditionalSum(this.X[i], itemWeight, 1),
-									(int) (this.input.getBins()[i].getCapacity()*this.alpha))
-				);
+			IFunction temp = new ConditionalSum(this.X[i], w, 1);
+			S.post(new LessOrEqual((int) (this.input.getBins()[i].getMinLoad()*this.alpha), temp));
+			S.post(new LessOrEqual(temp, (int) (this.input.getBins()[i].getCapacity()*this.alpha)));
 		}
 		
-		// 2
-		int[] itemP = new int[this.numItems];
-		for (int i = 0; i < this.numItems; i++) {
-			itemP[i] = (int) (this.input.getItems()[i].getP()*this.alpha);
-		}
+		// P
+		int[] p = new int[this.numItems];
+		for (int i = 0; i < this.numItems; i++)
+			p[i] = (int) (this.input.getItems()[i].getP()*this.alpha);
+		
 		for (int i = 0; i < this.numBins; i++) {
-			S.post(new LessOrEqual(new ConditionalSum(this.X[i], itemP, 1),
-					(int) (this.input.getBins()[i].getP())));
+			IFunction temp = new ConditionalSum(this.X[i], p, 1);
+			S.post(new LessOrEqual(temp, (int) (this.input.getBins()[i].getP()*this.alpha)));
 		}
 		
-		// 3
-		for (int i = 0; i < this.numBins; i ++) {
+		// types and layer
+		for (int i = 0; i < this.numBins; i ++)
 			for (int j = 0; j < this.numItems; j++) {
 				S.post(new LessOrEqual(this.X[i][j], 
-						this.Y[i][this.input.getItems()[j].getT()]));
+										this.Y[i][this.input.getItems()[j].getT()]));
 				S.post(new LessOrEqual(this.X[i][j],
-						this.Z[i][this.input.getItems()[j].getR()]));
+										this.Z[i][this.input.getItems()[j].getR()]));
 			}
-		}
 		
-		// 4
+		
 		for (int i = 0; i < this.numBins; i++) {
 			S.post(new LessOrEqual(new Sum(this.Y[i]), this.input.getBins()[i].getT()));
 			S.post(new LessOrEqual(new Sum(this.Z[i]), this.input.getBins()[i].getR()));
@@ -118,8 +115,9 @@ public class MultiKnapsack {
 			for (int j = 0; j < this.numBins; j ++) {
 				temp[j] = this.X[j][i];
 			}
-			S.post(new LessOrEqual(new Sum(temp), 1));
-			S.post(new LessOrEqual(1, new Sum(temp)));
+			IFunction _sum = new Sum(temp);
+			S.post(new LessOrEqual(_sum, 1));
+			S.post(new LessOrEqual(1, _sum));
 		}
 		
 		this.mgr.close();
@@ -132,10 +130,13 @@ public class MultiKnapsack {
 		int maxTime = 1000;
 		int maxStable = 100;
 		tabu.search(this.S, tabulen, maxTime, maxIter, maxStable);
+		
+//		HillClimbingSearch.hillClimbing(this.S, 1000);
+		
 	}
 	
 	private int findNumTypeItem(MinMaxTypeMultiKnapsackInputItem[] items) {
-		numTypes = 1;
+		numTypes = 0;
 		for (MinMaxTypeMultiKnapsackInputItem item: items) {
 			if (item.getT() > numTypes) {
 				numTypes = item.getT(); 
@@ -145,7 +146,7 @@ public class MultiKnapsack {
 	}
 	
 	private int findnumLayerItem(MinMaxTypeMultiKnapsackInputItem[] items) {
-		numLayer = 1;
+		numLayer = 0;
 		for (MinMaxTypeMultiKnapsackInputItem item : items) {
 			if (item.getR() > numLayer) {
 				numLayer = item.getR();
@@ -213,7 +214,7 @@ public class MultiKnapsack {
 			}
 		}
 		
-		System.out.println("Num bin fail = " + numBinFail);
+		System.out.println("\n\nNum bin fail = " + numBinFail);
 		
 		int numItemFail = 0;
 		int numItemInBin = 0;
@@ -230,8 +231,10 @@ public class MultiKnapsack {
 	}
 	
 	public static void main(String[] args) {
-		MultiKnapsack s = new MultiKnapsack("D:/thangnd/java/Optimization/data/MinMaxTypeMultiKnapsackInput-3000.json",
-											10000);
+//		String fn = "/home/thangnd/git/java/Optimization/data/test.json";
+		String fn = "D:\\thangnd\\java\\Optimization\\data\\test.json";
+		MultiKnapsack s = new MultiKnapsack(fn,
+											1000);
 		System.out.println("Load data okay !");
 		s.stateModel();
 		System.out.println("Build state model okay !");
