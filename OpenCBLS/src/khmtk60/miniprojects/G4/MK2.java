@@ -1,5 +1,7 @@
 package khmtk60.miniprojects.G4;
 
+import java.util.HashSet;
+
 import localsearch.constraints.basic.LessOrEqual;
 import localsearch.functions.conditionalsum.ConditionalSum;
 import localsearch.model.ConstraintSystem;
@@ -101,19 +103,56 @@ public class MK2 {
 	}
 	
 	public void showResult() {
+		int numBinFail = 0;
 		for (int b = 0; b < this.numBins; b++) {
-			System.out.println("\n=============================");
-			System.out.println("Bin " + b + ": ");
+			MinMaxTypeMultiKnapsackInputBin tempBin = this.input.getBins()[b];
+			System.out.println("============================================================================");
+			System.out.print("Bin " + b + ": ");
+			System.out.println("min weight = " + tempBin.getMinLoad() + 
+					", max weight = " + tempBin.getCapacity() + 
+					", max P = " + tempBin.getP() + 
+					", max types = " + tempBin.getT() + 
+					", max layer = " + tempBin.getR());
+			System.out.print("items: ");
+			
+			double totalWeight = 0;
+			double totalP = 0;
+			
+			HashSet<Integer> tHashSet = new HashSet<Integer>();
+			HashSet<Integer> rHashSet = new HashSet<Integer>();
+			
 			for (int i = 0; i < this.numItems; i++) {
 				if (X[i].getValue() == b) {
 					System.out.print(i + " ");
+					totalWeight += input.getItems()[i].getW();
+					totalP += input.getItems()[i].getP();
+					tHashSet.add(input.getItems()[i].getT());
+					rHashSet.add(input.getItems()[i].getR());
 				}
-			}	
+			}
+			
+			System.out.println("\nTotal items: " + 
+					"total weight = " + totalWeight +
+					", total P = " + totalP +
+					", total types = " + tHashSet.size() + 
+					", total layers = " + rHashSet.size());
+			if (rHashSet.size() > tempBin.getR() |
+					tHashSet.size() > tempBin.getT() |
+					totalP > tempBin.getP() |
+					totalWeight > tempBin.getCapacity() |
+					totalWeight < tempBin.getMinLoad()) {
+				numBinFail ++;
+			}
 		}
+		System.out.println("=========================================================================");
+		System.out.println("Num bin fail : " + numBinFail);
+		
 	}
 
 	public static void main(String[] args) {
-		MK2 s = new MK2("/home/thangnd/git/java/Optimization/data/test.json",
+//		String fn = "/home/thangnd/git/java/Optimization/data/test.json";
+		String fn = "D:\\thangnd\\java\\Optimization\\data\\test.json";
+		MK2 s = new MK2(fn,
 						1000);
 		System.out.println("Load data okay !");
 		s.stateModel();
