@@ -1,0 +1,236 @@
+package src;
+
+public class BalanceTwoBin extends Solution {
+	int DEBUG = 0;
+
+	private double violationsOfBalanceTwoBin(StatusOfBin status, int numItem) {
+		double sumViolation = 0;
+		int b = status.b;
+
+		sumViolation += Math.max(0, status.sumW - bins[b].getCapacity());
+		//sumViolation += Math.max(0, bins[b].getMinLoad() - status.sumW);
+		sumViolation += Math.max(0, status.sumP - bins[b].getP());
+		sumViolation += Math.max(0, status.nType - bins[b].getT());
+		
+		if(bins[b].getMinLoad() - status.sumW > 0) {
+			sumViolation += ((double)status.nItem)/numItem;
+		}
+
+		return sumViolation;
+	}
+
+	public double getAssignDeltaOfBalanceTwoBin(int oldBin, int newBin, StatusOfBin statusX, 
+										StatusOfBin statusY, int i, int nItem) {
+		double vioOld = violationsOfBalanceTwoBin(statusX, nItem) + violationsOfBalanceTwoBin(statusY, nItem);
+		int b_x = statusX.b;
+		int b_y = statusY.b;
+		if(oldBin == b_x && newBin == b_y) {
+			statusY.addItem(i);
+			statusX.removeItem(i);
+		} else if(oldBin == b_y && newBin == b_x) {
+			statusY.removeItem(i);
+			statusX.addItem(i);
+		} else {
+			return 0;
+		}
+		double vioNew = violationsOfBalanceTwoBin(statusX, nItem) + violationsOfBalanceTwoBin(statusY, nItem);
+		if(oldBin == b_x && newBin == b_y) {
+			statusY.removeItem(i);
+			statusX.addItem(i);
+		} else if(oldBin == b_y && newBin == b_x) {
+			statusY.addItem(i);
+			statusX.removeItem(i);
+		}
+		return vioNew - vioOld;
+	}
+
+	private void restartOfBalanceTwoBin(int[][] tabu, int b_x, int b_y, ArrayList<Integer> itemsUse, int x_take[], StatusOfBin statusX, StatusOfBin statusY) {	
+		int numItem = itemsUse.size();
+		for (int k = 0; k < numItem; k++) {
+			int i = itemsUse.get(k);
+			java.util.ArrayList<Integer> L = new java.util.ArrayList<Integer>();
+			for (int choice = 0; choice < 2; choice++) {
+				int b = x_take[choice];
+				if(!items[i].getBinIndices().contains(bins[b].getId())) {
+					continue;
+				}
+				if (getAssignDeltaOfBalanceTwoBin(x_take[k], b, statusX, statusY, i, n) <= 0)
+					L.add(b);
+			}
+			
+			if(L.size() == 0) {
+				continue;
+			}
+			
+			int oldBin = x_take[k];
+			int newBin = L.get(rand.nextInt(L.size()));
+			if(oldBin == b_x && newBin == b_y) {
+				statusY.addItem(i);
+				statusX.removeItem(i);
+			} else if(oldBin == b_y && newBin == b_x) {
+				statusY.removeItem(i);
+				statusX.addItem(i);
+			}
+			x_take[k] = newBin;
+		}
+		
+		for (int i = 0; i < tabu.length; i++) {
+			for (int j = 0; j < tabu[i].length; j++)
+				tabu[i][j] = -1;
+		}
+	}
+
+	private void balanceTwoBin(int tabulen, int maxTime, int maxIter, int maxStable, int b_x, int b_y, ArrayList<Integer> binXOld, ArrayList<Integer> binYOld, ArrayList<Integer> binXNew, ArrayList<Integer> binYNew) {
+		binXNew.clear();
+		binYNew.clear();
+		binXNew.addAll(binXOld);
+		binYNew.addAll(binYOld);
+		
+		double t0 = System.currentTimeMillis();
+
+		ArrayList<Integer> itemsUse = new ArrayList<Integer>(binXOld);
+		itemsUse.addAll(binYOld);
+		
+		int numItem = itemsUse.size();
+		
+		// System.out.println("n = " + n + ", D = " + D);
+		int tabu[][] = new int[numItem][2];
+		for (int i = 0; i < numItem; i++) 
+			for (int j = 0; j < 2; j++) 
+				tabu[i][j] = -1;
+
+		int it = 0;
+		maxTime = maxTime * 1000;// convert into milliseconds
+		
+		int[] x_best = new int[numItem];
+		int[] x_take = new int[numItem];
+		int[] binsUse = {b_x, b_y};
+		
+		for(int k = 0; k < binXOld.size(); k++) {
+			x_take[k] = b_x;
+		}
+		
+		for(int k = binXOld.size(); k < numItem; k++) {
+			x_take[k] = b_y;
+		}
+			
+		for (int k = 0; k < numItem; k++)
+			x_best[k] = x_take[k];
+		StatusOfBin statusX = new StatusOfBin(binXOld, b_x);
+		StatusOfBin statusY = new StatusOfBin(binYOld, b_y);
+		double best = violationsOfBalanceTwoBin(statusX, n) +
+				violationsOfBalanceTwoBin(statusY, n);
+		double sumV = best;
+		int nic = 0;
+		ArrayList<AssignMove> moves = new ArrayList<AssignMove>();
+		Random R = new Random();
+		
+		while (it < maxIter && System.currentTimeMillis() - t0 < maxTime
+				&& sumV > 0) {
+			
+			int sel_i = -1;
+			int sel_v = -1;
+			double minDelta = Double.MAX_VALUE;
+			moves.clear();
+			
+			for (int k = 0; k < numItem; k++) {
+				int i = itemsUse.get(k);
+				
+				for (int choice = 0; choice < 2; choice++) {
+					int b = binsUse[choice];
+					if(!items[i].getBinIndices().contains(bins[b].getId())) {
+						continue;
+					}
+						
+					double delta = getAssignDeltaOfBalanceTwoBin(x_take[k], b, statusX, statusY, i, n);
+					//System.out.println("Delta = " + delta + " old = " + x_take[k] + " new = " + b + " i = " + i);
+					if(tabu[k][choice] <= it || sumV + delta < best) {
+						if (delta < minDelta) {
+							minDelta = delta;
+							moves.clear();
+							moves.add(new AssignMove(b, x_take[k], k));
+						} else if (delta == minDelta) {
+							moves.add(new AssignMove(b, x_take[k], k));
+						}
+					}
+				}
+			}
+			
+			if (moves.size() <= 0) {
+				if(DEBUG == 1) {
+					System.out.println("Balance::TabuSearch::restart.....");
+				}
+				
+				restartOfBalanceTwoBin(tabu, b_x, b_y, itemsUse, x_take, statusX, statusY);
+				nic = 0;
+			} else {
+				// perform the move
+				AssignMove m = moves.get(R.nextInt(moves.size()));
+				sel_i = m.i;
+				sel_v = m.newBin;
+				if(x_take[sel_i] == b_x && sel_v == b_y) {
+					statusY.addItem(itemsUse.get(sel_i));
+					statusX.removeItem(itemsUse.get(sel_i));
+				} else if(x_take[sel_i] == b_y && sel_v == b_x) {
+					statusY.removeItem(itemsUse.get(sel_i));
+					statusX.addItem(itemsUse.get(sel_i));
+				}
+				
+				x_take[sel_i] = sel_v;
+				tabu[sel_i][sel_v == b_x ?0:1] = it + tabulen;
+				binXNew.clear();
+				binYNew.clear();
+				for (int k = 0; k < numItem; k++) {
+					int i = itemsUse.get(k);
+					if(x_best[k] == 0) {
+						binXNew.add(i);
+					} else {
+						binYNew.add(i);
+					}
+				}
+				sumV += minDelta;
+				
+				if(DEBUG == 1) {
+					System.out.println("Balance::Step " + it + ", "
+							+ "S = " + sumV
+							+ ", best = " + best + ", delta = " + minDelta
+							+ ", nic = " + nic);
+				}
+				
+				// update best
+				if (sumV < best) {
+					best = sumV;
+					for (int k = 0; k < numItem; k++)
+						x_best[k] = x_take[k];
+				}
+
+				//if (minDelta >= 0) {
+				if(sumV >= best){
+					nic++;
+					if (nic > maxStable) {
+						if(DEBUG == 1) {
+							System.out.println("Balance::TabuSearch::restart.....");
+						}
+						
+						restartOfBalanceTwoBin(tabu, b_x, b_y, itemsUse, x_take, statusX, statusY);
+						nic = 0;
+					}
+				} else {
+					nic = 0;
+				}
+			}
+			it++;
+		}
+		
+		binXNew.clear();
+		binYNew.clear();
+		for (int k = 0; k < numItem; k++) {
+			int i = itemsUse.get(k);
+			if(x_best[k] == 0) {
+				binXNew.add(i);
+			} else {
+				binYNew.add(i);
+			}
+		}
+	}
+}
