@@ -1,0 +1,6 @@
+[submodule "OpenCBLS/src/khmtk60/miniprojects/G13/MultiKnapsack_Python"]
+	path = OpenCBLS/src/khmtk60/miniprojects/G13/MultiKnapsack_Python
+	url = https://github.com/thanhhau097/MultiKnapsack_Python
+[submodule "OpenCBLS/src/khmtk60/miniprojects/G13/Multi-Constraint-Multiple-Knapsack"]
+	path = OpenCBLS/src/khmtk60/miniprojects/G13/Multi-Constraint-Multiple-Knapsack
+	url = https://github.com/nguyentran25/Multi-Constraint-Multiple-Knapsack.git
