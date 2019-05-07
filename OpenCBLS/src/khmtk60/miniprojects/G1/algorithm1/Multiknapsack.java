@@ -475,7 +475,7 @@ public abstract class Multiknapsack {
 		try{
 			PrintWriter out = new PrintWriter(fn);
 			Gson gson = new Gson();
-			String json = gson.toJson(solution.getClass());
+			String json = gson.toJson(solution);
 			out.print(json);
 			out.close();
 		}catch(Exception ex){

@@ -406,12 +406,12 @@ public class MultiKnapsack1D_minibatch extends MultiKnapsack{
 		System.out.println("Checking:.......");
 		System.out.println(checker.check(I, S));
 		
-//		String outputJson = "src/khmtk60/miniprojects/multiknapsackminmaxtypeconstraints/G1/result/MinMaxTypeMultiKnapsackInput-3000-result.json";
+//		String outputJson = "src/khmtk60/miniprojects/G1/result/MinMaxTypeMultiKnapsackInput-3000-result.json";
 //		multiKnapsack1D.writeResultToFile(outputJson);
 		
 
 //		String inputJson = "src/khmtk60/miniprojects/multiknapsackminmaxtypeconstraints/MinMaxTypeMultiKnapsackInput-3000.json";
-//		String outputJson = "src/khmtk60/miniprojects/multiknapsackminmaxtypeconstraints/G1/result/MinMaxTypeMultiKnapsackInput-3000-result.json";
+//		String outputJson = "src/khmtk60/miniprojects/G1/result/MinMaxTypeMultiKnapsackInput-3000-result.json";
 //		System.out.println(checker.check(inputJson, outputJson));	
 	}
 }
