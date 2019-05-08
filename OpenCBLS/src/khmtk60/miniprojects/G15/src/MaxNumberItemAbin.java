@@ -111,6 +111,8 @@ public class MaxNumberItemAbin extends Solution {
 		StatusOfBin status = new StatusOfBin(itemsAvail, b);
 		double best = violationsOfMaxNumItemInABin(status, numItem);
 		double sumV = best;
+		if (DEBUG == 1)
+			System.out.println("Init S = " + sumV);
 
 		int nic = 0;
 		ArrayList<AssignMove> moves = new ArrayList<AssignMove>();
@@ -118,6 +120,7 @@ public class MaxNumberItemAbin extends Solution {
 		
 		while (it < maxIter && System.currentTimeMillis() - t0 < maxTime
 				&& sumV  > 0) {
+
 			int sel_i = -1;
 			int sel_v = -1;
 			double minDelta = Double.MAX_VALUE;
@@ -202,6 +205,6 @@ public class MaxNumberItemAbin extends Solution {
 		for(int i: itemsNotAvail) {
 			otherBin.add(i);
 		}
-		System.out.println("Max number items in bin " + b);
+		//System.out.println("Max number items in bin " + b);
 	}	
 }

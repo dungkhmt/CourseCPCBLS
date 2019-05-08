@@ -78,6 +78,7 @@ public class SolutionPhase2 extends Solution {
 	public double getSwapDelta(int b_x, int b_y, ArrayList<Integer> binXNew, ArrayList<Integer> binYNew) {
 		binXNew.clear();
 		binYNew.clear();
+		int flag_use = 0;
 		
 		ArrayList<Integer> binXOld = new ArrayList<Integer>();
 		ArrayList<Integer> binYOld = new ArrayList<Integer>();
@@ -98,31 +99,44 @@ public class SolutionPhase2 extends Solution {
 		}
 		double newViolation = 0;
 		if(rBxOld != -1 && rByOld != -1 && rByOld != rBxOld) {
+			flag_use = 1;
 			for(int i: binXOld) binYNew.add(i);
 			for(int i: binYOld) binXNew.add(i);
 			newViolation = violations(binXNew, b_x) + violations(binYNew, b_y);
 		} else {
 			binXNew.clear();
 			binYNew.clear();
+			int num_steps = 1000;
 			if(rBxOld == -1 && rByOld != -1) {
+				flag_use = 2;
 				//System.out.println("Max number items in bin " + b_x);
 				ArrayList<Integer> allItemTwoBin = new ArrayList<Integer>();
 				for(int i: binXOld) allItemTwoBin.add(i);
 				for(int i: binYOld) allItemTwoBin.add(i);
 
 				MaxNumberItemAbin sol = new MaxNumberItemAbin(items, bins, newBinIndices, seed);
-				sol.search(5, 5000, 1500, 100, b_x, allItemTwoBin, binXNew, binYNew);
-				newViolation = violations(binXNew, b_x) + violations(binYNew, b_y);
+				sol.search(5, 5000, num_steps, 100, b_x, allItemTwoBin, binXNew, binYNew);
+				if(binXNew.size() == 0) {
+					newViolation = 1000000;
+				} else {
+					newViolation = violations(binXNew, b_x) + violations(binYNew, b_y);
+				}
 			} else if(rBxOld != -1 && rByOld == -1) {
+				flag_use = 3;
 				//System.out.println("Max number items in bin " + b_y);
 				ArrayList<Integer> allItemTwoBin = new ArrayList<Integer>();
 				for(int i: binXOld) allItemTwoBin.add(i);
 				for(int i: binYOld) allItemTwoBin.add(i);
 				
 				MaxNumberItemAbin sol = new MaxNumberItemAbin(items, bins, newBinIndices, seed);
-				sol.search(5, 5000, 1500, 100, b_y, allItemTwoBin, binYNew, binXNew);
-				newViolation = violations(binXNew, b_x) + violations(binYNew, b_y);
+				sol.search(5, 5000, num_steps, 100, b_y, allItemTwoBin, binYNew, binXNew);
+				if(binYNew.size() == 0) {
+					newViolation = 1000000;
+				} else {
+					newViolation = violations(binXNew, b_x) + violations(binYNew, b_y);
+				}
 			} else {
+				flag_use = 4;
 				//System.out.println("Balance 2 bin " + b_x + "-" + b_y);
 				// Chi su dung 1 bin x
 				ArrayList<Integer> allItemTwoBin = new ArrayList<Integer>();
@@ -132,14 +146,14 @@ public class SolutionPhase2 extends Solution {
 				ArrayList<Integer> binXNew1 = new ArrayList<Integer>();
 				ArrayList<Integer> binYNew1 = new ArrayList<Integer>();
 				MaxNumberItemAbin sol1 = new MaxNumberItemAbin(items, bins, newBinIndices, seed);
-				sol1.search(5, 5000, 1500, 100, b_x, allItemTwoBin, binXNew1, binYNew1);
+				sol1.search(5, 5000, num_steps, 100, b_x, allItemTwoBin, binXNew1, binYNew1);
 				double newViolation1 = violations(binXNew1, b_x) + violations(binYNew1, b_y);
 
 				// Chi su dung 1 bin y	
 				ArrayList<Integer> binXNew2 = new ArrayList<Integer>();
 				ArrayList<Integer> binYNew2 = new ArrayList<Integer>();
 				MaxNumberItemAbin sol2 = new MaxNumberItemAbin(items, bins, newBinIndices, seed);
-				sol2.search(5, 5000, 1500, 100, b_y, allItemTwoBin, binYNew2, binXNew2);
+				sol2.search(5, 5000, num_steps, 100, b_y, allItemTwoBin, binYNew2, binXNew2);
 				double newViolation2 = violations(binXNew2, b_x) + violations(binYNew2, b_y);
 				
 				binXNew.clear();
@@ -156,22 +170,63 @@ public class SolutionPhase2 extends Solution {
 			}
 		}
 		double oldViolation = violations(binXOld, b_x) + violations(binYOld, b_y);	
+		//System.out.println("Use " + flag_use);
 		
 		return newViolation - oldViolation;
 	}
+
+	public void swapTwoBin(int b_x, int b_y) {
+
+	}
 	
 	private void restartMaintainConstraint(int[][] tabu) {
+		ArrayList<Integer> binXOld = new ArrayList<Integer>();
+		ArrayList<Integer> binYOld = new ArrayList<Integer>();
 		ArrayList<Integer> binXNew = new ArrayList<Integer>();
 		ArrayList<Integer> binYNew = new ArrayList<Integer>();
 		Collections.shuffle(binsUse, new Random(seed));
 		int len = binsUse.size();
-		for(int k = 0; k < len/2; k++) {
-			binXNew.clear();
-			binYNew.clear();
-			double delta = getSwapDelta(binsUse.get(k), binsUse.get(len - k - 1), binXNew, binYNew);
-			if(delta <= 0) {
-				for(int i: binXNew) binOfItem[i] = binsUse.get(k);
-				for(int i: binYNew) binOfItem[i] = binsUse.get(len - k - 1);
+		ArrayList<Integer> binsChoosed = new ArrayList<Integer>();
+		ArrayList<Integer> binsNotChoosed = new ArrayList<Integer>();
+		violations();
+		for(int b: binsUse) {
+			if(nItemPerBin[b] > 0) {
+				if(violations(b) == 0) {
+					binsChoosed.add(b);
+				}
+			} else {
+				binsNotChoosed.add(b);
+			}
+		}
+		Collections.shuffle(binsChoosed, new Random(seed));
+		for(int b_x: binsChoosed) {
+			binXOld.clear();
+			for(int i: itemsUse) {
+				if(binOfItem[i] == b_x) {
+					binXOld.add(i);
+				}
+			}
+			for(int b_y: binsNotChoosed) {
+				binXNew.clear();
+				binYNew.clear();
+				binYOld.clear();
+				for(int i: itemsUse) {
+					if(binOfItem[i] == b_y) {
+						binYOld.add(i);
+						binXNew.add(i);
+					} else if(binOfItem[i] == b_x) {
+						binYNew.add(i);
+					}
+				}
+				double oldViolation = violations(binXOld, b_x) + violations(binYOld, b_y);
+				double newViolation = violations(binXNew, b_x) + violations(binYNew, b_y);
+
+				double delta = newViolation - oldViolation;
+				if(delta <= 0) {
+					//System.out.println("Swap " + b_x + " and " + b_y);
+					for(int i: binXNew) binOfItem[i] = b_x;
+					for(int i: binYNew) binOfItem[i] = b_y;
+				}
 			}		
 		}
 		
@@ -179,7 +234,6 @@ public class SolutionPhase2 extends Solution {
 			for (int j = 0; j < tabu[i].length; j++)
 				tabu[i][j] = -1;
 		}
-		
 	}
 	
 	public void updateBest(){
@@ -254,16 +308,11 @@ public class SolutionPhase2 extends Solution {
 			for (int b: binsUseVail) {
 				double vio = violations(b);
 				
-				//if(maxVio < vio) {
-					//maxVio = vio;
-					//maxVioBin.clear();
-					//maxVioBin.add(b);
 				if(vio > 0) {
 					maxVioBin.add(b);
 				}
 			}
 			System.out.println(maxVioBin);
-			System.out.println("max vio = " + maxVio);
 			int b_ucv = maxVioBin.get(R.nextInt(maxVioBin.size()));
 			
 			//binsUseVail.remove(new Integer(b_ucv));
@@ -282,7 +331,7 @@ public class SolutionPhase2 extends Solution {
 				
 				//System.out.println("Processing bin " + b_ucv + " and " + b + ": delta = " + delta);
 				
-				if(delta < 0) {
+				if(DEBUG == 1 && delta < 0) {
 					System.out.println("Press Enter to continue " + delta);
 					try{System.in.read();}
 					catch(Exception e){}
@@ -319,7 +368,7 @@ public class SolutionPhase2 extends Solution {
 				System.out.println("Step " + it + ", S = " + sumV
 						+ ", best = " + best + ", delta = " + minDelta
 						+ ", nic = " + nic);
-				System.out.println("Balance bx = " + b_x + " by = " + b_y);
+				System.out.println("Balance " + m.binXNew.size()+ " in bx = " + b_x + " and " + m.binYNew.size() + " in by = " + b_y);
 				// update best
 				if (sumV < best) {
 					best = sumV;
@@ -368,125 +417,14 @@ public class SolutionPhase2 extends Solution {
 	    }
 
 	}
-	/*
-	public double testSwapDelta(int b_x, int b_y) {
+
+	public void testSwapDelta(int b_x, int b_y) {
 		ArrayList<Integer> binXNew = new ArrayList<Integer>();
 		ArrayList<Integer> binYNew = new ArrayList<Integer>();
-		
-		ArrayList<Integer> binXOld = new ArrayList<Integer>();
-		ArrayList<Integer> binYOld = new ArrayList<Integer>();
-		
-		for(int i: itemsUse) {
-			if(binOfItem[i] == b_x) {
-				binXOld.add(i);
-			} else if(binOfItem[i] == b_y) {
-				binYOld.add(i);
-			}
-		}
-		int rBxOld = -1, rByOld = -1;
-		if(binXOld.size() > 0) rBxOld = items[binXOld.get(0)].getR();
-		if(binYOld.size() > 0) rByOld = items[binYOld.get(0)].getR();
-		if(rBxOld == -1 && rByOld == -1) {
-			return 0;
-		}
-		double newViolation = 0;
-		
-		if(rBxOld != -1 && rByOld != -1 && rByOld != rBxOld) {
-			System.out.println("Swap bin: " + rByOld);
-			for(int i: binXOld) {
-				binYNew.add(i);
-			}
-			for(int i: binYOld) {
-				binXNew.add(i);
-			}
-			newViolation = violations(binXNew, b_x) + violations(binYNew, b_y);
-		} else {
-			binXNew.clear();
-			binYNew.clear();
-			if(rBxOld == -1 && rByOld != -1) {
-				if(bins[b_x].getMinLoad() >= bins[b_y].getMinLoad()) {
-					return 0;
-				}
-				System.out.println("Max item:");
-				ArrayList<Integer> allItemTwoBin = new ArrayList<Integer>();
-				for(int i: binXOld) allItemTwoBin.add(i);
-				for(int i: binYOld) allItemTwoBin.add(i);
-				
-				maxNumItemInABin(5, 5000, 500, 100, b_x, allItemTwoBin, binXNew, binYNew);
-				newViolation = violations(binXNew, b_x) + violations(binYNew, b_y);
-			} else if(rBxOld != -1 && rByOld == -1) {
-				if(bins[b_x].getMinLoad() <= bins[b_y].getMinLoad()) {
-					return 0;
-				}
-				System.out.println("Max item:");
-				ArrayList<Integer> allItemTwoBin = new ArrayList<Integer>();
-				for(int i: binXOld) allItemTwoBin.add(i);
-				for(int i: binYOld) allItemTwoBin.add(i);
-				//System.out.println(binXOld);
-				maxNumItemInABin(5, 5000, 500, 100, b_y, allItemTwoBin, binYNew, binXNew);
-				//System.out.println(binXNew);
-				//System.out.println(binYNew);
-				//System.out.println(violations(binXNew, b_x));
-				//System.out.println(violations(binYNew, b_y));
-				newViolation = violations(binXNew, b_x) + violations(binYNew, b_y);
-			} else {
-				System.out.println("Balance 2 bin " + b_x + "-" + b_y);
-				// Chi su dung 1 bin x
-				ArrayList<Integer> allItemTwoBin = new ArrayList<Integer>();
-				for(int i: binXOld) allItemTwoBin.add(i);
-				for(int i: binYOld) allItemTwoBin.add(i);
-				ArrayList<Integer> binXNew1 = new ArrayList<Integer>();
-				ArrayList<Integer> binYNew1 = new ArrayList<Integer>();
-				maxNumItemInABin(5, 5000, 1000, 100, b_x, allItemTwoBin, binXNew1, binYNew1);
-				double newViolation1 = violations(binXNew1, b_x) + violations(binYNew1, b_y);
-
-				// Chi su dung 1 bin y	
-				ArrayList<Integer> binXNew2 = new ArrayList<Integer>();
-				ArrayList<Integer> binYNew2 = new ArrayList<Integer>();
-				maxNumItemInABin(5, 5000, 1000, 100, b_y, allItemTwoBin, binYNew2, binXNew2);
-				double newViolation2 = violations(binXNew2, b_x) + violations(binYNew2, b_y);
-				
-				int use = -1;
-				if(newViolation1 < newViolation2) {
-					newViolation = newViolation1;
-					use = b_x;
-				} else {
-					newViolation = newViolation2;
-					use = b_y;
-				}
-				
-				// Su dung ca 2 bin
-				balanceTwoBin(5, 5000, 1000,
-						100, b_x, b_y, 
-						binXOld, binYOld,
-						binXNew, binYNew) ;
-				
-				double newViolation3 = violations(binXNew, b_x) + violations(binYNew, b_y);
-				
-				System.out.println(newViolation);
-				System.out.println(newViolation3);
-				if(newViolation3 < newViolation) {
-					newViolation = newViolation3;
-				} else {
-					binXNew.clear();
-					binYNew.clear();
-					if(use == b_x) {
-						for(int i: binXNew1) binXNew.add(i);
-						for(int i: binYNew1) binYNew.add(i);
-					} else {
-						for(int i: binXNew2) binXNew.add(i);
-						for(int i: binYNew2) binYNew.add(i);
-					}
-				}
-			}
-			
-		}
-		
-		double oldViolation = violations(binXOld, b_x) + violations(binYOld, b_y);
-		System.out.println(oldViolation);
-		return newViolation - oldViolation;
+		double delta = getSwapDelta(b_x, b_y, binXNew, binYNew);
+		System.out.println(delta);
 	}
-	*/
+
 	/**
 	 * @param args
 	 */
@@ -496,7 +434,7 @@ public class SolutionPhase2 extends Solution {
 
 		// solution.loadData("src/khmtk60/miniprojects/multiknapsackminmaxtypeconstraints/MinMaxTypeMultiKnapsackInput.json");
 		solution.loadData(
-				"./dataset/MinMaxTypeMultiKnapsackInput-1000.json");
+				"./dataset/MinMaxTypeMultiKnapsackInput-3000.json");
 		solution.preprocess();
 		solution.loadPretrainedModel();
 		/*
@@ -504,10 +442,10 @@ public class SolutionPhase2 extends Solution {
 			System.out.println(b + " Test result: " + solution.testSwapDelta(1639, b));
 		}*/
 		//System.out.println(" Test result: " + solution.testSwapDelta(505, 514));
-		
-		solution.tabuSearch(10, 5000, 100, 10, solution.getBinsUse(), solution.getItemsUse()); // Cho tap du lieu 51004418316727.json
+		//solution.testSwapDelta(509, 1464);
+		solution.tabuSearch(10, 5000, 600, 12, solution.getBinsUse(), solution.getItemsUse()); // Cho tap du lieu 51004418316727.json
 		solution.writeSolution();
-		solution.writeSubmit();
+		//solution.writeSubmit();
 		solution.printSolution();
 	}
 
