@@ -462,7 +462,7 @@ public class SolutionPhase1 extends Solution {
      */
     public static void main(String[] args) {
         // solution.loadData("src/khmtk60/miniprojects/multiknapsackminmaxtypeconstraints/MinMaxTypeMultiKnapsackInput.json");
-        String dataset_path = "dataset/MinMaxTypeMultiKnapsackInput-1000.json";
+        String dataset_path = "dataset/MinMaxTypeMultiKnapsackInput-3000.json";
         int tabulen = 10;
         SolutionPhase1 solution = new SolutionPhase1();
         solution.loadData(
@@ -471,12 +471,15 @@ public class SolutionPhase1 extends Solution {
         //solution.info();
         solution.initModel();
         //solution.loadPretrainedModel();
-        solution.tabuSearch(10, 5000, 100000, 1000, solution.getBinsUse(), solution.getItemsUse()); // Cho tap du lieu 51004418316727.json
+        //solution.tabuSearch(10, 5000, 100000, 1000, solution.getBinsUse(), solution.getItemsUse()); // Cho tap du lieu 1000
+        solution.tabuSearch(10, 5000, 150000, 1000, solution.getBinsUse(), solution.getItemsUse()); // Cho tap du lieu 3000
         solution.writeSolution();
+        solution.printSolution();
+        /*
         HashSet<Integer> classNotArrage = solution.getClassNotArrange();
         HashSet<Integer> tabu = solution.getSolutionBins();
         HashSet<Integer> binNotUse = solution.getBinsNotUse();
-        solution.printSolution();
+        
         System.out.println(classNotArrage);
         //classNotArrage.clear();
         //classNotArrage.add(9);
@@ -550,5 +553,6 @@ public class SolutionPhase1 extends Solution {
                 }
             }
         }
+        */
     }
 }

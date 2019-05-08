@@ -151,7 +151,7 @@ public class MK2 {
 
 	public static void main(String[] args) {
 //		String fn = "/home/thangnd/git/java/Optimization/data/test.json";
-		String fn = "D:\\thangnd\\java\\Optimization\\data\\test.json";
+		String fn = "E:\\TaiLieuHocTap\\LocalSearch\\MiniProject\\CourseCPCBLS\\OpenCBLS\\src\\khmtk60\\miniprojects\\G8\\MinMaxTypeMultiKnapsackInput-1000.json";
 		MK2 s = new MK2(fn,
 						1000);
 		System.out.println("Load data okay !");
