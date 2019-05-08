@@ -1,4 +1,4 @@
-package khmtk60.miniprojects.G11.src;
+package khmtk60.miniprojects.G14.src;
 
 import java.io.File;
 import java.io.FileWriter;
