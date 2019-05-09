@@ -41,7 +41,7 @@ public class MinMaxTypeMultiKnapsackSolution {
 	
 	public void load_data() {
 		mki = new MinMaxTypeMultiKnapsackInput();
-		I = mki.loadFromFile("OpenCBLS/src/khmtk60/miniprojects/multiknapsackminmaxtypeconstraints/MinMaxTypeMultiKnapsackInput-1000.json");
+		I = mki.loadFromFile("src/khmtk60/miniprojects/multiknapsackminmaxtypeconstraints/MinMaxTypeMultiKnapsackInput-1000.json");
 		//I = mki.loadFromFile("/content/drive/My Drive/mini_project/MinMaxTypeMultiKnapsackInput.json");
 
 		bins= I.getBins();
