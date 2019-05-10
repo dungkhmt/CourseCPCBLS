@@ -630,9 +630,9 @@ public class Greedy {
 		MinMaxTypeMultiKnapsackInput inputData = new MinMaxTypeMultiKnapsackInput();
 		Util utils = new Util();
 		int promise = 0;
-		inputData = inputData.loadFromFile("data/sample.json");
+//		inputData = inputData.loadFromFile("data/sample.json");
 //		inputData = inputData.loadFromFile("data/MinMaxTypeMultiKnapsackInput.json");
-		inputData = inputData.loadFromFile("data/MinMaxTypeMultiKnapsackInput-1000.json");
+		inputData = inputData.loadFromFile("/Users/macos/Desktop/School/20182/CBLS/CourseCPCBLS/OpenCBLS/src/khmtk60/miniprojects/G13/Multiple-Constraint-Multiple-Knapsack-Java/data/MinMaxTypeMultiKnapsackInput-1000.json");
 		promise = 690;
 //		inputData = inputData.loadFromFile("data/MinMaxTypeMultiKnapsackInput-3000.json");
 //		promise = 2700;
