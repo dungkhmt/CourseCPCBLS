@@ -1,7 +1,7 @@
 /*
  * Author: PHAM Quang Dung (dungkhmt@gmail.com)
  */
-package core;
+package khmtk60.miniprojects.G2.src.core;
 
 public class BasicEntity {
 

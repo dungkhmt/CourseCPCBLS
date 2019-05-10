@@ -1,6 +1,6 @@
-package localsearch.common;
+package khmtk60.miniprojects.G2.src.localsearch.common;
 
-import localsearch.model.VarIntLS;
+import khmtk60.miniprojects.G2.src.localsearch.model.VarIntLS;
 import java.util.*;
 public class OpenCBLS {
 

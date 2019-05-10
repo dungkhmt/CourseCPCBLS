@@ -1,12 +1,12 @@
-package localsearch.functions.conditionalsum;
+package khmtk60.miniprojects.G2.src.localsearch.functions.conditionalsum;
 
 import java.util.HashMap;
 import java.util.HashSet;
 
-import localsearch.model.FloatAbstractInvariant;
-import localsearch.model.FloatLocalSearchManager;
-import localsearch.model.IFloatFunction;
-import localsearch.model.VarIntLS;
+import khmtk60.miniprojects.G2.src.localsearch.model.FloatAbstractInvariant;
+import khmtk60.miniprojects.G2.src.localsearch.model.FloatLocalSearchManager;
+import khmtk60.miniprojects.G2.src.localsearch.model.IFloatFunction;
+import khmtk60.miniprojects.G2.src.localsearch.model.VarIntLS;
 
 public class FloatSumVarInt extends FloatAbstractInvariant implements IFloatFunction {
 

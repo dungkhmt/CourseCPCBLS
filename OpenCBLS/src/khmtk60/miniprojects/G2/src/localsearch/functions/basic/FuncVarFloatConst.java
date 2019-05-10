@@ -1,9 +1,10 @@
-package localsearch.functions.basic;
+package khmtk60.miniprojects.G2.src.localsearch.functions.basic;
 
-import localsearch.model.FloatAbstractInvariant;
-import localsearch.model.FloatLocalSearchManager;
-import localsearch.model.IFloatFunction;
-import localsearch.model.VarIntLS;
+
+import khmtk60.miniprojects.G2.src.localsearch.model.FloatAbstractInvariant;
+import khmtk60.miniprojects.G2.src.localsearch.model.FloatLocalSearchManager;
+import khmtk60.miniprojects.G2.src..model.IFloatFunction;
+import khmtk60.miniprojects.G2.src.localsearch.model.VarIntLS;
 
 public class FuncVarFloatConst extends FloatAbstractInvariant implements IFloatFunction {
 

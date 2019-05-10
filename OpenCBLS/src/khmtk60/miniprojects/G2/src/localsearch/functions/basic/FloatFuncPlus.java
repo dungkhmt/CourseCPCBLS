@@ -1,8 +1,8 @@
-package localsearch.functions.basic;
+package khmtk60.miniprojects.G2.src.localsearch.functions.basic;
 
 import java.util.HashSet;
 
-import localsearch.model.*;
+import khmtk60.miniprojects.G2.src.localsearch.model.*;
 
 public class FloatFuncPlus extends FloatAbstractInvariant implements IFloatFunction {
 

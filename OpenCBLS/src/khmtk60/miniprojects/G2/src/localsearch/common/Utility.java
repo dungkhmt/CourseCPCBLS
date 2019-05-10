@@ -1,4 +1,4 @@
-package localsearch.common;
+package khmtk60.miniprojects.G2.src.localsearch.common;
 
 import java.util.Set;
 

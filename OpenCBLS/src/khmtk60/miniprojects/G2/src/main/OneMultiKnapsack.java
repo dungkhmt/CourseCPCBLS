@@ -1,4 +1,4 @@
-package main;
+package khmtk60.miniprojects.G2.src.main;
 
 import java.io.File;
 import java.io.FileReader;
@@ -16,19 +16,19 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
-import localsearch.constraints.basic.FloatIsEqual;
-import localsearch.constraints.basic.LessOrEqualFloat;
-import localsearch.functions.conditionalsum.FloatConditionalSum;
-import localsearch.functions.conditionalsum.FloatSum2;
-import localsearch.model.FloatConstraintSystem;
-import localsearch.model.FloatLocalSearchManager;
-import localsearch.model.IFloatConstraint;
-import localsearch.model.IFloatFunction;
-import localsearch.model.VarIntLS;
-import main.FloatMultiKnapsack.AssignMove;
-import main.FloatMultiKnapsack.SwapMove;
-import search.MultiStageGreedySearch;
-import search.TabuSearch;
+import khmtk60.miniprojects.G2.src.localsearch.constraints.basic.FloatIsEqual;
+import khmtk60.miniprojects.G2.src.localsearch.constraints.basic.LessOrEqualFloat;
+import khmtk60.miniprojects.G2.src.localsearch.functions.conditionalsum.FloatConditionalSum;
+import khmtk60.miniprojects.G2.src.localsearch.functions.conditionalsum.FloatSum2;
+import khmtk60.miniprojects.G2.src.localsearch.model.FloatConstraintSystem;
+import khmtk60.miniprojects.G2.src.localsearch.model.FloatLocalSearchManager;
+import khmtk60.miniprojects.G2.src.localsearch.model.IFloatConstraint;
+import khmtk60.miniprojects.G2.src.localsearch.model.IFloatFunction;
+import khmtk60.miniprojects.G2.src.localsearch.model.VarIntLS;
+import khmtk60.miniprojects.G2.src.main.FloatMultiKnapsack.AssignMove;
+import khmtk60.miniprojects.G2.src.main.FloatMultiKnapsack.SwapMove;
+import khmtk60.miniprojects.G2.src.search.MultiStageGreedySearch;
+import khmtk60.miniprojects.G2.src.search.TabuSearch;
 
 public class OneMultiKnapsack {
 	class AssignMove {

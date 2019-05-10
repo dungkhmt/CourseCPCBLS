@@ -1,4 +1,4 @@
-package solutioncheck;
+package khmtk60.miniprojects.G2.src.solutioncheck;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;

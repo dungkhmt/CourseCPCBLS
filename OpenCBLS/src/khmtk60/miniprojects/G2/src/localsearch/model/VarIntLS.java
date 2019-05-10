@@ -1,9 +1,9 @@
-package localsearch.model;
+package khmtk60.miniprojects.G2.src.localsearch.model;
 
 import java.util.Set;
 import java.util.TreeSet;
 
-import core.VarInt;
+import khmtk60.miniprojects.G2.src.core.VarInt;
 
 public class VarIntLS extends VarInt {
 

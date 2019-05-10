@@ -1,10 +1,10 @@
-package localsearch.functions.sum;
+package khmtk60.miniprojects.G2.src.localsearch.functions.sum;
 
 //import localsearch.constraints.basic.LessOrEqual;
-import localsearch.functions.basic.*;
+import khmtk60.miniprojects.G2.src.localsearch.functions.basic.*;
 //import localsearch.functions.basic.FuncVarConst;
 //import localsearch.functions.conditionalsum.ConditionalSum;
-import localsearch.model.*;
+import khmtk60.miniprojects.G2.src.localsearch.model.*;
 
 public class FloatSum extends FloatAbstractInvariant implements IFloatFunction {
 
