@@ -664,9 +664,13 @@ public class MinMaxTypeMultiKnapsackSolution {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		MinMaxTypeMultiKnapsackSolution mks = new MinMaxTypeMultiKnapsackSolution();
+		long startTime = System.nanoTime();
 		mks.load_data();
 		//mks.use_2d_arr();
 		mks.use_1d_arr();
+		long endTime   = System.nanoTime();
+		long totalTime = endTime - startTime;
+		System.out.println((double) totalTime/1000000000 + "seconds");
 		//mks.gan_mien_gia_tri();
 		//mks.stateModel();
 		//mks.stateModel_Use1D();
