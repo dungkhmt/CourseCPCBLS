@@ -1,4 +1,4 @@
-package khmtk60.miniprojects.G7.multiknapsackminmaxtypeconstraints;
+package khmtk60.miniprojects.multiknapsackminmaxtypeconstraints;
 
 import localsearch.model.LocalSearchManager;
 
