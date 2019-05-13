@@ -19,7 +19,7 @@ public class Demo_Greedy {
 	SolutionChecker sC;
 	
 	public void init() {
-		String inputFile = "./src/khmtk60/miniprojects/G8/inputoutputdata/MinMaxTypeMultiKnapsackInput-3000.json";
+		String inputFile = "./src/khmtk60/miniprojects/G8/InputOutputData/MinMaxTypeMultiKnapsackInput-3000.json";
         input = new MinMaxTypeMultiKnapsackInput().loadFromFile(inputFile);
 		nItems = input.getItems().length;
         nBins = input.getBins().length;
@@ -49,6 +49,16 @@ public class Demo_Greedy {
 				}
 			}
 		}
+		
+		// lay items ra khoi nhung bin bi vi pham rang buoc
+		boolean[] checkBins = checker.checkBins(input, solution);
+		for(int i = 0; i < nBins; i++)
+			if(!checkBins[i]) {
+				for(int j = 0; j < nItems; j++) {
+					if(solution.getBinOfItem()[j] == i)
+						solution.getBinOfItem()[j] = -1;
+				}
+			}
 	}
 	
 	public void outputFile(MinMaxTypeMultiKnapsackSolution S) {
