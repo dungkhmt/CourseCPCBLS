@@ -17,20 +17,14 @@ public class GeneticAlgorithm extends Solution {
 	public GeneticAlgorithm() throws FileNotFoundException {
 		super();
 	}
-
-	public int[] gene() throws JsonIOException, IOException {
+	/**
+	 * Tao Gene tham lam tu mot hoan vi ngau nhien
+	 * @return
+	 * @throws JsonIOException
+	 * @throws IOException
+	 */
+	public int[] getGene1() throws JsonIOException, IOException {
 		int[] X = new int[num_items];
-//		Random r = new Random();
-//		for (int i = 0; i < num_items; i++) {
-//			int roll = r.nextInt(100);
-//			if (roll < 10) {
-//				X[i] = -1;
-//			} else {
-//				X[i] = D[i][r.nextInt(D[i].length)];
-//			}
-//
-//		}
-//		return X;
 		for(int i = 0; i < num_items; i++) {
 			X[i] = i;
 		}
@@ -38,7 +32,24 @@ public class GeneticAlgorithm extends Solution {
 		int[] sol = firstFit(X);
 		return sol;
 	}
+	/**
+	 * Tao Gene ngau nhien
+	 * @return
+	 */
+	public int[] getGene2() {
+		int[] X = new int[num_items];
+		Random r = new Random();
+		for (int i = 0; i < num_items; i++) {
+			int roll = r.nextInt(100);
+			if (roll < 10) {
+				X[i] = -1;
+			} else {
+				X[i] = D[i][r.nextInt(D[i].length)];
+			}
 
+		}
+		return X;		
+	}
 	/**
 	 * 
 	 * @param gene
@@ -201,7 +212,7 @@ public class GeneticAlgorithm extends Solution {
 		int leng = gene.length;
 		int[] bestGen = Arrays.copyOf(gene, leng);
 		float bestFitness = fitness(gene);
-		int[] id = r.ints(r.nextInt(2), 0, leng).toArray();
+		int[] id = r.ints(r.nextInt(100), 0, leng).toArray();
 		for (int i : id) {
 //			for (int j = 0; j <= D[i].length; j++) {
 //				if (j != D[i].length) {
@@ -287,30 +298,30 @@ public class GeneticAlgorithm extends Solution {
 	public void solve(int generation, int populationSize) throws JsonIOException, IOException {
 		int[][] pop = new int[populationSize][];
 		for (int i = 0; i < populationSize; i++) {
-			pop[i] = gene();
+			pop[i] = getGene1();
 		}
+//		for(int i = 0; i < populationSize / 2; i++) {
+//			pop[i] = getGene1();
+//			pop[i + populationSize / 2] = getGene2();
+//		}
 		Arrays.sort(pop, (a, b) -> Float.compare(fitness(b), fitness(a))); // sort pop in descending order
 		int[] bestGene = pop[0];
-		for(int j = 0; j < populationSize; j++) {
-			System.out.print(fitness(pop[j]) + " ");
-		}
-		System.out.println();
 		System.out.println("Breeding");
 		for (int i = 0; i < generation; i++) {
-			newGeneration(pop, 20, 0.1f);
+			newGeneration(pop, 70, 0.3f);
 			Arrays.sort(pop, (a, b) -> Float.compare(fitness(b), fitness(a))); // sort pop in descending order
 			bestGene = pop[0];
 			System.out.println("Population best: " + getLoadedItem(bestGene) + " item at generation " + i);
-			for(int j = 0; j < populationSize; j++) {
-				System.out.print(fitness(pop[j]) + " ");
-				if(j == 19)
-					System.out.print("| ");
-			}
-			System.out.println();
+//			for(int j = 0; j < populationSize; j++) {
+//				System.out.print(fitness(pop[j]) + " ");
+//				if(j == 19)
+//					System.out.print("| ");
+//			}
+//			System.out.println();
 		}		
 		int[] bestFilteredSol = filterViolatedItem(bestGene);
 		try {
-			Utilities.printJson(bestFilteredSol, "outputGA2.json");
+			Utilities.printJson(bestFilteredSol, "outputGA.json");
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}

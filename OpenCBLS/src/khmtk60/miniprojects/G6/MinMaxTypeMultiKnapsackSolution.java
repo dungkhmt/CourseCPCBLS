@@ -363,12 +363,12 @@ public class MinMaxTypeMultiKnapsackSolution {
 		
 	}
 	
-	public Ass getDetal() {
+	public Assign getDetal() {
 		
 		Random R = new Random();
 		int count=0,count1 =0;
-		Ass resut ;
-		ArrayList<Ass> ArrAss = new ArrayList<>();
+		Assign resut ;
+		ArrayList<Assign> ArrAss = new ArrayList<>();
 		int index,value;
 		int CurVal1,CurVal ;
 		int tmp; 
@@ -397,11 +397,11 @@ public class MinMaxTypeMultiKnapsackSolution {
 						tmp1 = getViolation(j) - _V[j] + getViolation(CurVal) - _V[CurVal];
 						if(tmp1 < detal) {
 							ArrAss.clear();
-							ArrAss.add(new Ass(i,j));
+							ArrAss.add(new Assign(i,j));
 							detal = tmp1;
 						}else {
 							if(tmp1 == detal) {
-								ArrAss.add(new Ass(i,j));
+								ArrAss.add(new Assign(i,j));
 							}
 						}
 					}
@@ -481,7 +481,7 @@ public class MinMaxTypeMultiKnapsackSolution {
 	
 	
 	public void mySearch(int maxInter, int maxInterUp, int lenFob) { // maxInterUp so vong lap toi da cho phep violation tang.
-		Ass ass; 
+		Assign ass; 
 		Random R = new Random();
 		double tmp1,tmp2;
 		int tmp,it =0;
