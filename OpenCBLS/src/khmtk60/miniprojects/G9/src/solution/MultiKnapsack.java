@@ -130,17 +130,6 @@ public class MultiKnapsack {
         MultiKnapsack m = new MultiKnapsack();
         m.readDataJson("data/MinMaxTypeMultiKnapsackInput-1000.json");
         System.out.println("So item: " + m.n);
-        
-        double sumW = 0;
-        double sumMin = 0;
-        for (int i=0; i<m.n; i++) {
-        	sumW += m.w[i];
-        }
-        System.out.println("Tong weight: " + sumW);
-        for (int i=0; i<m.LW.length; i++) {
-        	sumMin += m.LW[i];
-        }
-        System.out.println("Tong minLoad: " + sumMin);
         System.out.println();
         
         
@@ -170,6 +159,9 @@ public class MultiKnapsack {
 //		}
 //        System.out.println(a.violations);
 //        System.out.println(count);
+        
+        
+        
         
         int numIter = 500;
         ArrayList<Double> savedViols = new ArrayList<Double>();
