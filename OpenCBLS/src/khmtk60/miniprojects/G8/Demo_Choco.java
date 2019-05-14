@@ -18,22 +18,22 @@ import khmtk60.miniprojects.multiknapsackminmaxtypeconstraints.model.MinMaxTypeM
 
 public class Demo_Choco {
     public void solve() {
-    	String inputFile = "./src/khmtk60/miniprojects/G8/inputoutputdata/MinMaxTypeMultiKnapsackInput-1000.json";
+    	String inputFile = "./src/khmtk60/miniprojects/G8/InputOutputData/MinMaxTypeMultiKnapsackInput-16.json";
         MinMaxTypeMultiKnapsackInput input = new MinMaxTypeMultiKnapsackInput().loadFromFile(inputFile);
         
         CPModel m = new CPModel();
         int nItems = input.getItems().length;
         int nBins = input.getBins().length;
-        IntegerVariable[][] x = new IntegerVariable[nItems][nBins];
+        IntegerVariable[][] X = new IntegerVariable[nItems][nBins];
         for(int i = 0; i < nItems; i++) 
             for(int j = 0; j < nBins; j++)
-                x[i][j] = Choco.makeIntVar("x"+i+j, 0, 1);
+                X[i][j] = Choco.makeIntVar("x"+i+j, 0, 1);
          
         // moi item chi duoc xep vao mot bin
         for(int i = 0; i < nItems; i++) {
             IntegerVariable[] y = new IntegerVariable[nBins];
             for(int j = 0; j < nBins; j++)
-                y[j] = x[i][j];
+                y[j] = X[i][j];
             m.addConstraint(Choco.eq(Choco.sum(y), 1));
         }
         
@@ -49,16 +49,16 @@ public class Demo_Choco {
                     }    
                 }
                 if(check == false)
-                    m.addConstraint(Choco.eq(x[i][j], 0));
+                    m.addConstraint(Choco.eq(X[i][j], 0));
             }
         }
         
         // max loaded w
         IntegerExpressionVariable[] loadedW = new IntegerExpressionVariable[nBins];
         for(int j = 0; j < nBins; j++) {
-            loadedW[j] = Choco.plus(Choco.mult(x[0][j],(int) input.getItems()[0].getW()), 0);
+            loadedW[j] = Choco.plus(Choco.mult(X[0][j],(int) input.getItems()[0].getW()), 0);
             for(int i = 1; i < nItems; i++) {
-                loadedW[j] = Choco.plus(loadedW[j], Choco.mult(x[i][j],(int) input.getItems()[i].getW()));
+                loadedW[j] = Choco.plus(loadedW[j], Choco.mult(X[i][j],(int) input.getItems()[i].getW()));
             }
             m.addConstraint(Choco.leq(loadedW[j],(int) input.getBins()[j].getCapacity()));
             m.addConstraint(Choco.leq((int) input.getBins()[j].getMinLoad(), loadedW[j]));
@@ -67,9 +67,9 @@ public class Demo_Choco {
         // max load p
         IntegerExpressionVariable[] loadedP = new IntegerExpressionVariable[nBins];
         for(int j = 0; j < nBins; j++) {
-            loadedP[j] = Choco.plus(Choco.mult(x[0][j],(int) input.getItems()[0].getP()), 0);
+            loadedP[j] = Choco.plus(Choco.mult(X[0][j],(int) input.getItems()[0].getP()), 0);
             for(int i = 1; i < nItems; i++) {
-                loadedP[j] = Choco.plus(loadedP[j], Choco.mult(x[i][j],(int) input.getItems()[i].getP()));
+                loadedP[j] = Choco.plus(loadedP[j], Choco.mult(X[i][j],(int) input.getItems()[i].getP()));
             }
             m.addConstraint(Choco.leq(loadedP[j],(int) input.getBins()[j].getP()));
         }
@@ -82,17 +82,17 @@ public class Demo_Choco {
         }
         maxT++;
         // max load type 
-        IntegerVariable[][] t = new IntegerVariable[maxT][nBins];
+        IntegerVariable[][] Y = new IntegerVariable[maxT][nBins];
         for(int i = 0; i < maxT; i++)
             for(int j = 0; j < nBins; j++) 
-                t[i][j] = Choco.makeIntVar("y"+i+j, 0, 1);
+                Y[i][j] = Choco.makeIntVar("y"+i+j, 0, 1);
         for(int i = 0; i < nItems; i++) 
             for(int j = 0; j < nBins; j++)
-                m.addConstraint(Choco.implies(Choco.eq(x[i][j], 1), Choco.eq(t[input.getItems()[i].getT()][j], 1)));
+                m.addConstraint(Choco.implies(Choco.eq(X[i][j], 1), Choco.eq(Y[input.getItems()[i].getT()][j], 1)));
         for(int j = 0; j < nBins; j++) {
             IntegerVariable[] z = new IntegerVariable[maxT];
             for(int i = 0; i < maxT; i++)
-                z[i] = t[i][j];
+                z[i] = Y[i][j];
             m.addConstraint(Choco.leq(Choco.sum(z), input.getBins()[j].getT()));
         }
         
@@ -103,17 +103,17 @@ public class Demo_Choco {
                 maxR = input.getItems()[i].getR();
         }
         maxR++;
-        IntegerVariable[][] r = new IntegerVariable[maxR][nBins];
+        IntegerVariable[][] Z = new IntegerVariable[maxR][nBins];
         for(int i = 0; i < maxR; i++)
             for(int j = 0; j < nBins; j++) 
-                r[i][j] = Choco.makeIntVar("r"+i+j, 0, 1);
+                Z[i][j] = Choco.makeIntVar("r"+i+j, 0, 1);
         for(int i = 0; i < nItems; i++) 
             for(int j = 0; j < nBins; j++)
-                m.addConstraint(Choco.implies(Choco.eq(x[i][j], 1), Choco.eq(r[input.getItems()[i].getR()][j], 1)));
+                m.addConstraint(Choco.implies(Choco.eq(X[i][j], 1), Choco.eq(Z[input.getItems()[i].getR()][j], 1)));
         for(int j = 0; j < nBins; j++) {
             IntegerVariable[] z = new IntegerVariable[maxR];
             for(int i = 0; i < maxR; i++)
-                z[i] = r[i][j];
+                z[i] = Z[i][j];
             m.addConstraint(Choco.leq(Choco.sum(z), input.getBins()[j].getR()));
         }
         
@@ -137,9 +137,9 @@ public class Demo_Choco {
             ArrayList<Integer> types = new ArrayList<Integer>();
             ArrayList<Integer> classes = new ArrayList<Integer>();
             for(int i = 0; i < nItems; i++) {
-                W[j] += s.getVar(x[i][j]).getVal() * input.getItems()[i].getW();
-                P[j] += s.getVar(x[i][j]).getVal() * input.getItems()[i].getP();
-                if(s.getVar(x[i][j]).getVal() == 1) {
+                W[j] += s.getVar(X[i][j]).getVal() * input.getItems()[i].getW();
+                P[j] += s.getVar(X[i][j]).getVal() * input.getItems()[i].getP();
+                if(s.getVar(X[i][j]).getVal() == 1) {
                     if(!types.contains(input.getItems()[i].getT())) {
                         T[j]++;
                         types.add(input.getItems()[i].getT());
@@ -155,7 +155,7 @@ public class Demo_Choco {
             System.out.println("Bin " + j + ": ");
             System.out.print("\tLoadedItems: ");
             for(int i = 0; i < nItems; i++) 
-                if(s.getVar(x[i][j]).getVal() == 1)
+                if(s.getVar(X[i][j]).getVal() == 1)
                     System.out.print(i + " ");
             System.out.println();
             System.out.println("\tLoadedW : " + W[j]);
@@ -169,7 +169,7 @@ public class Demo_Choco {
         int[] binOfItem = new int[nItems];
         for(int j = 0; j < nBins; j++) 
             for(int i = 0; i < nItems; i++) 
-                if(s.getVar(x[i][j]).getVal() == 1)
+                if(s.getVar(X[i][j]).getVal() == 1)
                     binOfItem[i] = j;
         S.setBinOfItem(binOfItem);
         Gson gson = new Gson();

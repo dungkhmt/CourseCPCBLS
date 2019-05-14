@@ -28,29 +28,29 @@ public class Demo_LocalSearch_Model1 {
     int nBins;
     
     public void input() {
-    	String inputFile = "./src/khmtk60/miniprojects/G8/inputoutputdata/MinMaxTypeMultiKnapsackInput-16.json";
+    	String inputFile = "./src/khmtk60/miniprojects/G8/InputOutputData/MinMaxTypeMultiKnapsackInput-16.json";
         input = new MinMaxTypeMultiKnapsackInput().loadFromFile(inputFile);
     }
     
     LocalSearchManager mgr;
-    VarIntLS[][] x;
+    VarIntLS[][] X;
     ConstraintSystem S;
     
     public void stateModel() {
         nItems = input.getItems().length;
         nBins = input.getBins().length;
         mgr = new LocalSearchManager();
-        x = new VarIntLS[nItems][nBins];
+        X = new VarIntLS[nItems][nBins];
         for(int i = 0; i < nItems; i++)
             for(int j = 0; j < nBins; j++)
-                x[i][j] = new VarIntLS(mgr, 0, 1);
+                X[i][j] = new VarIntLS(mgr, 0, 1);
         S = new ConstraintSystem(mgr);
         
         // moi item chi duoc xep vao mot bin
         for(int i = 0; i < nItems; i++) {
             VarIntLS[] y = new VarIntLS[nBins];
             for(int j = 0; j < nBins; j++) 
-                y[j] = x[i][j];
+                y[j] = X[i][j];
             S.post(new IsEqual(new SumVar(y), 1));
         }
         
@@ -66,7 +66,7 @@ public class Demo_LocalSearch_Model1 {
                     }    
                 }
                 if(check == false)
-                    S.post(new IsEqual(x[i][j], 0));
+                    S.post(new IsEqual(X[i][j], 0));
             }
         }
         
@@ -74,7 +74,7 @@ public class Demo_LocalSearch_Model1 {
         for(int j = 0; j < nBins; j++) {
             VarIntLS[] y = new VarIntLS[nItems];
             for(int i = 0; i < nItems; i++)
-                y[i] = x[i][j];
+                y[i] = X[i][j];
             IFunction[] f = new IFunction[nItems];
             for(int i = 0; i < nItems; i++) {
                 f[i] = new FuncMult(y[i],(int) input.getItems()[i].getW());
@@ -87,7 +87,7 @@ public class Demo_LocalSearch_Model1 {
         for(int j = 0; j < nBins; j++) {
             VarIntLS[] y = new VarIntLS[nItems];
             for(int i = 0; i < nItems; i++)
-                y[i] = x[i][j];
+                y[i] = X[i][j];
             IFunction[] f = new IFunction[nItems];
             for(int i = 0; i < nItems; i++) {
                 f[i] = new FuncMult(y[i],(int) input.getItems()[i].getP());
@@ -102,17 +102,17 @@ public class Demo_LocalSearch_Model1 {
                 maxT = input.getItems()[i].getT();
         }
         maxT++;
-        VarIntLS[][] t = new VarIntLS[maxT][nBins];
+        VarIntLS[][] Y = new VarIntLS[maxT][nBins];
         for(int i = 0; i < maxT; i++)
             for(int j = 0; j < nBins; j++) 
-                t[i][j] = new VarIntLS(mgr, 0, 1);
+                Y[i][j] = new VarIntLS(mgr, 0, 1);
         for(int i = 0; i < nItems; i++) 
             for(int j = 0; j < nBins; j++)
-                S.post(new Implicate(new IsEqual(x[i][j], 1), new IsEqual(t[input.getItems()[i].getT()][j], 1)));
+                S.post(new Implicate(new IsEqual(X[i][j], 1), new IsEqual(Y[input.getItems()[i].getT()][j], 1)));
         for(int j = 0; j < nBins; j++) {
             VarIntLS[] z = new VarIntLS[maxT];
             for(int i = 0; i < maxT; i++)
-                z[i] = t[i][j];
+                z[i] = Y[i][j];
             S.post(new LessOrEqual(new SumVar(z), input.getBins()[j].getT()));
         }
         
@@ -123,17 +123,17 @@ public class Demo_LocalSearch_Model1 {
                 maxR = input.getItems()[i].getR();
         }
         maxR++;
-        VarIntLS[][] r = new VarIntLS[maxR][nBins];
+        VarIntLS[][] Z = new VarIntLS[maxR][nBins];
         for(int i = 0; i < maxR; i++)
             for(int j = 0; j < nBins; j++) 
-                r[i][j] = new VarIntLS(mgr, 0, 1);
+                Z[i][j] = new VarIntLS(mgr, 0, 1);
         for(int i = 0; i < nItems; i++) 
             for(int j = 0; j < nBins; j++)
-                S.post(new Implicate(new IsEqual(x[i][j], 1), new IsEqual(r[input.getItems()[i].getR()][j], 1)));
+                S.post(new Implicate(new IsEqual(X[i][j], 1), new IsEqual(Z[input.getItems()[i].getR()][j], 1)));
         for(int j = 0; j < nBins; j++) {
             VarIntLS[] z = new VarIntLS[maxR];
             for(int i = 0; i < maxR; i++)
-                z[i] = r[i][j];
+                z[i] = Z[i][j];
             S.post(new LessOrEqual(new SumVar(z), input.getBins()[j].getR()));
         }
         
@@ -160,9 +160,9 @@ public class Demo_LocalSearch_Model1 {
             ArrayList<Integer> types = new ArrayList<Integer>();
             ArrayList<Integer> classes = new ArrayList<Integer>();
             for(int i = 0; i < nItems; i++) {
-                W[j] += x[i][j].getValue() * input.getItems()[i].getW();
-                P[j] += x[i][j].getValue() * input.getItems()[i].getP();
-                if(x[i][j].getValue() == 1) {
+                W[j] += X[i][j].getValue() * input.getItems()[i].getW();
+                P[j] += X[i][j].getValue() * input.getItems()[i].getP();
+                if(X[i][j].getValue() == 1) {
                     if(!types.contains(input.getItems()[i].getT())) {
                         T[j]++;
                         types.add(input.getItems()[i].getT());
@@ -178,7 +178,7 @@ public class Demo_LocalSearch_Model1 {
             System.out.println("Bin " + j + ": ");
             System.out.print("\tLoadedItems: ");
             for(int i = 0; i < nItems; i++) 
-                if(x[i][j].getValue() == 1)
+                if(X[i][j].getValue() == 1)
                     System.out.print(i + " ");
             System.out.println();
             System.out.println("\tLoadedW : " + W[j]);
@@ -193,7 +193,7 @@ public class Demo_LocalSearch_Model1 {
         int[] binOfItem = new int[nItems];
         for(int j = 0; j < nBins; j++) 
             for(int i = 0; i < nItems; i++) 
-                if(x[i][j].getValue() == 1)
+                if(X[i][j].getValue() == 1)
                     binOfItem[i] = j;
         S.setBinOfItem(binOfItem);
         Gson gson = new Gson();

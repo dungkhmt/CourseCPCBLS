@@ -179,3 +179,56 @@ public class Bin {
 	}
 	
 }
+for (int i = 0; i < numI; i++) {
+//			solution[i] = -1;
+//		}
+//		boolean[] binTake = new boolean[numBin];
+//		boolean[] itemsTake = new boolean[numBin];
+//		// Choose the bin to intialize the solution.
+//		int numItemsTake = 0;
+//
+//		while (numItemsTake < numI) {
+//			int bin = r.nextInt(numBin);
+//			while (binTake[bin]) {
+//				bin = r.nextInt(numBin);
+//			}
+//			binTake[bin] = true;
+//			// Lay nhung item co binindice bang bin
+//			ArrayList<Integer> itemInBins = new ArrayList<>();
+//			for (int i = 0; i < numI; i++) {
+//				if (itemsTake[i]) {
+//					for (int j = 0; j < items[i].getBinIndices().length; j++) {
+//						if (items[i].getBinIndices()[j] == bin) {
+//							itemInBins.add(i);
+//						}
+//					}
+//				}
+//			}
+//			// xep cac item vao bin sao cho thoa man minload va maxload
+//			double W = 0;
+//			int time = 0;
+//			
+//			while (check(I, solution) != 0 || W > bins[bin].getMinLoad()) {
+//				int item = r.nextInt(itemInBins.size());
+//				solution[itemInBins.get(item)] = bin;
+//				itemsTake[itemInBins.get(item)] = true;
+//				while (check(I, solution) > binViol && itemsTake[itemInBins.get(item)]) {
+//					solution[item] = -1;
+//					itemsTake[itemInBins.get(item)] = false;
+//					item = r.nextInt(itemInBins.size());
+//					solution[itemInBins.get(item)] = bin;
+//					itemsTake[itemInBins.get(item)] = true;
+//					System.out.println(check(I, solution));
+//				}
+//				time++;
+//				if (time > 20) {
+//					break;
+//				}
+//			}
+//			
+//			
+//			
+//			
+//			
+//
+//		}
