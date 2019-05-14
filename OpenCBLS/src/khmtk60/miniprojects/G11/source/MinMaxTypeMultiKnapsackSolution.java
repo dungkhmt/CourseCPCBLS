@@ -459,7 +459,7 @@ public class MinMaxTypeMultiKnapsackSolution {
 			System.out.println("Gen " + i + ":\t " + bestFiness + ":\t" + numITems);
 
 			// printSolution( pop.get(bestFinessIndex).getChromosome());
-			pop.get(bestFinessIndex).setChromosome(climbing(numI, pop.get(bestFinessIndex).getChromosome(), 1000, r));
+			pop.get(bestFinessIndex).setChromosome(climbing(numI, pop.get(bestFinessIndex).getChromosome(), 100, r));
 			// add the best Individual of old Population to new
 			// Population
 			offPop.set(r.nextInt(popSize), pop.get(bestFinessIndex));
@@ -475,7 +475,7 @@ public class MinMaxTypeMultiKnapsackSolution {
 			}
 
 		}
-		filePrintOut(pop.get(bestFinessIndex).getChromosome(), "3000ha.txt");
+		filePrintOut(pop.get(bestFinessIndex).getChromosome(), "3000.txt");
 		System.out.println("Best Fitness:\t " + bestFiness);
 	}
 
@@ -619,15 +619,20 @@ public class MinMaxTypeMultiKnapsackSolution {
 
 	public static void main(String[] args) {
 		Random rand = new Random();
-		rand.setSeed(2);
+		int numRun = 4;
 		int popSize = 200;
 		String path = "MinMaxTypeMultiKnapsackInput-1000.json";
-		String path1 = "src/khmtk60/miniprojects/multiknapsackminmaxtypeconstraints/model/MinMaxTypeMultiKnapsackInput-1000.json";
+		String path1 = "src/khmtk60/miniprojects/multiknapsackminmaxtypeconstraints/model/3000.json";
 		MinMaxTypeMultiKnapsackSolution minMaxType = new MinMaxTypeMultiKnapsackSolution();
 		minMaxType.readData(path1);
-		minMaxType.GA(minMaxType.numI, popSize, 500, 0.3, 0.8, rand);
-		int[] sol = minMaxType.readFileOut("1000.txt");
-		System.out.println(minMaxType.calItems(minMaxType.I, sol));
+		for (int i = 0; i <numRun ; i++) {
+			rand.setSeed(i);
+			minMaxType.GA(minMaxType.numI, popSize, 5, 0.3, 0.8, rand);
+		}
+	
+		
+//		int[] sol = minMaxType.readFileOut("3000.txt");
+//		System.out.println(minMaxType.calItems(minMaxType.I, sol));
 	}
 
 }
