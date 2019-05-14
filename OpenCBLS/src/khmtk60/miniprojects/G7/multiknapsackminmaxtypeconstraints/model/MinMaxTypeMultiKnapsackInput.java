@@ -1,10 +1,11 @@
 package khmtk60.miniprojects.G7.multiknapsackminmaxtypeconstraints.model;
 
-import com.google.gson.Gson;
-
 import java.io.FileReader;
 import java.io.PrintWriter;
 import java.io.Reader;
+
+
+import com.google.gson.Gson;
 
 public class MinMaxTypeMultiKnapsackInput {
 	private MinMaxTypeMultiKnapsackInputItem[] items;

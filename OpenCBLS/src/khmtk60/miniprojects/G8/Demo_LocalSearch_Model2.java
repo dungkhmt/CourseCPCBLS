@@ -30,11 +30,11 @@ public class Demo_LocalSearch_Model2 {
     int nBins;
     
     LocalSearchManager mgr;
-    VarIntLS[] x;
+    VarIntLS[] X;
     ConstraintSystem S;
     
     public void input() {
-    	String inputFile = "./src/khmtk60/miniprojects/G8/inputoutputdata/MinMaxTypeMultiKnapsackInput-1000.json";
+    	String inputFile = "./src/khmtk60/miniprojects/G8/InputOutputData/MinMaxTypeMultiKnapsackInput-16.json";
         input = new MinMaxTypeMultiKnapsackInput().loadFromFile(inputFile);
         nItems = input.getItems().length;
         nBins = input.getBins().length;
@@ -42,9 +42,9 @@ public class Demo_LocalSearch_Model2 {
     
     public void stateModel() {
         mgr = new LocalSearchManager();
-        x = new VarIntLS[nItems];
+        X = new VarIntLS[nItems];
         for(int i = 0; i < nItems; i++)
-            x[i] = new VarIntLS(mgr, 0, nBins-1); 
+            X[i] = new VarIntLS(mgr, 0, nBins-1); 
         S = new ConstraintSystem(mgr);
         
         // cac bin ma mot item co the xep vao
@@ -52,7 +52,7 @@ public class Demo_LocalSearch_Model2 {
             int[] binIndices = input.getItems()[i].getBinIndices();
             IConstraint[] I = new IConstraint[binIndices.length];
             for(int j = 0; j < binIndices.length; j++) 
-                I[j] = new IsEqual(x[i], binIndices[j]);
+                I[j] = new IsEqual(X[i], binIndices[j]);
             S.post(new OR(I));
         }
         
@@ -62,7 +62,7 @@ public class Demo_LocalSearch_Model2 {
         for(int i = 0; i < nItems; i++)
             w[i] = (int) input.getItems()[i].getW();
         for(int j = 0; j < nBins; j++) {
-            W[j] = new ConditionalSum(x, w, j);
+            W[j] = new ConditionalSum(X, w, j);
             S.post(new LessOrEqual(W[j],(int) input.getBins()[j].getCapacity()));
             S.post(new LessOrEqual((int) input.getBins()[j].getMinLoad(), W[j]));
         }
@@ -73,7 +73,7 @@ public class Demo_LocalSearch_Model2 {
         for(int i = 0; i < nItems; i++)
             p[i] = (int) input.getItems()[i].getP();
         for(int j = 0; j < nBins; j++) {
-            P[j] = new ConditionalSum(x, p, j);
+            P[j] = new ConditionalSum(X, p, j);
             S.post(new LessOrEqual(P[j],(int) input.getBins()[j].getP()));
         }
         
@@ -84,17 +84,17 @@ public class Demo_LocalSearch_Model2 {
                 maxT = input.getItems()[i].getT();
         }
         maxT++;
-        VarIntLS[][] t = new VarIntLS[maxT][nBins];
+        VarIntLS[][] Y = new VarIntLS[maxT][nBins];
         for(int i = 0; i < maxT; i++)
             for(int j = 0; j < nBins; j++) 
-                t[i][j] = new VarIntLS(mgr, 0, 1);
+                Y[i][j] = new VarIntLS(mgr, 0, 1);
         for(int i = 0; i < nItems; i++) 
             for(int j = 0; j < nBins; j++)
-                S.post(new Implicate(new IsEqual(x[i], j), new IsEqual(t[input.getItems()[i].getT()][j], 1)));
+                S.post(new Implicate(new IsEqual(X[i], j), new IsEqual(Y[input.getItems()[i].getT()][j], 1)));
         for(int j = 0; j < nBins; j++) {
             VarIntLS[] z = new VarIntLS[maxT];
             for(int i = 0; i < maxT; i++)
-                z[i] = t[i][j];
+                z[i] = Y[i][j];
             S.post(new LessOrEqual(new SumVar(z), input.getBins()[j].getT()));
         }
         
@@ -105,17 +105,17 @@ public class Demo_LocalSearch_Model2 {
                 maxR = input.getItems()[i].getR();
         }
         maxR++;
-        VarIntLS[][] r = new VarIntLS[maxR][nBins];
+        VarIntLS[][] Z = new VarIntLS[maxR][nBins];
         for(int i = 0; i < maxR; i++)
             for(int j = 0; j < nBins; j++) 
-                r[i][j] = new VarIntLS(mgr, 0, 1);
+                Z[i][j] = new VarIntLS(mgr, 0, 1);
         for(int i = 0; i < nItems; i++) 
             for(int j = 0; j < nBins; j++)
-                S.post(new Implicate(new IsEqual(x[i], j), new IsEqual(r[input.getItems()[i].getR()][j], 1)));
+                S.post(new Implicate(new IsEqual(X[i], j), new IsEqual(Z[input.getItems()[i].getR()][j], 1)));
         for(int j = 0; j < nBins; j++) {
             VarIntLS[] z = new VarIntLS[maxR];
             for(int i = 0; i < maxR; i++)
-                z[i] = r[i][j];
+                z[i] = Z[i][j];
             S.post(new LessOrEqual(new SumVar(z), input.getBins()[j].getR()));
         }
         
@@ -130,7 +130,7 @@ public class Demo_LocalSearch_Model2 {
     public void search() {
         HillClimbing h = new HillClimbing();
         h.hillClimbing(S, 10000);
-        //tabuSearch(10000);
+        //tabuSearch(100000);
     }
     
     public void display() {
@@ -141,7 +141,7 @@ public class Demo_LocalSearch_Model2 {
             System.out.println("Bin " + j + ": ");
             System.out.print("\tLoadedItems: ");
             for(int i = 0; i < nItems; i++) {
-                if(x[i].getValue() == j){
+                if(X[i].getValue() == j){
                     System.out.print(i + " ");
                     W += input.getItems()[i].getW();
                     P += input.getItems()[i].getP();
@@ -165,9 +165,9 @@ public class Demo_LocalSearch_Model2 {
     
     public void outputFile() {
     	MinMaxTypeMultiKnapsackSolution S = new MinMaxTypeMultiKnapsackSolution();
-        int[] binOfItem = new int[x.length];
-        for(int i = 0; i < x.length; i++)
-        	binOfItem[i] = x[i].getValue();
+        int[] binOfItem = new int[X.length];
+        for(int i = 0; i < X.length; i++)
+        	binOfItem[i] = X[i].getValue();
         S.setBinOfItem(binOfItem);
         Gson gson = new Gson();
 		try (FileWriter writer = new FileWriter("./src/khmtk60/miniprojects/G8/outputLS2.json")) {

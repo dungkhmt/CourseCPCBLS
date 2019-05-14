@@ -1,4 +1,4 @@
-package localsearch.model;
+package khmtk60.miniprojects.G2.src.localsearch.model;
 
 public interface IFloatConstraint extends FloatInvariant{
 	public float violations();

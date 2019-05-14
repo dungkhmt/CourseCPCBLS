@@ -40,9 +40,6 @@ public class Use_2d_arr {
 	int int_p_bin[];
 	int int_minload[];
 	int boiso = 10000;
-	public Use_2d_arr() {
-		super();
-	}
 	
 	public Use_2d_arr(
 			MinMaxTypeMultiKnapsackInputBin[] bins, MinMaxTypeMultiKnapsackInputItem[] items, double[] capacity,
@@ -123,15 +120,7 @@ public class Use_2d_arr {
 		}
 		return new_arr;
 	}
-	LocalSearchManager mgr;
-	ConstraintSystem S;
-	private VarIntLS[][] x;
-    private VarIntLS[][] Y;
-    private VarIntLS[][] Z;
-    int n;
-    int m;
-    int mt;
-    int mr;
+	
     class AssignMove{
 	    int i;
 	    int v;
@@ -195,7 +184,15 @@ public class Use_2d_arr {
 		}
 	}
    
-
+	LocalSearchManager mgr;
+	ConstraintSystem S;
+	private VarIntLS[][] x;
+    private VarIntLS[][] Y;
+    private VarIntLS[][] Z;
+    int n;
+    int m;
+    int mt;
+    int mr;
 	public void stateModel() {
 		 mgr = new LocalSearchManager();
 		 S = new ConstraintSystem(mgr);
@@ -210,7 +207,7 @@ public class Use_2d_arr {
 	     for (int i = 0 ; i < n; i++){
 	            for (int j = 0; j < m; j++) {
 	                x[i][j] = new VarIntLS(mgr, 0, 1);
-	                //x[i][j].setValue(rd.nextInt(2));
+	                x[i][j].setValue(rd.nextInt(2));
 
 	            }
 	        }
@@ -218,14 +215,14 @@ public class Use_2d_arr {
 	        for (int i = 0 ; i < mt; i++){
 	            for (int j= 0; j < m; j++) {
 	                Y[i][j] = new VarIntLS(mgr, 0 , 1);
-	                //Y[i][j].setValue(rd.nextInt(2));
+	                Y[i][j].setValue(rd.nextInt(2));
 	            }
 	        }
 	        //init Z
 	        for (int i = 0 ; i < mr; i++){
 	            for (int j = 0; j < m; j++) {
 	                Z[i][j] = new VarIntLS(mgr,0,1);
-	                //Z[i][j].setValue(rd.nextInt(2));
+	                Z[i][j].setValue(rd.nextInt(2));
 	            }
 	        }
 	        

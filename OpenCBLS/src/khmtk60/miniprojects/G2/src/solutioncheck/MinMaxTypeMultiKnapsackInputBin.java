@@ -1,4 +1,4 @@
-package solutioncheck;
+package khmtk60.miniprojects.G2.src.solutioncheck;
 
 public class MinMaxTypeMultiKnapsackInputBin {
 	private double capacity;

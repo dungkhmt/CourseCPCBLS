@@ -1,6 +1,6 @@
-package search;
+package khmtk60.miniprojects.G2.src.search;
 
-import localsearch.model.*;
+import khmtk60.miniprojects.G2.src.localsearch.model.*;
 
 public class OneVariableValueMove extends Move {
 

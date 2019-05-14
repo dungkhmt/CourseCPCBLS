@@ -1,6 +1,8 @@
-package localsearch.model;
 
-import core.BasicEntity;
+
+package khmtk60.miniprojects.G2.src.localsearch.model;
+
+import khmtk60.miniprojects.G2.src.core.BasicEntity;
 
 public abstract class FloatAbstractInvariant extends BasicEntity implements FloatInvariant {
 

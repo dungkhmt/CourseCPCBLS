@@ -1,10 +1,10 @@
-package search;
+package khmtk60.miniprojects.G2.src.search;
 
 import java.util.ArrayList;
 import java.util.Random;
 
-import localsearch.model.IFloatConstraint;
-import localsearch.model.VarIntLS;
+import khmtk60.miniprojects.G2.src.localsearch.model.IFloatConstraint;
+import khmtk60.miniprojects.G2.src.localsearch.model.VarIntLS;
 
 public class MinMaxSelector {
 	private IFloatConstraint _S;
