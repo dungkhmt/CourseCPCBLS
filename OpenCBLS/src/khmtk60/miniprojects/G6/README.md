@@ -1,3 +1,3 @@
 mini-projects
-Cach 1: GeneticAlgorithm.java
-Cach 2: MiniProject.java
+<p>Cach 1: GeneticAlgorithm.java</p>
+<p>Cach 2: MiniProject.java</p>
