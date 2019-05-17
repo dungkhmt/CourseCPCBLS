@@ -92,13 +92,49 @@ public class Solution {
 	}
 
 	// item rieng le search 2
-	public void solution3() {
+	public void solution3(int size) {
+		String separatedInput = "src/khmtk60/miniprojects/G17/data/MinMaxTypeMultiKnapsackInput-" + size + ".json";
 
+		State2 st = new State2();
+
+		st.initialize(separatedInput);
+
+		int[] finalSolution = st.search2();
+
+		checkSolution(finalSolution, separatedInput);
+
+		MinMaxTypeMultiKnapsackSolution solution = new MinMaxTypeMultiKnapsackSolution();
+		solution.setBinOfItem(finalSolution);
+
+		saveAsJson(solution, "src/khmtk60/miniprojects/G17/data/solution3-" + size + ".json");
 	}
 
 	// item group search 2
-	public void solution4() {
+	public void solution4(int size) {
+		String groupInput = "src/khmtk60/miniprojects/G17/data/group-" + size + ".json";
+		String separatedInput = "src/khmtk60/miniprojects/G17/data/MinMaxTypeMultiKnapsackInput-" + size + ".json";
+		String decomposeInput = "src/khmtk60/miniprojects/G17/data/decompose-" + size + ".json";
+		State2 st = new State2();
 
+		st.initialize(groupInput);
+		int[] binOfItems = st.search2();
+
+		Decompose D = loadFromFile(decomposeInput);
+
+		checkSolution(binOfItems, groupInput);
+
+		int[] decomposedBinOfItems = D.decompose(binOfItems);
+
+		st.initialize(separatedInput);
+		st.loadBinOfItems(decomposedBinOfItems);
+		int[] finalSolution = st.search2();
+
+		checkSolution(finalSolution, separatedInput);
+
+		MinMaxTypeMultiKnapsackSolution solution = new MinMaxTypeMultiKnapsackSolution();
+		solution.setBinOfItem(finalSolution);
+
+		saveAsJson(solution, "src/khmtk60/miniprojects/G17/data/solution4-" + size + ".json");
 	}
 
 	public static void main(String[] args) {
@@ -107,5 +143,7 @@ public class Solution {
 		// s.solution1(3000);
 		s.solution2(1000);
 		// s.solution2(3000);
+
+		// s.solution4(1000);
 	}
 }
