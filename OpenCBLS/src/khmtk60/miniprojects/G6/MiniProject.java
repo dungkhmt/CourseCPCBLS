@@ -1021,6 +1021,7 @@ public class MiniProject {
 			}
 		}
 		C.printResult();
+		Utilities.printJson(C.X, "output.json");
 	}
 
 }

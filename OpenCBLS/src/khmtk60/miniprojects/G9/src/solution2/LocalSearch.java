@@ -212,6 +212,8 @@ public class LocalSearch {
                 }
             }
         }
+        
+      
 
 
     }
@@ -236,7 +238,7 @@ public class LocalSearch {
             if(b.getSizeT() > T[X[idx]]) violIdxS++;
             b.getR().remove(b.getR().indexOf(r[idx]));
             if(b.getSizeR() > R[X[idx]]) violIdxS++;
-            return violIdxS+violBinS-violBinT-violIdxT;
+            return violIdxS+1-violBinT-violIdxT;
         }else {
             Bin b1 = map.get(X[idx]);
             Bin b2 = map.get(bin);
@@ -335,9 +337,9 @@ public class LocalSearch {
     }
 
     public void solve(){
-        readDataJson("data/MinMaxTypeMultiKnapsackInput-3000.json");
+        readDataJson("data/MinMaxTypeMultiKnapsackInput-1000.json");
         initX();
-        HillClimbing(18);
+        HillClimbing(20);
         checkResult();
 //        printOutPut();
     }

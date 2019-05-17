@@ -63,10 +63,10 @@ public class Individual {
 	
 	public void heuristicInit(int m, int n, int mt, int mr, double[] W, double[] LW, double[] P, int[] T, int[] R, ArrayList<ArrayList<Integer>> binIndices, double[] w, double[] p, int[] t, int[] r) {
 		// Code init kieu Heuristic
-		float[] w_bin_current = new float[m];
-		float[] p_bin_current = new float[m];
-		int[] t_bin_current = new int[m];
-		int[] r_bin_current = new int[m];
+		float[] currentSumW = new float[m];
+		float[] currentSumP = new float[m];
+		int[] currentSumT = new int[m];
+		int[] currentSumR = new int[m];
 		
 		ArrayList<Set<Integer>> typeBin = new ArrayList<>();
 		ArrayList<Set<Integer>> classBin = new ArrayList<>();
@@ -90,16 +90,16 @@ public class Individual {
 //				int idx = tempBinofItem.get(currentIndex);
 				int idx = tempBinofItem.get(tempi);
 				
-				if (w_bin_current[idx] + w[i] <= W[idx] && p_bin_current[idx] + p[i] <= P[idx]) {
-					if ((t_bin_current[idx] > T[idx]) || (r_bin_current[idx] > R[idx])) {
+				if (currentSumW[idx] + w[i] <= W[idx] && currentSumP[idx] + p[i] <= P[idx]) {
+					if ((currentSumT[idx] > T[idx]) || (currentSumR[idx] > R[idx])) {
 //						tempBinofItem.remove(currentIndex);
 						continue;
 					}
-					else if ((!classBin.get(idx).contains(r[i]) && (r_bin_current[idx] == R[idx]))) {
+					else if ((!classBin.get(idx).contains(r[i]) && (currentSumR[idx] == R[idx]))) {
 //						tempBinofItem.remove(currentIndex);
 						continue;
 					}
-					else if ((!typeBin.get(idx).contains(t[i]) && (t_bin_current[idx] == T[idx]))) {
+					else if ((!typeBin.get(idx).contains(t[i]) && (currentSumT[idx] == T[idx]))) {
 //						tempBinofItem.remove(currentIndex);
 						continue;
 					}
@@ -108,10 +108,10 @@ public class Individual {
 							Indiv[i] = new Gene(i, idx, w[i], p[i], t[i], r[i]);
 //							tempBinofItem.remove(currentIndex);
 							
-							w_bin_current[idx] += w[i];
-							p_bin_current[idx] += p[i];
+							currentSumW[idx] += w[i];
+							currentSumP[idx] += p[i];
 							if (!classBin.get(idx).contains(r[i])) {
-								r_bin_current[idx] += 1;
+								currentSumR[idx] += 1;
 								classBin.get(idx).add(r[i]);
 								break;
 							}
@@ -120,11 +120,11 @@ public class Individual {
 							Indiv[i] = new Gene(i, idx, w[i], p[i], t[i], r[i]);
 //							tempBinofItem.remove(currentIndex);
 							
-							w_bin_current[idx] += w[i];
-							p_bin_current[idx] += p[i];
+							currentSumW[idx] += w[i];
+							currentSumP[idx] += p[i];
 							if (!classBin.get(idx).contains(r[i])) {
 								typeBin.get(idx).add(r[i]);
-								r_bin_current[idx] += 1;
+								currentSumR[idx] += 1;
 								classBin.get(idx).add(r[i]);
 								break;
 							}
