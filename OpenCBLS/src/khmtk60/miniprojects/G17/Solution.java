@@ -60,7 +60,7 @@ public class Solution {
 		MinMaxTypeMultiKnapsackSolution solution = new MinMaxTypeMultiKnapsackSolution();
 		solution.setBinOfItem(finalSolution);
 
-		saveAsJson(solution, "solution1-" + size + ".json");
+		saveAsJson(solution, "src/khmtk60/miniprojects/G17/data/solution1-" + size + ".json");
 	}
 
 	// item group search 1
@@ -94,47 +94,49 @@ public class Solution {
 	// item rieng le search 2
 	public void solution3(int size) {
 		String separatedInput = "src/khmtk60/miniprojects/G17/data/MinMaxTypeMultiKnapsackInput-" + size + ".json";
-
+		String itIdenx = "src/khmtk60/miniprojects/G17/data/itemsIndices-" + size +"1846.json" ;
 		State2 st = new State2();
 
-		st.initialize(separatedInput);
+		st.initialize(separatedInput,itIdenx);
 
 		int[] finalSolution = st.search2();
 
 		checkSolution(finalSolution, separatedInput);
 
-		MinMaxTypeMultiKnapsackSolution solution = new MinMaxTypeMultiKnapsackSolution();
-		solution.setBinOfItem(finalSolution);
-
-		saveAsJson(solution, "src/khmtk60/miniprojects/G17/data/solution3-" + size + ".json");
+//		MinMaxTypeMultiKnapsackSolution solution = new MinMaxTypeMultiKnapsackSolution();
+//		solution.setBinOfItem(finalSolution);
+//
+//		saveAsJson(solution, "src/khmtk60/miniprojects/G17/manh/solution3-" + size + ".json");
 	}
 
 	// item group search 2
 	public void solution4(int size) {
-		String groupInput = "src/khmtk60/miniprojects/G17/data/group-" + size + ".json";
+		String groupInput = "src/khmtk60/miniprojects/G17/data/group-"+size+".json";
 		String separatedInput = "src/khmtk60/miniprojects/G17/data/MinMaxTypeMultiKnapsackInput-" + size + ".json";
 		String decomposeInput = "src/khmtk60/miniprojects/G17/data/decompose-" + size + ".json";
+		
+		String itIdenx_group = "src/khmtk60/miniprojects/G17/data/itemsIndices-group-" + size +"1846.json" ;
+		String itIdenx = "src/khmtk60/miniprojects/G17/data/itemsIndices-" + size +"1846.json" ;
 		State2 st = new State2();
 
-		st.initialize(groupInput);
+		st.initialize(groupInput,itIdenx_group);
 		int[] binOfItems = st.search2();
-
+		
 		Decompose D = loadFromFile(decomposeInput);
-
 		checkSolution(binOfItems, groupInput);
-
 		int[] decomposedBinOfItems = D.decompose(binOfItems);
-
-		st.initialize(separatedInput);
-		st.loadBinOfItems(decomposedBinOfItems);
+//		
+		st.initialize(separatedInput,itIdenx);
+		st.loadBinOfItems(decomposedBinOfItems);	
 		int[] finalSolution = st.search2();
-
 		checkSolution(finalSolution, separatedInput);
-
-		MinMaxTypeMultiKnapsackSolution solution = new MinMaxTypeMultiKnapsackSolution();
-		solution.setBinOfItem(finalSolution);
-
-		saveAsJson(solution, "src/khmtk60/miniprojects/G17/data/solution4-" + size + ".json");
+		
+		
+		
+//		MinMaxTypeMultiKnapsackSolution solution = new MinMaxTypeMultiKnapsackSolution();
+//		solution.setBinOfItem(finalSolution);
+//
+//		saveAsJson(solution, "src/khmtk60/miniprojects/G17/manh/solution4-1000-lan2" + size + ".json");
 	}
 
 	public static void main(String[] args) {
@@ -143,7 +145,22 @@ public class Solution {
 		// s.solution1(3000);
 		s.solution2(1000);
 		// s.solution2(3000);
-
-		// s.solution4(1000);
+		// try {
+		// System.setOut(new PrintStream(new
+		// File("src/khmtk60/miniprojects/G17/manh/lan1-3000.txt")));
+		// } catch (Exception e) {
+		//
+		// e.printStackTrace();
+		// }
+		// s.solution4(3000);
+		
+		// try {
+		// System.setOut(new PrintStream(new
+		// File("src/khmtk60/miniprojects/G17/manh/riengre-3000.txt")));
+		// } catch (Exception e) {
+		//
+		// e.printStackTrace();
+		// }
+		// s.solution3(3000);
 	}
 }
