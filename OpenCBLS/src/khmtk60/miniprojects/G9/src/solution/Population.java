@@ -9,19 +9,19 @@ public class Population {
 	int numPopu = 200;
 	int numMutate = 0;
 	double fixedCrossRate = 0.5;
-	double fixedMutateRate = 0.1;
+	double fixedMutateRate = 0.9;
 	
 	ArrayList<Individual> Popu;
 	
 	public Population(int m, int n, int mt, int mr, double[] W, double[] LW, double[] P, int[] T, int[] R, ArrayList<ArrayList<Integer>> binIndices, double[] w, double[] p, int[] t, int[] r) {
-		numMutate = n * 50/100;
+		numMutate = n * 20/100;
 		
 		this.Popu = new ArrayList<Individual>();
-		for (int i=0; i<numPopu/2; i++) {
+		for (int i=0; i<numPopu*95/100; i++) {
 			Individual newIndi = new Individual("random", m, n, mt, mr, W, LW, P, T, R, binIndices, w, p, t, r);
 			this.Popu.add(newIndi);
 		}
-		for (int i=numPopu/2; i<numPopu; i++) {
+		for (int i=numPopu*95/100; i<numPopu; i++) {
 			Individual newIndi = new Individual("heuristic", m, n, mt, mr, W, LW, P, T, R, binIndices, w, p, t, r);
 			this.Popu.add(newIndi);
 		}
@@ -49,7 +49,7 @@ public class Population {
 			//Mutation
 			mutateRate = Math.random();
 			if(mutateRate > fixedMutateRate) {
-				mutate(inputPopu, Popu.get(i), m, n, mt, mr, W, LW, P, T, R, binIndices, w, p, t, r);
+				mutateHeuristic(inputPopu, Popu.get(i), m, n, mt, mr, W, LW, P, T, R, binIndices, w, p, t, r);
 			}
 		}
 		
@@ -119,6 +119,49 @@ public class Population {
 		inputPopu.add(XMen);
 	}
 	
+	public void mutateHeuristic(ArrayList<Individual> inputPopu, Individual hooman, int m, int n, int mt, int mr, double[] W, double[] LW, double[] P, int[] T, int[] R, ArrayList<ArrayList<Integer>> binIndices, double[] w, double[] p, int[] t, int[] r) {
+		Random Rand = new Random();
+		ArrayList<Integer> listBin = new ArrayList<Integer>();
+		for (int i=0; i<m; i++) {
+			if (hooman.sumWeight[i] <= W[i] && hooman.sumWeight[i] >= LW[i] && hooman.sumPrice[i] <= P[i] && hooman.sumType[i] <= T[i] && hooman.sumRank[i] <= R[i]) {
+				listBin.add(i);
+			}
+		}
+		
+		int[] mutateGene = new int[numMutate];
+		for (int i=0; i<numMutate; i++) {
+			mutateGene[i] = Rand.nextInt(hooman.Indiv.length);
+		}
+		Individual XMen = new Individual("random", m, n, mt, mr, W, LW, P, T, R, binIndices, w, p, t, r);
+		
+		for (int i=0; i<numMutate; i++) {
+//			int binIndex = Rand.nextInt(binIndices.get(mutateGene[i]).size()+1) - 1;
+			int binIndex = 0;
+			for (int k=0; k<binIndices.get(mutateGene[i]).size(); k++) {
+				if (binIndices.get(mutateGene[i]).get(k) == hooman.Indiv[mutateGene[i]].bin) {
+					binIndex = k;
+				}
+			}
+			// Khi nao random ra mot bin sai (Khong nam trong listBin) thi chon
+			for (int j=0; j<binIndices.get(mutateGene[i]).size(); j++) {
+				if (!listBin.contains(binIndices.get(mutateGene[i]).get(j))) {
+					binIndex = j;
+				}
+			}
+			
+			if (binIndex != -1 && binIndices.get(mutateGene[i]).get(binIndex) != hooman.Indiv[mutateGene[i]].bin && (!listBin.contains(hooman.Indiv[mutateGene[i]].bin))) {
+				XMen.Indiv[mutateGene[i]].bin = binIndices.get(mutateGene[i]).get(binIndex);
+			}
+			else if (binIndex == -1) {
+				XMen.Indiv[mutateGene[i]].bin = -1;
+			}
+		}
+		
+		XMen.violations = XMen.calculateViolations(m, n, mt, mr, W, LW, P, T, R);
+		
+		inputPopu.add(XMen);
+	}
+	
 	public void selection(ArrayList<Individual> inputPopu) {
 		// Giu lai 50% ca the tot nhat con lai lay random
 		quickSort(inputPopu, 0, inputPopu.size()-1);
@@ -158,27 +201,6 @@ public class Population {
 		currentIndiv = this.Popu.get(0);
 
 		for (int i = 0; i < m; i++) {
-//			VarIntLS[] y = new VarIntLS[n];
-//			float sum_w = 0;
-//			float sum_p = 0;
-//			float sum_t = 0;
-//			float sum_r = 0;
-//			for (int j = 0; j < n; j++) {
-//				y[j] = X[j][i];
-//			}
-//			Set<Integer> ty = new HashSet<>();
-//			Set<Integer> cl = new HashSet<>();
-//			for (int k = 0; k < y.length; k++) {
-//				int value = y[k].getValue();
-//				if (value == 1) {
-//					sum_w += w[k];
-//					sum_p += p[k];
-//					ty.add(t[k]);
-//					cl.add(r[k]);
-//					sum_t = ty.size();
-//					sum_r = cl.size();
-//				}
-//			}
 
 			if (currentIndiv.sumWeight[i] <= W[i] && currentIndiv.sumWeight[i] >= LW[i] && currentIndiv.sumPrice[i] <= P[i] && currentIndiv.sumType[i] <= T[i] && currentIndiv.sumRank[i] <= R[i]) {
 				listBin.add(i);
@@ -189,14 +211,6 @@ public class Population {
 		}
 		
 		int sum = 0;
-//		for (int i = 0; i < listBin.size(); i++) {
-//			for (int j = 0; j < n; j++) {
-//				if (X[j][listBin.get(i)].getValue() == 1) {
-//					sum++;
-//					itemSave.add(j);
-//				}
-//			}
-//		}
 		for (int b=0; b<listBin.size(); b++) {
 			for (int i=0; i<n; i++) {
 				if (currentIndiv.Indiv[i].bin == listBin.get(b)) {

@@ -18,72 +18,6 @@ class AssignMove{
     }
 }
 
-class Bin{
-    private double w;
-    private double p;
-    private List<Integer> t;
-    private List<Integer> r;
-    public Bin(double w, double p) {
-        this.w = w;
-        this.p = p;
-        t = new ArrayList<>();
-        r = new ArrayList<>();
-    }
-
-    public List<Integer> getT() {
-        return t;
-    }
-
-    public double getW() {
-        return w;
-    }
-
-    public void setW(double w) {
-        this.w = w;
-    }
-
-    public double getP() {
-        return p;
-    }
-
-    public void setP(double p) {
-        this.p = p;
-    }
-
-    public List<Integer> getR() {
-        return r;
-    }
-
-    public void setT(List<Integer> t) {
-        this.t = t;
-    }
-
-    public void setR(List<Integer> r) {
-        this.r = r;
-    }
-
-    public void chageW(double w){
-        this.w +=w;
-    }
-
-    public void chageP(double p){
-        this.p +=p;
-    }
-
-    public int getSizeT(){
-        Set<Integer> set = new HashSet<>();
-        set.addAll(this.t);
-        return set.size();
-    }
-
-    public int getSizeR(){
-        Set<Integer> set = new HashSet<>();
-        set.addAll(this.r);
-        return set.size();
-    }
-
-}
-
 public class LocalSearch {
 
     private int[] X;
@@ -191,32 +125,67 @@ public class LocalSearch {
             if (list.get(i).getP() > P[i]) totalViol++;
             if (list.get(i).getSizeT() > T[i]) totalViol++;
             if (list.get(i).getSizeR() > R[i]) totalViol++;
+
         }
         return totalViol;
     }
 
     public void initX(){
         X= new int[n];
+
+        HashMap<Integer,Bin> listHashMap = new HashMap<>();
+        for (int i=0; i <n; i++){
+            listHashMap.put(r[i],addItem(listHashMap,r[i],w[i],p[i],t[i],r[i]));
+        }
+
+        double maxW = Double.MIN_VALUE;
+        for (Integer i : listHashMap.keySet()){
+            if (listHashMap.get(i).getW() > maxW){
+                maxW=listHashMap.get(i).getW();
+            }
+        }
+        for (int i = 0; i < binIndices.size(); i++){
+            for (int j =0; j < binIndices.get(i).size(); j++){
+                if (LW[binIndices.get(i).get(j)]>maxW){
+                    binIndices.get(i).remove(j);
+                }
+//                if(P[binIndices.get(i).get(j)]<0) {
+//                    binIndices.get(i).remove(j);
+//                }
+            }
+        }
+
+
+
         HashMap<Integer, Bin> map = new HashMap<>();
         for(int i = 0; i < n; i++) {
-            for(int bin : binIndices.get(i)) {
-                X[i]=bin;
-                map.put(bin, addItem(map, bin, w[i],p[i],t[i],r[i]));
-                Bin b = map.get(bin);
-                if (b.getW() <= W[bin] && b.getP() <=P[bin]
-                        && b.getSizeT()<=T[bin] && b.getSizeR() <= R[bin]) {
-                    break;
-                }else {
-                    X[i]=-1;
-                    map.put(bin, removeItem(map, bin, -w[i], -p[i], t[i], r[i]));
+                for (int bin : binIndices.get(i)) {
+
+                        X[i] = bin;
+                        map.put(bin, addItem(map, bin, w[i], p[i], t[i], r[i]));
+                        Bin b = map.get(bin);
+                        if (b.getW() <= W[bin] && b.getP() <= P[bin]
+                                && b.getSizeT() <= T[bin] && b.getSizeR() <= R[bin]) {
+                            break;
+                        } else {
+                            X[i] = -1;
+                            map.put(bin, removeItem(map, bin, -w[i], -p[i], t[i], r[i]));
+                        }
+                }
+        }
+
+        int count=0;
+        for(Integer i : map.keySet()){
+            if (LW[i] <= map.get(i).getW()){
+                for (int j =0; j < n; j++){
+                    if (X[j]==i) count++;
                 }
             }
         }
-        
-      
-
+        System.out.println("Init : "+count);
 
     }
+
 
     public int getAssignDelta(HashMap<Integer,Bin> map,int idx, int bin){
         int violIdxT=0;
@@ -284,28 +253,30 @@ public class LocalSearch {
 
             cand.clear();
             int minDelta = Integer.MAX_VALUE;
-            for(int i = 0 ; i < n ; i++) {
-                for( int j = 0; j < binIndices.get(i).size(); j++) {
-                    HashMap<Integer, Bin> map = new HashMap<>();
-                    for(Integer k : list.keySet()){
-                        Bin b = new Bin(list.get(k).getW(), list.get(k).getP());
-                        List<Integer> l =new ArrayList<>();
-                        l.addAll(list.get(k).getT());
-                        b.setT(l);
 
-                        List<Integer> g =new ArrayList<>();
-                        g.addAll(list.get(k).getR());
-                        b.setR(g);
-                        map.put(k,b);
-                    }
-                    int d = getAssignDelta(map,i, binIndices.get(i).get(j));
-                    if(d < minDelta ) {
-                        cand.clear();
-                        cand.add(new AssignMove(i, binIndices.get(i).get(j)));
-                        minDelta = d;
-                    }
-                    else if(d == minDelta) {
-                        cand.add(new AssignMove(i, binIndices.get(i).get(j)));
+            for(int i = 0 ; i < n ; i++) {
+                if(X[i] >=0) {
+                    for (int j = 0; j < binIndices.get(i).size(); j++) {
+                        HashMap<Integer, Bin> map = new HashMap<>();
+                        for (Integer k : list.keySet()) {
+                            Bin b = new Bin(list.get(k).getW(), list.get(k).getP());
+                            List<Integer> l = new ArrayList<>();
+                            l.addAll(list.get(k).getT());
+                            b.setT(l);
+
+                            List<Integer> g = new ArrayList<>();
+                            g.addAll(list.get(k).getR());
+                            b.setR(g);
+                            map.put(k, b);
+                        }
+                        int d = getAssignDelta(map, i, binIndices.get(i).get(j));
+                        if (d < minDelta) {
+                            cand.clear();
+                            cand.add(new AssignMove(i, binIndices.get(i).get(j)));
+                            minDelta = d;
+                        } else if (d == minDelta) {
+                            cand.add(new AssignMove(i, binIndices.get(i).get(j)));
+                        }
                     }
                 }
             }
@@ -319,29 +290,22 @@ public class LocalSearch {
     }
 
     public void printOutPut(){
-        for (int i=0; i<n;i++){
-            System.out.println(X[i]+" : ");
-        }
-//        JSONObject json = new JSONObject();
-//        for (int i=0; i<n;i++){
-//            json.put(i,X[i]);
-//        }
-//        try (FileWriter file = new FileWriter("src/result/result.json")) {
-//
-//            file.write(json.toJSONString());
-//            file.flush();
-//
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-    }
+        JSONObject json = new JSONObject();
 
-    public void solve(){
-        readDataJson("data/MinMaxTypeMultiKnapsackInput-1000.json");
-        initX();
-        HillClimbing(20);
-        checkResult();
-//        printOutPut();
+
+        JSONArray array = new JSONArray();
+        for (int i=0; i <n; i++){
+            array.add(X[i]);
+        }
+        json.put("binOfItem",array);
+        try (FileWriter file = new FileWriter("output/result-3000.json")) {
+
+            file.write(json.toJSONString());
+            file.flush();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public List<Integer> addList(HashMap<Integer , List<Integer>> hashMap, Integer key, Integer value) {
@@ -383,6 +347,14 @@ public class LocalSearch {
             count+=hashMap.get(i).size();
         }
         System.out.println(count);
+    }
+
+    public void solve(){
+        readDataJson("data/MinMaxTypeMultiKnapsackInput-3000.json");
+        initX();
+        HillClimbing(20);
+//        printOutPut();
+        checkResult();
     }
 
 

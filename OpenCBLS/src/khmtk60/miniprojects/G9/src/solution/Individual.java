@@ -63,8 +63,8 @@ public class Individual {
 	
 	public void heuristicInit(int m, int n, int mt, int mr, double[] W, double[] LW, double[] P, int[] T, int[] R, ArrayList<ArrayList<Integer>> binIndices, double[] w, double[] p, int[] t, int[] r) {
 		// Code init kieu Heuristic
-		float[] currentSumW = new float[m];
-		float[] currentSumP = new float[m];
+		double[] currentSumW = new double[m];
+		double[] currentSumP = new double[m];
 		int[] currentSumT = new int[m];
 		int[] currentSumR = new int[m];
 		
@@ -147,8 +147,10 @@ public class Individual {
 	
 	
 	public double calculateViolations(int m, int n, int mt, int mr, double[] W, double[] LW, double[] P, int[] T, int[] R) {
-		int alpha = 100;
+		int alpha = 20;
+		int beta = 100;
 		double viols = 0;
+		
 		
 		violWeight = 0;
 		violLowWeight = 0;
@@ -219,11 +221,16 @@ public class Individual {
 		}
 		
 		for (int b=0; b<m; b++) {
+			int countTrueBin = 0;
+			
 //			viols += Math.max(0, sumWeight[b] - W[b])  +  Math.max(0, LW[b] - sumWeight[b])  +  Math.max(0, sumPrice[b] - P[b])  +  Math.max(0, sumType[b] - T[b]) + Math.max(0, sumRank[b] - R[b]); 
 //			viols += ((sumWeight[b] > W[b])?1:0) + ((LW[b] > sumWeight[b])?1:0) + ((sumPrice[b] > P[b])?1:0) + ((sumType[b] > T[b])?1:0) + ((sumRank[b] > R[b])?1:0);
 			
+			if ((sumWeight[b] <= W[b]) && (LW[b] <= sumWeight[b]) && (sumPrice[b] <= P[b]) && (sumType[b]-T[b] <= 0) && (sumRank[b] - R[b] <= 0)) {
+				countTrueBin += 1;
+			}
 			
-			viols += ((sumWeight[b] > W[b])?1:0) + ((LW[b] > sumWeight[b])?1:0) + ((sumPrice[b] > P[b])?1:0) + alpha * (Math.max(0, sumType[b] - T[b]) + Math.max(0, sumRank[b] - R[b]));
+			viols += ((sumWeight[b] > W[b])?1:0) + ((LW[b] > sumWeight[b])?1:0) + ((sumPrice[b] > P[b])?1:0) + alpha * (((sumType[b] > T[b])?1:0) + ((sumRank[b] > R[b])?1:0)) - beta * countTrueBin;
 			
 			violWeight += ((sumWeight[b] > W[b])?1:0);
 			violLowWeight += ((LW[b] > sumWeight[b])?1:0);

@@ -128,14 +128,58 @@ public class MultiKnapsack {
     	System.out.println();
     	
         MultiKnapsack m = new MultiKnapsack();
-        m.readDataJson("data/MinMaxTypeMultiKnapsackInput-1000.json");
+        m.readDataJson("data/MinMaxTypeMultiKnapsackInput-3000.json");
         System.out.println("So item: " + m.n);
         System.out.println();
         
+        // Xoa bo nhung bin bi sai
+//        HashSet<Integer> setR = new HashSet<Integer>();
+//		for (int i=0; i<m.n; i++) {
+//			setR.add(m.r[i]);
+//		}
+//		
+//		double[] sumWcorrespondingR = new double[setR.size()];
+//		for (int i=0; i<m.n; i++) {
+//			sumWcorrespondingR[m.r[i]] += m.w[i];
+//		}
+//		double maxSumWcuaR = 0;
+//		
+//		for (int i=0; i<sumWcorrespondingR.length; i++) {
+//			if (maxSumWcuaR < sumWcorrespondingR[i]) {
+//				maxSumWcuaR = sumWcorrespondingR[i];
+//			}
+//		}
+//		
+//		ArrayList<Integer> needToBeDeletedBin = new ArrayList<Integer>();
+//		for (int i=0; i<m.m; i++) {
+//			if (m.LW[i] > maxSumWcuaR) {
+//				needToBeDeletedBin.add(i);
+//			}
+//		}
+//		for (int i=0; i<m.n; i++) {
+//			for (int binIndex=m.binIndices.get(i).size()-1; binIndex>=0; binIndex--) {
+//				if (needToBeDeletedBin.contains(m.binIndices.get(i).get(binIndex))) {
+//					m.binIndices.get(i).remove(binIndex);
+//				}
+//			}
+//		}
+		
+		
+		
         
+//        HashSet<Integer> countR = new HashSet<Integer>();
+//        for (int i=0; i<m.m; i++) {
+//        	countR.add(m.R[i]);
+//        }
+//        System.out.println(countR.size());
+        
+
+		
+		
+		
 //        int count = 0;
 //        
-//        Individual a = new Individual("heuristic", m.m, m.n, m.mt, m.mr, m.W, m.LW, m.P, m.T, m.R, m.binIndices, m.w, m.p, m.t, m.r);
+//        Individual a = new Individual("random", m.m, m.n, m.mt, m.mr, m.W, m.LW, m.P, m.T, m.R, m.binIndices, m.w, m.p, m.t, m.r);
 //        for (int i=0; i<m.n; i++) {
 //        	try {
 //        		System.out.println(i+ " la: " + a.Indiv[i].bin);
@@ -161,9 +205,12 @@ public class MultiKnapsack {
 //        System.out.println(count);
         
         
+
+		
+		
+		
         
-        
-        int numIter = 500;
+        int numIter = 200;
         ArrayList<Double> savedViols = new ArrayList<Double>();
         
         Population list = new Population(m.m, m.n, m.mt, m.mr, m.W, m.LW, m.P, m.T, m.R, m.binIndices, m.w, m.p, m.t, m.r);
