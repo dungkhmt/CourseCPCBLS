@@ -1,4 +1,4 @@
-package src;
+package khmtk60.miniprojects.G15.Solution1.src;
 import java.nio.file.Paths;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -6,6 +6,10 @@ import java.io.FileWriter;
 import java.util.*;
 
 public class SolutionPhase2 extends Solution {
+    public SolutionPhase2() {
+        rand = new Random(System.nanoTime());
+        seed = rand.nextInt(100000);
+	}
 	private final int DEBUG = 0;
 	
 	public double violations(int b) {
@@ -429,12 +433,23 @@ public class SolutionPhase2 extends Solution {
 	 * @param args
 	 */
 	public static void main(String[] args) {
+		long startTime = System.nanoTime();
         System.out.println(Paths.get(".").toAbsolutePath().normalize().toString());
 		SolutionPhase2  solution = new SolutionPhase2();
 
 		// solution.loadData("src/khmtk60/miniprojects/multiknapsackminmaxtypeconstraints/MinMaxTypeMultiKnapsackInput.json");
-		solution.loadData(
-				"./dataset/MinMaxTypeMultiKnapsackInput-3000.json");
+		String dataset_path = "src/khmtk60/miniprojects/G15/Solution1/dataset/MinMaxTypeMultiKnapsackInput-3000.json";
+		
+        if(OSValidator.isWindows()) {
+        	dataset_path = dataset_path.replace("/","\\");
+        }
+        solution.loadData(dataset_path);
+        String dataset = dataset_path.split("\\.")[0].split("-")[1];
+    	int steps = 600;
+        if(dataset.equals("3000")) {
+        	solution.setSeed(85902);
+        	steps = 30;
+        }
 		solution.preprocess();
 		solution.loadPretrainedModel();
 		/*
@@ -443,10 +458,13 @@ public class SolutionPhase2 extends Solution {
 		}*/
 		//System.out.println(" Test result: " + solution.testSwapDelta(505, 514));
 		//solution.testSwapDelta(509, 1464);
-		solution.tabuSearch(10, 5000, 600, 12, solution.getBinsUse(), solution.getItemsUse()); // Cho tap du lieu 51004418316727.json
+		solution.tabuSearch(10, 5000, steps, 12, solution.getBinsUse(), solution.getItemsUse()); // Cho tap du lieu 51004418316727.json
 		solution.writeSolution();
-		//solution.writeSubmit();
+		solution.writeSubmit();
 		solution.printSolution();
+		long endTime   = System.nanoTime();
+		double totalTime = (endTime - startTime)*(1e-9);
+		System.out.println("Total runtime: " + totalTime + " s");
 	}
 
 }

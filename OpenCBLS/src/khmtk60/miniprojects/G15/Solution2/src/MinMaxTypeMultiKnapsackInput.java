@@ -1,4 +1,4 @@
-package src;
+package khmtk60.miniprojects.G15.Solution2.src;
 
 import java.io.FileReader;
 import java.io.PrintWriter;

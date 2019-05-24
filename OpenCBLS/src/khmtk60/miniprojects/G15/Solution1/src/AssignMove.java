@@ -1,4 +1,4 @@
-package src;
+package khmtk60.miniprojects.G15.Solution1.src;
 
 public class AssignMove {
     int newBin;

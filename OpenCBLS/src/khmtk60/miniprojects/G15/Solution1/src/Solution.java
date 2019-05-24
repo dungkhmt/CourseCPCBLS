@@ -1,4 +1,4 @@
-package src;
+package khmtk60.miniprojects.G15.Solution1.src;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -9,7 +9,11 @@ public abstract class Solution {
     public final int USE = 1;
     public final int NOT_USE_FOREVER = -1;
     int seed = 0;
-    int binOfItem[];
+    public void setSeed(int seed) {
+		this.seed = seed;
+	}
+
+	int binOfItem[];
     public int[] getBinOfItem() {
         return binOfItem;
     }
@@ -147,9 +151,7 @@ public abstract class Solution {
     }
 
     public void preprocess() {
-        rand = new Random(System.nanoTime());
-        seed = rand.nextInt(100000);
-        //seed = 1;
+
         rand = new Random(seed);
         int r;
         double w;
@@ -513,9 +515,11 @@ public abstract class Solution {
     }
 
     public void loadPretrainedModel() {
-        String[] tmp = inputPath.split("/");
-        String fileName = tmp[tmp.length - 1].split("\\.")[0] + ".out";
-        String preTrainPath = inputPath.substring(0, inputPath.lastIndexOf('/')) + "/pretrain/" + fileName;
+    	String dataset = inputPath.split("\\.")[0].split("-")[1];
+        String preTrainPath = "src/khmtk60/miniprojects/G15/Solution1/dataset/pretrain/MinMaxTypeMultiKnapsackInput-" + dataset + ".out";
+        if(OSValidator.isWindows()) {
+        	preTrainPath = preTrainPath.replace("/","\\");
+        }
         System.out.println(preTrainPath);
         File file = new File(preTrainPath);
         try {
@@ -539,9 +543,16 @@ public abstract class Solution {
     }
 
     public void writeSolution() {
-        String[] tmp = inputPath.split("/");
-        String fileName = tmp[tmp.length - 1].split("\\.")[0] + ".out";
-        outputPath = inputPath.substring(0, inputPath.lastIndexOf('/')) + "/pretrain/" + fileName;
+    	char delimeter = '/';
+    	String[] tmp = inputPath.split("/");
+        if(OSValidator.isWindows()) {
+        	delimeter = '\\';
+        	tmp = inputPath.split("\\\\");
+        }
+        System.out.println(inputPath);
+        System.out.println(inputPath.lastIndexOf(delimeter));
+        String fileName = tmp[tmp.length - 1].split("\\.")[0] + ".out";  
+        outputPath = inputPath.substring(0, inputPath.lastIndexOf(delimeter)) + delimeter + "pretrain" + delimeter + fileName;
         System.out.println(outputPath);
         try (FileWriter fileWriter = new FileWriter(outputPath)) {
             for (int i = 0; i < n; i++) {
@@ -557,10 +568,14 @@ public abstract class Solution {
     }
 
     public void writeSubmit() {
-        violations();
-        String[] tmp = inputPath.split("/");
+    	char delimeter = '/';
+    	String[] tmp = inputPath.split("/");
+        if(OSValidator.isWindows()) {
+        	delimeter = '\\';
+        	tmp = inputPath.split("\\\\");
+        }
         String fileName = tmp[tmp.length - 1].split("\\.")[0] + ".out";
-        outputPath = inputPath.substring(0, inputPath.lastIndexOf('/')) + "/submit/" + fileName;
+        outputPath = inputPath.substring(0, inputPath.lastIndexOf(delimeter)) + delimeter + "submit" + delimeter + fileName;
         System.out.println(outputPath);
         
         HashSet<Integer> binsNotUse = new HashSet<Integer>();

@@ -1,4 +1,4 @@
-package src;
+package khmtk60.miniprojects.G15.Solution1.src;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -6,7 +6,12 @@ import java.io.FileWriter;
 import java.util.*;
 
 public class SolutionPhase1 extends Solution {
-    private int DEBUG = 1;
+    public SolutionPhase1() {
+        rand = new Random(System.nanoTime());
+        seed = rand.nextInt(100000);
+	}
+
+	private int DEBUG = 1;
     public void setDebug(int v) {
         this.DEBUG = v;
     }
@@ -461,12 +466,21 @@ public class SolutionPhase1 extends Solution {
      * @param args
      */
     public static void main(String[] args) {
+    	long startTime = System.nanoTime();
         // solution.loadData("src/khmtk60/miniprojects/multiknapsackminmaxtypeconstraints/MinMaxTypeMultiKnapsackInput.json");
-        String dataset_path = "dataset/MinMaxTypeMultiKnapsackInput-3000.json";
+        String dataset_path = "src/khmtk60/miniprojects/G15/Solution1/dataset/MinMaxTypeMultiKnapsackInput-3000.json";
+        if(OSValidator.isWindows()) {
+        	dataset_path = dataset_path.replace("/","\\");
+        }
         int tabulen = 10;
         SolutionPhase1 solution = new SolutionPhase1();
         solution.loadData(
             dataset_path);
+    	String dataset = dataset_path.split("\\.")[0].split("-")[1];
+
+        if(dataset.equals("3000")) {
+        	solution.setSeed(72104);
+        }
         solution.preprocess();
         //solution.info();
         solution.initModel();
@@ -475,84 +489,8 @@ public class SolutionPhase1 extends Solution {
         solution.tabuSearch(10, 5000, 150000, 1000, solution.getBinsUse(), solution.getItemsUse()); // Cho tap du lieu 3000
         solution.writeSolution();
         solution.printSolution();
-        /*
-        HashSet<Integer> classNotArrage = solution.getClassNotArrange();
-        HashSet<Integer> tabu = solution.getSolutionBins();
-        HashSet<Integer> binNotUse = solution.getBinsNotUse();
-        
-        System.out.println(classNotArrage);
-        //classNotArrage.clear();
-        //classNotArrage.add(9);
-        
-        HashMap<Integer, HashSet<Integer>> tempBinUse = new HashMap<Integer, HashSet<Integer>>();
-        for (int r : classNotArrage) {
-            for (int i = 0; i < solution.getN(); i++) {
-                if (solution.getItems()[i].getR() == r) {
-                    if (!tempBinUse.containsKey(r)) {
-                        tempBinUse.put(r, new HashSet<Integer>());
-                    }
-                    int b = solution.getTake()[i];
-                    if (b != solution.NOT_USE_FOREVER) {
-                        tempBinUse.get(r).add(b);
-                        tabu.remove(b);
-                    }
-                }
-            }
-        }
-        System.out.println(tabu);
-        Scanner s = new Scanner(System.in);
-        System.out.println("Press enter to continue.....");
-        s.nextLine();
-        
-        for (int r : classNotArrage) {
-            System.out.println("Processing r = " + r);
-            for (int k = 0; k < 5; k++) {
-                solution = new SolutionPhase1();
-                solution.loadData(dataset_path);
-                solution.preprocess();
-                solution.loadPretrainedModel();
-                int oldTake[] = solution.getTake().clone();
-
-                solution.setAvailR(r);
-                solution.loadPretrainedModel();
-                solution.setDebug(0);
-                //solution.tabuSearch(5, 500, 150000, 1000); // Cho tap du lieu 41525782483156.json
-                solution.tabuSearch(10, 5000, 20000, 1000, solution.getBinsUseR(r), solution.getItemsUseR(r)); // Cho tap du lieu 51004418316727.json
-
-                if (solution.violations() == 0) {
-                    HashSet<Integer> solutionBins = solution.getSolutionBins();
-                    HashSet<Integer> intersect = new HashSet<Integer>(solutionBins);
-                    intersect.retainAll(tabu);
-                    if (intersect.isEmpty()) {
-                        for (Map.Entry<Integer, HashSet<Integer>> entry : tempBinUse.entrySet()) {
-                            if (entry.getKey() == r) continue;
-                            for (int b : entry.getValue()) {
-                                if (solutionBins.contains(b)) {
-                                    int newBin = solution.useNewBin(b, binNotUse);
-                                    binNotUse.remove(b);
-                                    binNotUse.add(newBin);
-                                    tempBinUse.get(entry.getKey()).remove(b);
-                                    tempBinUse.get(entry.getKey()).add(newBin);
-                                }
-                            }
-                        }
-                        int newTake[] = solution.getTake().clone();
-                        for (int i = 0; i < newTake.length; i++) {
-                            if (newTake[i] != -1) {
-                                oldTake[i] = newTake[i];
-                            }
-                        }
-                        tempBinUse.remove(r);
-                        tabu.addAll(solutionBins);
-                        solution.writeSolution(oldTake);
-                        binNotUse.removeAll(solutionBins);
-                        break;
-                    } else {
-
-                    }
-                }
-            }
-        }
-        */
+		long endTime   = System.nanoTime();
+		double totalTime = (endTime - startTime)*(1e-9);
+		System.out.println("Total runtime: " + totalTime + " s");
     }
 }
