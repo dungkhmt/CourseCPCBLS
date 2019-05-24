@@ -7,21 +7,20 @@ package khmtk60.miniprojects.G15.SolutionGA;
 
 import java.util.*;
 import khmtk60.miniprojects.multiknapsackminmaxtypeconstraints.model.*;
-
 /**
  *
  * @author Khang
  */
 public class GA {
-    public final int population = 500; //sá»‘ lÆ°á»£ng cÃ¡ thá»ƒ cá»§a quáº§n thá»ƒ
-    public int n; // sá»‘ lÆ°á»£ng item
-    public int m; // sá»‘ lÆ°á»£ng bin
+    public final int population = 500; //số lượng cá thể của quần thể
+    public int n; // số lượng item
+    public int m; // số lượng bin
     public MinMaxTypeMultiKnapsackInputItem items[];
     public MinMaxTypeMultiKnapsackInputBin bins[];
     Random r;
    
     /*
-    Ä�á»�c dá»¯ liá»‡u
+    Đọc dữ liệu
     input:
     output:
     */
@@ -36,9 +35,9 @@ public class GA {
     }
     
     /*
-    Khá»Ÿi táº¡o quáº§n thá»ƒ ban Ä‘áº§u
+    Khởi tạo quần thể ban đầu
     input:
-    output: Danh sÃ¡ch gá»“m 500 cÃ¡ thá»ƒ,má»—i cÃ¡ thá»ƒ lÃ  1 lá»�i giáº£i cá»§a bÃ i toÃ¡n
+    output: Danh sách gồm 500 cá thể,mỗi cá thể là 1 lời giải của bài toán
     */
     
     public ArrayList<int[]> initPopulations(){
@@ -58,10 +57,10 @@ public class GA {
     };
     
     /*
-    TÃ­nh toÃ¡n violation cá»§a lá»�i giáº£i
-    input: má»™t lá»�i giáº£i cá»§a bÃ i toÃ¡n
-    output: máº£ng gá»“m 6 pháº§n tá»­ chá»©a cÃ¡c violation: violation weight,
-    violation minload,violation P,violation T,violation R,Tá»•ng cÃ¡c violation.
+    Tính toán violation của lời giải
+    input: một lời giải của bài toán
+    output: mảng gồm 6 phần tử chứa các violation: violation weight,
+    violation minload,violation P,violation T,violation R,Tổng các violation.
     */
     
     public int[] violations(int[] solutions){
@@ -102,9 +101,9 @@ public class GA {
     }
     
     /*
-    XÃ¡c Ä‘á»‹nh tá»«ng bin chá»©a cÃ¡c item nÃ o
-    input: Máº£ng chá»©a lá»�i giáº£i cá»§a bÃ i toÃ¡n
-    output: Danh sÃ¡ch m bin, má»—i bin chá»©a 1 danh sÃ¡ch cÃ¡c item
+    Xác định từng bin chứa các item nào
+    input: Mảng chứa lời giải của bài toán
+    output: Danh sách m bin, mỗi bin chứa 1 danh sách các item
     */
     
     public ArrayList<ArrayList<Integer>> getBinUse(int[] solution){
@@ -123,9 +122,9 @@ public class GA {
     }
     
     /*
-    Lai ghÃ©p 2 cÃ¡ thá»ƒ bá»‘,máº¹ báº¥t kÃ¬ Ä‘á»ƒ táº¡o ra 2 cÃ¡ thá»ƒ con tÆ°Æ¡ng á»©ng
-    input: 2 máº£ng tÆ°Æ¡ng á»©ng vá»›i 2 lá»�i giáº£i.
-    output: Danh sÃ¡ch 2 lá»�i giáº£i má»›i tÆ°Æ¡ng á»©ng
+    Lai ghép 2 cá thể bố,mẹ bất kì để tạo ra 2 cá thể con tương ứng
+    input: 2 mảng tương ứng với 2 lời giải.
+    output: Danh sách 2 lời giải mới tương ứng
     */
     
     public ArrayList<int[]> crossover(int[] solution1, int[] solution2){
@@ -162,9 +161,9 @@ public class GA {
     }
 
     /*
-    Ä�á»™t biáº¿n 1 cÃ¡ thá»ƒ báº¥t kÃ¬ Ä‘á»ƒ táº¡o ra cÃ¡ thá»ƒ con má»›i
-    input: máº£ng tÆ°Æ¡ng á»©ng vá»›i lá»�i giáº£i.
-    output: Danh sÃ¡ch lá»�i giáº£i má»›i tÆ°Æ¡ng á»©ng
+    Đột biến 1 cá thể bất kì để tạo ra cá thể con mới
+    input: mảng tương ứng với lời giải.
+    output: Danh sách lời giải mới tương ứng
     */
     
     public ArrayList<int[]> mutate(int n,int m,int[] solution){
@@ -186,17 +185,16 @@ public class GA {
     }
     
     /*
-    Chá»�n lá»�c 50% sá»‘ cÃ¡ thá»ƒ con cÃ³ hÃ m fitness tá»‘t nháº¥t vÃ  50%
-    cÃ¡ thá»ƒ bá»‘ máº¹ ngáº«u nhiÃªn Ä‘á»ƒ táº¡o ra 500 cÃ¡ thá»ƒ cho láº§n lai ghÃ©p,Ä‘á»™t biáº¿n tiáº¿p theo
-    input: Danh sÃ¡ch cÃ¡c lá»�i giáº£i bá»‘ máº¹ vÃ  danh sÃ¡ch cÃ¡c lá»�i giáº£i con.
-    output: Danh sÃ¡ch cÃ¡c lá»�i giáº£i má»›i tÆ°Æ¡ng á»©ng vá»›i quáº§n thá»ƒ má»›i.
+    Chọn lọc 50% số cá thể con có hàm fitness tốt nhất và 50%
+    cá thể bố mẹ ngẫu nhiên để tạo ra 500 cá thể cho lần lai ghép,đột biến tiếp theo
+    input: Danh sách các lời giải bố mẹ và danh sách các lời giải con.
+    output: Danh sách các lời giải mới tương ứng với quần thể mới.
     */
     
     public ArrayList<int[]> selection(ArrayList<int[]> parents,ArrayList<int[]> child){
         double[] violation = null;
         ArrayList<int[]> newSolutions = new ArrayList<int[]>(population);
         sortSolution(child,0,population-1);
-        
         //Collections.shuffle(child);
         Collections.shuffle(parents);
         for(int i = 0; i< population/2;i++){
@@ -209,9 +207,9 @@ public class GA {
     }
      
     /*
-    Káº¿t há»£p cÃ¡c phÆ°Æ¡ng phÃ¡p lai ghÃ©p,Ä‘á»™t biáº¿n,chá»�n lá»�c Ä‘á»ƒ táº¡o ra quáº§n thá»ƒ má»›i
-    input: Danh sÃ¡ch cÃ¡c lá»�i giáº£i tÆ°Æ¡ng á»©ng vá»›i quáº§n thá»ƒ, kÃ­ch thÆ°á»›c quáº§n thá»ƒ cáº§n táº¡o
-    output: Danh sÃ¡ch cÃ¡c lá»�i giáº£i tÆ°Æ¡ng á»©ng vá»›i quáº§n thá»ƒ má»›i
+    Kết hợp các phương pháp lai ghép,đột biến,chọn lọc để tạo ra quần thể mới
+    input: Danh sách các lời giải tương ứng với quần thể, kích thước quần thể cần tạo
+    output: Danh sách các lời giải tương ứng với quần thể mới
     */
     
     public ArrayList<int[]> generateSolutions(ArrayList<int[]> solutions,int population){
@@ -229,15 +227,14 @@ public class GA {
         for(int i = 0;i<rate_mutate;i++){
             childSolutions.add(rate_crossover+i,mutate(n,m,solutions.get(r.nextInt(population))).get(0));
         }
-        
         newSolutions = selection(solutions,childSolutions);
         return newSolutions;
     }
     
     /*
-    TÃ­nh violation tÆ°Æ¡ng á»©ng vá»›i má»—i bin
-    input: chá»‰ sá»‘ cá»§a bin, danh sÃ¡ch cÃ¡c item chá»©a trong bin Ä‘Ã³
-    output: tá»•ng sá»‘ violation cá»§a má»—i bin
+    Tính violation tương ứng với mỗi bin
+    input: chỉ số của bin, danh sách các item chứa trong bin đó
+    output: tổng số violation của mỗi bin
     */
     
     public int miniViolations(int binIndex,ArrayList<Integer> itemUse){
@@ -273,9 +270,9 @@ public class GA {
     }
     
     /*
-    Thuáº­t toÃ¡n tham lam loáº¡i bá»�, thÃªm cÃ¡c item vÃ o cÃ¡c bin sao cho violation
-    cá»§a má»—i bin há»™i tá»¥ vá»� 0
-    input:  máº£ng tÆ°Æ¡ng á»©ng vá»›i lá»�i giáº£i hay cÃ¡ thá»ƒ.
+    Thuật toán tham lam loại bỏ, thêm các item vào các bin sao cho violation
+    của mỗi bin hội tụ về 0
+    input:  mảng tương ứng với lời giải hay cá thể.
     output: 
     */
     
@@ -314,9 +311,9 @@ public class GA {
     }
     
     /*
-    Sáº¯p xáº¿p cÃ¡c lá»�i giáº£i tÆ°Æ¡ng á»©ng vá»›i giÃ¡ trá»‹ violation Ä‘á»ƒ chá»�n ra
-    cÃ¡c lá»�i giáº£i cÃ³ violation nhá»� nháº¥t theo thuáº­t toÃ¡n sáº¯p xáº¿p nhanh
-    input: Danh sÃ¡ch cÃ¡c lá»�i giáº£i, giÃ¡ trá»‹ Ä‘áº§u,giÃ¡ trá»‹ cuá»‘i
+    Sắp xếp các lời giải tương ứng với giá trị violation để chọn ra
+    các lời giải có violation nhỏ nhất theo thuật toán sắp xếp nhanh
+    input: Danh sách các lời giải, giá trị đầu,giá trị cuối
     output: 
     */
     
@@ -342,8 +339,8 @@ public class GA {
     }
     
     /*
-    In káº¿t quáº£
-    input: máº£ng tÆ°Æ¡ng á»©ng vá»›i lá»�i giáº£i
+    In kết quả
+    input: mảng tương ứng với lời giải
     output: 
     */
     
@@ -366,7 +363,6 @@ public class GA {
     }
 
     public static void main(String[] args){
-    	
         int num = 500;
         int k=0;
         ArrayList<int[]> solutions = new ArrayList<int[]>(500);
@@ -376,14 +372,10 @@ public class GA {
         //String dataset_path = "dataset/test.json";
         String dataset_path = "src\\khmtk60\\miniprojects\\multiknapsackminmaxtypeconstraints\\MinMaxTypeMultiKnapsackInput-1000.json";
         ga.loadData(dataset_path);
-        
         solutions = ga.initPopulations();
-       
         for(int i =0;i< num;i++){
             solutions = ga.generateSolutions(solutions,ga.population);
-            
             ga.sortSolution(solutions,0,ga.population-1);
-            
             System.out.println("Step: "+(i+1)+",Minviolations: "+ga.violations(solutions.get(0))[5]);
             for(int j =0;j<ga.population;j++){
                 violations[i] = ga.violations(solutions.get(j))[5];
