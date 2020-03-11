@@ -1,8 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER">
+		<attributes>
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="D:/teaching/soict/CPCBLS/code/CourseCPCBLS/CourseCPCBLS/OpenCBLS/lib"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="lib" path="lib/gson-2.8.0.jar"/>
 	<classpathentry kind="lib" path="lib/choco-solver-2.1.5.jar"/>
+	<classpathentry kind="lib" path="lib/choco-solver-4.10.2.jar"/>
+	<classpathentry kind="lib" path="lib/com.google.ortools.jar"/>
+	<classpathentry kind="lib" path="lib/protobuf.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
