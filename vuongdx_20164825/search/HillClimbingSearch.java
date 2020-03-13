@@ -29,7 +29,9 @@ public class HillClimbingSearch {
 					cand.clear();
 					minDelta = d;
 				}
-				cand.add(new AssignMove(i, v));
+				if (d <= minDelta) {
+					cand.add(new AssignMove(i, v));
+				}
 			}
 		}
 	}
@@ -37,6 +39,7 @@ public class HillClimbingSearch {
 	public void search(int maxIter) {
 		int it = 0;
 		while (it < maxIter && c.violations() > 0) {
+			System.out.println(it + " " + c.violations());
 			exploreNeighborhood();
 			AssignMove m = cand.get(R.nextInt(cand.size()));
 			y[m.i].setValuePropagate(m.v);
