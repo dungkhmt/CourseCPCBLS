@@ -27,13 +27,6 @@ public class Sudoku {
 		}
 		S = new ConstraintSystem(mgr);
 		
-//		for(int i = 0; i < 9; i++) {
-//			VarIntLS[] y = new VarIntLS[9];
-//			for(int j = 0; j < 9; j++) {
-//				y[j] = X[i][j];
-//			}
-//			S.post(new AllDifferent(y));
-//		}
 		
 		for(int i = 0; i < 9; i++) {
 			VarIntLS[] y = new VarIntLS[9];
