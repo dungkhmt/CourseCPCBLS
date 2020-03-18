@@ -14,6 +14,17 @@ public class Sudoku {
 	ConstraintSystem S;		 // he thong cac rang buoc
 	VarIntLS[][] X;			// bien quyet dinh 
 	
+	public class Move{
+		public int i;
+		public int j1;
+		public int j2;
+		public Move(int i, int j1, int j2) {
+			this.i = i;
+			this.j1 = j1;
+			this.j2 = j2;
+		}
+	}
+	
 	public void stateModel() {
 		
 		mgr = new LocalSearchManager();
@@ -80,7 +91,7 @@ public class Sudoku {
 						cand.add(new Move(i, j1, j2));
 						minDelta = delta;
 					} else if (delta == minDelta) {
-						cand.add(new Move(i, j2, j2));
+						cand.add(new Move(i, j1, j2));
 					}
 				}
 			}
@@ -108,6 +119,6 @@ public class Sudoku {
 		Sudoku app = new Sudoku();
 		app.stateModel();
 		//app.search();
-		app.search2()
+		app.search2();
 	}
 }
