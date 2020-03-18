@@ -2,7 +2,7 @@ package localsearch.constraints.basic;
 
 import java.util.HashSet;
 
-import localsearch.functions.*;
+//import localsearch.functions.*;
 import localsearch.functions.basic.*;
 import localsearch.model.*;
 import core.*;
