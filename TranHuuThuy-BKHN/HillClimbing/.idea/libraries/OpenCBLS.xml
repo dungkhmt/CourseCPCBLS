@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="OpenCBLS">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/../../OpenCBLS/out/artifacts/OpenCBLS_jar/OpenCBLS.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
