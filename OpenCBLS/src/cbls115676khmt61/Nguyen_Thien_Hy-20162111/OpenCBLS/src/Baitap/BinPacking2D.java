@@ -97,6 +97,10 @@ public class BinPacking2D {
     public void solve(){
         stateModel();
         search();
+        for(int i = 0 ; i < N ; i ++){
+            System.out.println("Item " + i + ": " + x[i].getValue() + " " + 
+                    y[i].getValue() + " " + o[i].getValue());
+        }
     }
     
     public static void main(String[] args) {
