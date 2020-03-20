@@ -53,10 +53,10 @@ public class Hill {
         generateInitialSolution(x);
         Random R = new Random();
         int it = 0;
-        ArrayList<AssignMove> candidate = new ArrayList<AssignMove>();
+        ArrayList<AssignMove> candidate = new ArrayList<>();
         while (it < maxIter && c.violations() > 0) {
             exploreNeighborhood(c, x, candidate);
-            if (candidate.size() == 0) {
+            if (candidate.isEmpty()) {
                 System.out.println("Reach Local Optimum");
                 break;
             }
@@ -65,9 +65,5 @@ public class Hill {
             it++;
             System.out.println("Step " + it + ", violations = " + c.violations());
         }
-    }
-
-    public static void main(String[] args) {
-        System.out.println("Hello World");
     }
 }

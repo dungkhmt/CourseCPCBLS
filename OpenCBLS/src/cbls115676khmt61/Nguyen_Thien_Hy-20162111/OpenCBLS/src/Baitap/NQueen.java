@@ -60,8 +60,9 @@ public class NQueen {
     }
 
     public static void main(String[] args) {
-        NQueen ob = new NQueen(700);
+        NQueen ob = new NQueen(70);
         ob.stateModel();
         ob.search();
+        System.out.println("\n");
     }
 }
