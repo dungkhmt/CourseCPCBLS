@@ -94,7 +94,7 @@ public class QueenCBLS {
     }
 
     public static void main(String[] args) {
-        QueenCBLS app = new QueenCBLS(200);
+        QueenCBLS app = new QueenCBLS(600);
         app.stateModel();
         app.localSearch();
         app.test1();
