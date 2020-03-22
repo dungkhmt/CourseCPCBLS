@@ -1,6 +1,5 @@
 package cbls115676khmt61.ThaiDD_20163676;
 
-import localsearch.applications.queen.Queen;
 import localsearch.constraints.alldifferent.AllDifferent;
 import localsearch.functions.basic.FuncPlus;
 import localsearch.model.ConstraintSystem;
