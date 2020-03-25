@@ -58,6 +58,10 @@ public class TabuSearch {
         }
     }
 
+    public void search(IConstraint c , IFunction f , int tblen , int maxStable){
+        // tim loi giai thoa man rang buoc 
+    }
+    
     public void search(int maxIter, int tblen, int maxStable) {
         this.tbl = tblen;
         bestViolations = c.violations();
