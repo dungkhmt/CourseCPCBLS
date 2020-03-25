@@ -20,6 +20,7 @@ import localsearch.model.VarIntLS;
  *
  * @author hydon
  */
+
 public class BinPacking2D {
     int W = 4;
     int H = 6;
@@ -90,8 +91,10 @@ public class BinPacking2D {
     }
     
     private void search(){
-        Hill hillSearch = new Hill();
-        hillSearch.LocalSearch(S , 1000);
+        //Hill hillSearch = new Hill();
+        //hillSearch.LocalSearch(S , 1000);
+        TabuSearch tabu = new TabuSearch(S);
+        tabu.search(100000, 20, 100);
     }
     
     public void solve(){
