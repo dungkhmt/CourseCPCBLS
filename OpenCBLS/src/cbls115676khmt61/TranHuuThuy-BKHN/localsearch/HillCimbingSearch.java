@@ -1,4 +1,4 @@
-package com.company;
+package com.company.localsearch;
 import localsearch.model.ConstraintSystem;
 
 import localsearch.model.VarIntLS;
@@ -6,7 +6,7 @@ import localsearch.model.VarIntLS;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class HillCimbing {
+public class HillCimbingSearch {
 
     Random r = new Random();
 
