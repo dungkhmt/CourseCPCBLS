@@ -1,4 +1,4 @@
-package com.company;
+package com.company.appliaction;
 
 import localsearch.constraints.alldifferent.AllDifferent;
 import localsearch.model.ConstraintSystem;
