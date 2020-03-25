@@ -1,5 +1,6 @@
-package com.company;
+package com.company.appliaction;
 
+import com.company.localsearch.HillCimbingSearch;
 import localsearch.constraints.basic.Implicate;
 import localsearch.constraints.basic.IsEqual;
 import localsearch.constraints.basic.LessOrEqual;
@@ -29,7 +30,7 @@ public class CSP {
 
         mgr.close();
 
-        HillCimbing hill = new HillCimbing();
+        HillCimbingSearch hill = new HillCimbingSearch();
         hill.search(S, 1_000_000);
     }
 }
