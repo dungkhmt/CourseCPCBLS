@@ -1,4 +1,4 @@
-package Exercises;
+package cbls115676khmt61.TranHuyHung_20164777;
 
 import localsearch.constraints.basic.Implicate;
 import localsearch.constraints.basic.IsEqual;
