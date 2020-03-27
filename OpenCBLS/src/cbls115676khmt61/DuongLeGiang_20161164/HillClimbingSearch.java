@@ -61,7 +61,7 @@ public class HillClimbingSearch {
 			AssignMove m = candidate.get(R.nextInt(candidate.size()));
 			x[m.i].setValuePropagate(m.v);
 			it++;
-			System.out.println("Step" + it + ", violation = " + c.violations());
+			System.out.println("Step " + it + ", violation = " + c.violations());
 			
 		}
 	}

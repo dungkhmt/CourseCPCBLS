@@ -61,8 +61,10 @@ public class BACP {
 	}
 	
 	public void search(){
-		HillClimbingSearch searcher = new HillClimbingSearch();
-		searcher.search(S, 10000);
+//		HillClimbingSearch searcher = new HillClimbingSearch();
+//		searcher.search(S, 10000);
+		MyTabuSearch searcher = new MyTabuSearch(S);
+        searcher.search(10000, 60, 100);
 	}
 	
 	public void printResult() {
