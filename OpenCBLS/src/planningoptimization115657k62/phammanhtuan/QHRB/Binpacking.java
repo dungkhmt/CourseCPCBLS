@@ -1,17 +1,47 @@
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+
 import org.chocosolver.solver.Model;
 import org.chocosolver.solver.Solver;
 import org.chocosolver.solver.constraints.Constraint;
 import org.chocosolver.solver.variables.IntVar;
 
 public class Binpacking {
-public static void main(String[] args) {
-	int N = 3;
-	int W = 4;
-	int H = 6;
-	int[] w = {3,3,1};
-	int[] h = {2,4,6};
+	private static int N;
+	private static int W;
+	private static int H;
+	private static int[] w = new int[30];
+	private static int[] h = new int[30];
+	
+	public static void load (String s) throws Exception {
+		InputStream in = new FileInputStream(s) ;
+		BufferedReader br = new BufferedReader(
+					new InputStreamReader(in)
+				);
+		String line;
+		String delims = "\\s+";
+		line = br.readLine();
+		String[] token = line.split(delims);
+		W = Integer.parseInt(token[0]);
+		H = Integer.parseInt(token[1]);		
+		int i = 0;
+		do {
+			line = br.readLine();
+			token = line.split(delims);
+			w[i]= Integer.parseInt(token[0]);
+			if (w[i]!=-1) {
+				h[i]= Integer.parseInt(token[1]);
+			}		
+			i++;
+		} while (line.equalsIgnoreCase("-1")==false);
+		N=i-1;
+	}
+public static void main(String[] args) throws Exception {
+	load("E:\\Java\\eclipse\\bin-packing-2D.txt");
 	Model model = new Model("Binpacking");
-	IntVar[][] X = new IntVar[3][3];
+	IntVar[][] X = new IntVar[N][N];
 	for (int i=0;i<N;i++) {
 		X[i][0] = model.intVar("X["+i+"]["+0+"]",0,W-1);
 		X[i][1] = model.intVar("X["+i+"]["+1+"]",0,H-1);
