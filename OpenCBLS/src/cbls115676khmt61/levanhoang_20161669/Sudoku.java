@@ -47,11 +47,12 @@ public class Sudoku {
 //			}
 //			S.post(new AllDifferent(y));
 //		}
-		// Theo cot 
+		
+		// Constraint AllDifferent theo cot 
 		for (int i = 0; i<9; i++) {
 			VarIntLS[] y = new VarIntLS[9];
 			for (int j = 0; j < 9; j++) {
-				y[i] = X[j][i];
+				y[j] = X[i][j];
 			}
 			S.post(new AllDifferent(y));
 		}
@@ -111,6 +112,26 @@ public class Sudoku {
 			X[m.i][m.j1].swapValuePropagate(X[m.i][m.j2]);
 			it++;
 			System.out.println("Step " + it + ", S=" + S.violations());
+		}
+		System.out.println("--- Best solution ---");
+		printSolution();
+	}
+	
+	public void printSolution() {
+		for (int i = 0; i< 9; i++) {
+			for (int j = 0; j < 9; j++ ){ 
+				if ((j+1) % 3 == 0 ) {
+					System.out.print(X[i][j].getValue() + "|");
+				} else {
+					System.out.print(X[i][j].getValue() + " ");
+				}
+			}
+			if ( (i+1)% 3 == 0) {
+				System.out.println();
+				System.out.println("------------------");
+			} else {
+				System.out.println();
+			}
 		}
 	}
 	
