@@ -1,4 +1,4 @@
-package learn;
+package cbls115676khmt61.levanhoang_20161669;
 
 import localsearch.constraints.basic.Implicate;
 import localsearch.constraints.basic.IsEqual;
@@ -10,7 +10,10 @@ import localsearch.model.LocalSearchManager;
 import localsearch.model.VarIntLS;
 
 public class CSP {
-	
+	/*
+	 * Phát biểu bài toán 
+	 * 
+	 */
 	public static void main(String[] args) {
 		LocalSearchManager mgr = new LocalSearchManager();
 		VarIntLS[] X = new VarIntLS[5];
