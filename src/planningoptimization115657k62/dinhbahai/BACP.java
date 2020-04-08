@@ -1,4 +1,4 @@
-package choco;
+package planningoptimization115657k62.dinhbahai;
 
 import org.chocosolver.solver.Model;
 import org.chocosolver.solver.variables.IntVar;
