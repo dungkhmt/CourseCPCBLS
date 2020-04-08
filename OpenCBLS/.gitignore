@@ -1,4 +1,8 @@
 /bin/
+<<<<<<< HEAD
 /lib/
 /.classpath
 /.settings/org.eclipse.core.resources.prefs
+=======
+/.metadata/
+>>>>>>> c5fa67d0594720a717b6865c733fa2e3738484ff

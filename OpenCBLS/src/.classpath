@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry excluding="planningoptimization115657k62/NguyenDinhDat/|planningoptimization115657k62/NguyenDinhManh/|planningoptimization115657k62/nguyenquangphuc/|planningoptimization115657k62/NguyenLC/|planningoptimization115657k62/lexuanan/|planningoptimization115657k62/ngoviethoang/bai2-mip/|planningoptimization115657k62/tranthiquyen/W2/|planningoptimization115657k62/damtrongtuyen/|planningoptimization115657k62/hoangthihao/|cbls115676khmt61/HieuNT_20164813/|planningoptimization115657k62/Duongkieunga/|planningoptimization115657k62/nguyenvanduc/src/|planningoptimization115657k62/tranthidinh/|planningoptimization115657k62/ngoviethoang/|planningoptimization115657k62/nguyenthinhung/src/QHRB/|planningoptimization115657k62/nguyenthinhung/src/QHTT/|planningoptimization115657k62/phammanhtuan/|cbls115676khmt61/Nguyen_Thien_Hy-20162111/OpenCBLS/src/|planningoptimization115657k62/levanlinh/|planningoptimization115657k62/phamthanhdong/|planningoptimization115657k62/Dangminhduc/|cbls115676khmt61/VuDinhHoang_20161728/|planningoptimization115657k62/phammanhtuan/QHRB/|planningoptimization115657k62/phamvietbang/|planningoptimization115657k62/ngoviethoang/bai3-csp/" kind="src" path=""/>
+	<classpathentry kind="src" path="cbls115676khmt61/HieuNT_20164813"/>
+	<classpathentry kind="src" path="cbls115676khmt61/Nguyen_Thien_Hy-20162111/OpenCBLS/src"/>
+	<classpathentry kind="src" path="cbls115676khmt61/VuDinhHoang_20161728"/>
+	<classpathentry kind="src" path="planningoptimization115657k62/damtrongtuyen"/>
+	<classpathentry kind="src" path="planningoptimization115657k62/Dangminhduc"/>
+	<classpathentry kind="src" path="planningoptimization115657k62/Duongkieunga"/>
+	<classpathentry kind="src" path="planningoptimization115657k62/hoangthihao"/>
+	<classpathentry kind="src" path="planningoptimization115657k62/levanlinh"/>
+	<classpathentry kind="src" path="planningoptimization115657k62/lexuanan"/>
+	<classpathentry excluding="bai2-mip/|bai3-csp/" kind="src" path="planningoptimization115657k62/ngoviethoang"/>
+	<classpathentry kind="src" path="planningoptimization115657k62/ngoviethoang/bai2-mip"/>
+	<classpathentry kind="src" path="planningoptimization115657k62/ngoviethoang/bai3-csp"/>
+	<classpathentry kind="src" path="planningoptimization115657k62/NguyenDinhDat"/>
+	<classpathentry kind="src" path="planningoptimization115657k62/NguyenDinhManh"/>
+	<classpathentry kind="src" path="planningoptimization115657k62/NguyenLC"/>
+	<classpathentry kind="src" path="planningoptimization115657k62/nguyenquangphuc"/>
+	<classpathentry kind="src" path="planningoptimization115657k62/nguyenthinhung/src/QHRB"/>
+	<classpathentry kind="src" path="planningoptimization115657k62/nguyenthinhung/src/QHTT"/>
+	<classpathentry kind="src" path="planningoptimization115657k62/nguyenvanduc/src"/>
+	<classpathentry excluding="QHRB/" kind="src" path="planningoptimization115657k62/phammanhtuan"/>
+	<classpathentry kind="src" path="planningoptimization115657k62/phammanhtuan/QHRB"/>
+	<classpathentry kind="src" path="planningoptimization115657k62/phamthanhdong"/>
+	<classpathentry kind="src" path="planningoptimization115657k62/phamvietbang"/>
+	<classpathentry kind="src" path="planningoptimization115657k62/tranthidinh"/>
+	<classpathentry kind="src" path="planningoptimization115657k62/tranthiquyen/W2"/>
+	<classpathentry kind="output" path="cbls115676khmt61/Nguyen_Thien_Hy-20162111/OpenCBLS/bin"/>
+</classpath>
