@@ -1,4 +1,4 @@
-package buoi4;
+package planningoptimization115657k62.NguyenQuynhLoc;
 
 import org.chocosolver.solver.Model;
 import org.chocosolver.solver.variables.IntVar;

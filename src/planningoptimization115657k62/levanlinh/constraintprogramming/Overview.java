@@ -1,4 +1,4 @@
-package constraintprogramming;
+package planningoptimization115657k62.levanlinh.constraintprogramming;
 
 import org.chocosolver.solver.Model;
 import org.chocosolver.solver.variables.IntVar;

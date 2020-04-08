@@ -1,4 +1,4 @@
-package constraintprogramming;
+package planningoptimization115657k62.levanlinh.constraintprogramming;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -107,7 +107,7 @@ public class BalancedAcademicCurriculumProblem {
 	
 	public static void main(String[] args) throws IOException {
 		BalancedAcademicCurriculumProblem app = new BalancedAcademicCurriculumProblem();
-		app.importFile("D:/data-bacp/bacp.in01"); // duong dan file input
+		//app.importFile("D:/data-bacp/bacp.in01"); // duong dan file input
 		app.solve();
 	}
 }
