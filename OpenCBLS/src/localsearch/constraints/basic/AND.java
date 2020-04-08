@@ -26,6 +26,14 @@ public class AND extends AbstractInvariant implements IConstraint {
 		
 		post();
 	}
+	public AND(ArrayList<IConstraint> c){
+		_cstr = new IConstraint[c.size()];
+		for(int i = 0; i < c.size(); i++)
+			_cstr[i] = c.get(i);
+		
+		post();
+	}
+	
 	private void post(){
 		_ls = _cstr[0].getLocalSearchManager();
 		_mapC = new HashMap<IConstraint, Integer>();

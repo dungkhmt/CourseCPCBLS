@@ -147,12 +147,15 @@ public class ConstraintSystem extends AbstractInvariant implements IConstraint {
 	@Override
 	public void initPropagate() {
 		// TODO Auto-generated method stub
-		//System.out.println(name() + "::initPropagate");
+		
 		_totalviolations = 0;
 		for(int i = 0; i < _constraints.size(); i++){
 			_violations[i] = _constraints.get(i).violations();
 			_totalviolations += _violations[i];
+			System.out.println(name() + "::initPropagate, _constraint[" + i + "].violations = " 
+			+ _violations[i] + ", _violations = " + _totalviolations);
 		}
+		System.out.println(name() + "::initPropagate, _violations = " + _totalviolations);
 	}
 	@Override
 	public LocalSearchManager getLocalSearchManager() {
