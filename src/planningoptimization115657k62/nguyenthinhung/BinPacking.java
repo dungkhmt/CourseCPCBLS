@@ -1,3 +1,5 @@
+package planningoptimization115657k62.nguyenthinhung;
+
 import java.util.Scanner;
 
 import org.chocosolver.solver.Model;

@@ -1,3 +1,5 @@
+package planningoptimization115657k62.nguyenthinhung;
+
 import org.chocosolver.solver.Model;
 import org.chocosolver.solver.variables.IntVar;
 
