@@ -2,22 +2,12 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER">
-		<attributes>
-<<<<<<< HEAD
-			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="D:/teaching/soict/CPCBLS/code/CourseCPCBLS/CourseCPCBLS/OpenCBLS/lib"/>
-=======
-			<attribute name="module" value="true"/>
->>>>>>> c5fa67d0594720a717b6865c733fa2e3738484ff
-		</attributes>
+		
 	</classpathentry>
 	<classpathentry kind="lib" path="lib/gson-2.8.0.jar"/>
 	<classpathentry kind="lib" path="lib/choco-solver-2.1.5.jar"/>
-<<<<<<< HEAD
 	<classpathentry kind="lib" path="lib/choco-solver-4.10.2.jar"/>
 	<classpathentry kind="lib" path="lib/com.google.ortools.jar"/>
 	<classpathentry kind="lib" path="lib/protobuf.jar"/>
-=======
-	<classpathentry kind="lib" path="C:/Users/Hi/Desktop/choco-4.10.2/choco-4.10.2/choco-solver-4.10.2.jar"/>
->>>>>>> c5fa67d0594720a717b6865c733fa2e3738484ff
 	<classpathentry kind="output" path="bin"/>
 </classpath>

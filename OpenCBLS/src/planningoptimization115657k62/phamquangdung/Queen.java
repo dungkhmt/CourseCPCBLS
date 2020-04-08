@@ -9,7 +9,7 @@ public class Queen {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		int N = 1000;
+		int N = 500;
 		LocalSearchManager mgr = new LocalSearchManager();
 		VarIntLS[] X = new VarIntLS[N];
 		for(int i = 0; i < N; i++)
@@ -29,6 +29,10 @@ public class Queen {
 		 S.post(new AllDifferent(f2));			
 		 mgr.close();
 		 
+		 //HillClimbingSearch searcher = new HillClimbingSearch();
+		 //searcher.search(S, 100000);
+		 
+		 
 		 System.out.println("init S = " + S.violations());
 		 //if(true) return;
 		 
@@ -43,6 +47,7 @@ public class Queen {
 		  System.out.println("Step " + it + ", violations = " + S.violations());
 		  it++;		
 		 }
+		 
 
 	}
 
