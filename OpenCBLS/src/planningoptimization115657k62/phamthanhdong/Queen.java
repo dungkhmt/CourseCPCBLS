@@ -1,3 +1,5 @@
+// bai toan n quan hau
+
 import java.util.*;
 import org.chocosolver.solver.Model;
 import org.chocosolver.solver.variables.IntVar;
