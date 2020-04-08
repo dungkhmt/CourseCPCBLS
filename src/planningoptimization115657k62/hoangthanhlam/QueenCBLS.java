@@ -16,14 +16,17 @@ public class QueenCBLS {
 	}
 	
 	public void test() {
+		// Khởi tạo manager
 		LocalSearchManager ls = new LocalSearchManager();
 		ConstraintSystem S = new ConstraintSystem(ls);
 		
+		// Khởi tạo biến
 		VarIntLS[] x = new VarIntLS[n];
 		for (int i = 0; i < n; i++) {
 			x[i] = new VarIntLS(ls, 0, n-1);
 		}
 		
+		// Thêm các ràng buộc
 		S.post(new AllDifferent(x));
 		
 		IFunction[] f1 = new IFunction[n];
@@ -39,24 +42,25 @@ public class QueenCBLS {
 		S.post(new AllDifferent(f2));
 		
 		ls.close();
+		
 		System.out.println("Init S = " + S.violations());
 		MinMaxSelector mms = new MinMaxSelector(S);
 		
-		int it = 0;
-		while(it < 10000 && S.violations() > 0) {
+		int count = 0;
+		while(count < 10000 && S.violations() > 0) {
 			VarIntLS sel_x = mms.selectMostViolatingVariable();
 			int sel_v = mms.selectMostPromissingValue(sel_x);
 			
 			sel_x.setValuePropagate(sel_v);
-			System.out.println("Step " + it + ", S = " + S.violations());
+			System.out.println("Step " + count + ", S = " + S.violations());
 			
-			it++;
+			count++;
 		}
 		System.out.println(S.violations());
 	}
 	
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
+		System.out.println("_QueenCBLS_");
 		QueenCBLS Q = new QueenCBLS(1000);
 		Q.test();
 
