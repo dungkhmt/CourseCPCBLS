@@ -1,3 +1,4 @@
+package planningoptimization115657k62.nguyenvanduc;
 import org.chocosolver.solver.Model;
 import org.chocosolver.solver.variables.IntVar;
 
@@ -26,7 +27,7 @@ public class BACP {
 
 
     public void solve() {
-        input("src/data-bacp/bacp.in30");
+        input("data/BACP/bacp.in30");
         Model model = new Model();
         IntVar[][] x = model.intVarMatrix(P, N, 0, 1);
         //x[p, i] = 1 mon i duoc phan vao ki p

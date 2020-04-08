@@ -1,3 +1,5 @@
+package planningoptimization115657k62.nguyenvanduc;
+
 import org.chocosolver.solver.Model;
 import org.chocosolver.solver.Solution;
 import org.chocosolver.solver.constraints.Constraint;
@@ -47,7 +49,7 @@ public class TwoDBinPacking {
     }
 
     public void solve() {
-        load_data_from_file("src/BinPacking2D/bin-packing-2D-W10-H8-I6.txt");
+        load_data_from_file("data/BinPacking2D/bin-packing-2D-W10-H8-I6.txt");
        //print_input();
         Model model = new Model();
         IntVar[] o = model.intVarArray(n, 0, 1);

@@ -2,3 +2,6 @@
 /lib/
 .classpath
 /.settings/
+
+#nguyenvanduc
+**/nguyenvanduc/Test?.java

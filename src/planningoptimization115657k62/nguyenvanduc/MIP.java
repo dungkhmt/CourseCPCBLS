@@ -1,3 +1,5 @@
+package planningoptimization115657k62.nguyenvanduc;
+
 import com.google.ortools.linearsolver.MPConstraint;
 import com.google.ortools.linearsolver.MPObjective;
 import com.google.ortools.linearsolver.MPSolver;
@@ -24,7 +26,7 @@ public class MIP {
         MPConstraint c2 = solver.makeConstraint(0, 20);
         c2.setCoefficient(x1, 2);
         c2.setCoefficient(x2, 3);
-
+        
         MPObjective obj = solver.objective();
         obj.setCoefficient(x1, 1);
         obj.setCoefficient(x2, 1);
