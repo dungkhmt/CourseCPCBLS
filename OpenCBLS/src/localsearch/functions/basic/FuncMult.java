@@ -162,9 +162,7 @@ public class FuncMult extends AbstractInvariant implements IFunction {
 	@Override
 	public void initPropagate() {
 		_value=_f1.getValue()*_f2.getValue();
-		System.out.println("FuncMult::initPropagate, f1 = " + _f1.getValue() + ", f2 = " 
-				+ _f2.getValue() + ", value = " + _value);
-				
+	
 	}
 
 	@Override

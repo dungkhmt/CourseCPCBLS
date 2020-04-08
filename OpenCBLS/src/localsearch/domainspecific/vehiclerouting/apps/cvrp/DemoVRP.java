@@ -155,7 +155,6 @@ public class DemoVRP {
 		AccumulatedWeightNodesVR accDemand = new AccumulatedWeightNodesVR(XR, nwm);
 		AccumulatedWeightEdgesVR accW = new AccumulatedWeightEdgesVR(XR, awm);
 		
-		
 		d = new IFunctionVR[K];// demand on routes
 		for(int k = 1; k <= K; k++){
 			Point tk = XR.endPoint(k);// diem cuoi cung cua route thu k

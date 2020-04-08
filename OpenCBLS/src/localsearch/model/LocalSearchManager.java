@@ -13,8 +13,7 @@ public class LocalSearchManager {
 	//private VarIntLS[] _x;
 	private ArrayList<VarIntLS>	_x;
 	private Vector<AbstractInvariant> _invariants;
-	private ConstraintSystem[] _S = null;
-	
+	private ConstraintSystem _S = null;
 	//private Vector<TreeSet<BasicEntity>> _map;
 	private HashMap<VarIntLS, TreeSet<AbstractInvariant>> _map;
 	private boolean	_closed;
@@ -34,11 +33,7 @@ public class LocalSearchManager {
 	public void post(AbstractInvariant e) {
 		e.setID(n++);
 		_invariants.add(e);
-		if(e instanceof ConstraintSystem){
-			System.out.println(name() + "::post(ConstraintSystem)");
-		}
 	}
-	/*
 	public void post(ConstraintSystem S){
 		if(_S != null){
 			System.out.println("LocalSearchManager::post(ConstraintSystem) EXCEPTION: A ConstraintSystem has already instantiated");
@@ -47,7 +42,6 @@ public class LocalSearchManager {
 		_S = S;
 		//_S.setID(n++);
 	}
-	*/
 	public void propagateInt(VarIntLS x, int val) {
 		TreeSet<AbstractInvariant> s = _map.get(x);
 		if(s == null){
@@ -103,30 +97,11 @@ public class LocalSearchManager {
 		if(closed()) return;
 		_closed = true;
 		
-		// new fix bug
-		int cnt = 0;
-		for(AbstractInvariant i: _invariants){
-			if(i instanceof ConstraintSystem){
-				cnt++;
-			}
-		}
-		_S = new ConstraintSystem[cnt];
-		int idx = -1;
-		for(AbstractInvariant i: _invariants){
-			if(i instanceof ConstraintSystem){
-				idx++;
-				_S[idx] = (ConstraintSystem)i;
-				_S[idx].close();
-			}
-		}
-		
-		/*
 		if(_S != null){
 			_S.setID(n++);
 			_invariants.add(_S);
 			_S.close();
 		}
-		*/
 		
 		_map = new HashMap<VarIntLS, TreeSet<AbstractInvariant>>();
 		

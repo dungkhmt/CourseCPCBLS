@@ -31,9 +31,9 @@ public class ConstraintViolations extends AbstractInvariant implements
 	@Override
 	public int getMaxValue() {
 		// TODO Auto-generated method stub
-		//System.out.println(name() + "::getMaxValue() --> this has not been implemented yet");
-		//assert(false);
-		return 1000;
+		System.out.println(name() + "::getMaxValue() --> this has not been implemented yet");
+		assert(false);
+		return 0;
 	}
 
 	@Override
@@ -61,9 +61,6 @@ public class ConstraintViolations extends AbstractInvariant implements
 		return _c.getLocalSearchManager();
 	}
 	public void initPropagate() {
-		// DO NOTHING
-	}
-	public void propagateInt(VarIntLS x, int val){
 		// DO NOTHING
 	}
 	/**

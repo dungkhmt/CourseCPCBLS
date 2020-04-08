@@ -147,7 +147,7 @@ public class GraphPartitioningCost extends AbstractInvariant implements IFunctio
 		int delta = 0;
 		for(Edge e: A[nz]){
 			int v = e.node;
-			//if(v == ny) continue;
+			if(v == ny) continue;
 			if(x[nz].getValue() == x[v].getValue()){
 				delta += e.w;
 			}else{
@@ -156,7 +156,7 @@ public class GraphPartitioningCost extends AbstractInvariant implements IFunctio
 		}
 		for(Edge e: A[ny]){
 			int v = e.node;
-			//if(v == nz) continue;
+			if(v == nz) continue;
 			if(x[ny].getValue() == x[v].getValue()){
 				delta += e.w;
 			}else{
@@ -200,7 +200,6 @@ public class GraphPartitioningCost extends AbstractInvariant implements IFunctio
 			cur = f.getValue();
 			System.out.println("Step " + it + ", cur = " + cur + ", delta = " + d + ", new f = " + f.getValue());
 			it++;
-		}
-		
+		}		
 	}
 }

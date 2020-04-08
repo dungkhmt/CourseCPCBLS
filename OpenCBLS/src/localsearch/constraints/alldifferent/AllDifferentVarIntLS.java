@@ -102,11 +102,10 @@ public class AllDifferentVarIntLS extends AbstractInvariant implements IConstrai
 	
 	@Override
 	public void initPropagate() {
-		
+		//System.out.println(name() + "::initPropagate");
 		_violations = 0;
 		for (VarIntLS e : _x) _occ[e.getValue() - _minValue]++;
 		for (int i = 0; i < _occ.length; i++) _violations += Math.max(0, _occ[i] - 1);
-		System.out.println(name() + "::initPropagate, _violations = " + _violations);
 	}
 	
 	public void print(){
