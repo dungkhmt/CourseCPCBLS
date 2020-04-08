@@ -3,7 +3,8 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER">
 		<attributes>
-			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="D:/teaching/soict/CPCBLS/code/CourseCPCBLS/tmp/CourseCPCBLS/lib"/>
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="/media/deserteagle735/DATA/HUST/20192/IT4663-Toi-uu-lap-ke-hoach/ortools/lib"/>
+			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="lib" path="lib/choco-solver-4.10.2.jar"/>
