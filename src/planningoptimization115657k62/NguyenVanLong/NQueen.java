@@ -24,7 +24,7 @@ public class NQueen {
 		System.out.println("X[" + i + "] = " + x[i].getValue());
 	}
 	public static void main(String[] args) {
-		NQueen.NQueen(100);
+		NQueen.NQueen(110);
 	}
 
 }
