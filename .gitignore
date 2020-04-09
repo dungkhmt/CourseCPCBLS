@@ -5,3 +5,6 @@
 .project
 #nguyenvanduc
 **/nguyenvanduc/Test?.java
+.vscode/*
+run.sh
+build.sh
