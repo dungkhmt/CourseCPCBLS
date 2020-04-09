@@ -1,3 +1,5 @@
+package planningoptimization115657k62.phamthanhdong;
+
 //có lẽ nên chú ý hơn !
 //lưu ý nhớ cài đặt TSPDynSEC và SubGenerator !!!
 
@@ -105,14 +107,14 @@ public class TSP {
 		System.out.println("c size: " + this.c.length);
 		for (int i = 0; i < this.c.length; i++) {
 			for (int j = 0; j < this.c.length; j++) {
-				System.out.print(this.c[i][j] + "  ");
+				System.out.print(this.c[i][j] + "   ");
 			}
 			System.out.println();
 		}
 	}
 
 	public static void main(String[] args) {
-		TSPP app = new TSP();
+		TSP app = new TSP();
 		app.setC(7);
 		app.solve();
 	}

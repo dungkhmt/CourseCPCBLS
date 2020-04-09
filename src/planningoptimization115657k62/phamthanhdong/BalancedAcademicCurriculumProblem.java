@@ -1,3 +1,5 @@
+package planningoptimization115657k62.phamthanhdong;
+
 //chuong trinh giai quyet bai toan phan cong giang day
 
 import com.google.ortools.linearsolver.MPConstraint;

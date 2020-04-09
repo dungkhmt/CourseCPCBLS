@@ -1,3 +1,5 @@
+package planningoptimization115657k62.phamthanhdong;
+
 //bai toan xep hang 2D
 
 import org.chocosolver.solver.Model;
