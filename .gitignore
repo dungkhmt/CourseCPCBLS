@@ -2,6 +2,6 @@
 /lib/
 .classpath
 /.settings/
-
+.project
 #nguyenvanduc
 **/nguyenvanduc/Test?.java
