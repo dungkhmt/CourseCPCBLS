@@ -1,7 +1,12 @@
 package planningoptimization115657k62.hoangthanhlam;
 
 import localsearch.model.IConstraint;
+import localsearch.model.IFunction;
 import localsearch.model.VarIntLS;
+import localsearch.model.LocalSearchManager;
+import localsearch.constraints.alldifferent.AllDifferent;
+import localsearch.functions.basic.FuncPlus;
+import localsearch.model.ConstraintSystem;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -37,6 +42,7 @@ public class HillClimbing {
 		}
 	}
 	
+	// Khởi tạo giá trị ngẫu nhiên cho mảng x trong khoảng minValue đến maxValue 
 	private void generateInitialSolution(VarIntLS[] x) {
 		for (int i = 0; i < x.length; i++) {
 			int v = R.nextInt(x[i].getMaxValue() - x[i].getMinValue() + 1) + x[i].getMinValue();
@@ -63,5 +69,39 @@ public class HillClimbing {
 			it++;
 			System.out.println("Step " + it + ", violations = " + c.violations());
 		}
+	}
+	
+	public void test(int n) {
+		LocalSearchManager ls = new LocalSearchManager();
+		ConstraintSystem c = new ConstraintSystem(ls);
+		
+		VarIntLS[] x = new VarIntLS[n];
+		for (int i = 0; i < n; i++) {
+			x[i] = new VarIntLS(ls, 0, n-1);
+		}
+		c.post(new AllDifferent(x));
+		
+		IFunction[] f1 = new IFunction[n];
+		for (int i = 0; i < n; i++) {
+			f1[i] = new FuncPlus(x[i], i);
+		}
+		c.post(new AllDifferent(f1));
+		
+		IFunction[] f2 = new IFunction[n];
+		for (int i = 0; i < n; i++) {
+			f2[i] = new FuncPlus(x[i], -i);
+		}
+		c.post(new AllDifferent(f2));
+		
+		ls.close();
+		
+		search(c, 1000);
+		System.out.println("Result = " + c.violations());
+	}
+	
+	public static void main (String[] args) {
+		System.out.println("_QueenHillClimbing_");
+		HillClimbing lam = new HillClimbing();
+		lam.test(1000);
 	}
 }
