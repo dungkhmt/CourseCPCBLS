@@ -1,8 +1,7 @@
-package baitap;
+package CBLS;
 
 import localsearch.model.*;
 import localsearch.constraints.alldifferent.AllDifferent;
-import localsearch.constraints.basic.*;
 import localsearch.functions.basic.*;
 import localsearch.search.TabuSearch;
 import localsearch.selectors.*;
@@ -10,7 +9,7 @@ import localsearch.selectors.*;
 import java.io.PrintWriter;
 import java.util.*;
 
-public class CSP {
+public class Queen {
 	//data structures input 
 	int N;
 	
@@ -19,7 +18,7 @@ public class CSP {
 	VarIntLS[] X;
 	ConstraintSystem S;
 	
-	public CSP(int i) {
+	public Queen(int i) {
 		this.N = i;
 	}
 
@@ -30,16 +29,22 @@ public class CSP {
 		//Khoi tao cau hinh bai toan
 		X = new VarIntLS[N];
 		for(int i = 0 ; i < N; i++)
-			X[i] = new VarIntLS(mgr, 1, 5);
+			X[i] = new VarIntLS(mgr, 1, N);
 		
 		//Khai bao rang buoc
 		S = new ConstraintSystem(mgr);
-		S.post(new NotEqual(new FuncPlus(X[2],3), X[1]));
-		S.post(new LessOrEqual(X[3], X[4]));
-		S.post(new IsEqual(new FuncPlus(X[2],X[3]), new FuncPlus(X[0],1)));
-		S.post(new LessOrEqual(X[4], 3));
-		S.post(new IsEqual(new FuncPlus(X[4],X[1]), 7));
-		S.post(new Implicate(new IsEqual(X[2], 1), new NotEqual(X[4], 2)));
+		IConstraint c = new AllDifferent(X);
+		S.post(c);
+		
+		IFunction[] f1 = new IFunction[N];
+		for(int i = 0 ; i < N; i++)
+			f1[i] = new FuncPlus(X[i], i);
+		S.post(new AllDifferent(f1));
+		
+		IFunction[] f2 = new IFunction[N];
+		for(int i = 0 ; i < N; i++)
+			f2[i] = new FuncPlus(X[i], -i);
+		S.post(new AllDifferent(f2));
 		
 		mgr.close();		
 	}
@@ -50,12 +55,12 @@ public class CSP {
 		//System.out.println();
 	}
 	
-	private void localSearch(){
+	private void localSearch() {
 		printSol();
 		System.out.println("init, S = " + S.violations());
 		int it = 1;
 		
-		while (it < 100 && S.violations() > 0) {
+		while (it < 10000 && S.violations() > 0) {
 			
 			MinMaxSelector mms = new MinMaxSelector(S);
 			
@@ -67,13 +72,12 @@ public class CSP {
 			System.out.println("Step "+ it + " , S = "+ S.violations());
 			it++;
 		}
-		
 		System.out.print("Best Solution: ");
 		printSol();
 	}
 	
 	public static void main(String[] args) {
-		CSP app = new CSP(5);
+		Queen app = new Queen(8);
 		app.stateNode();
 		app.localSearch();
 	}

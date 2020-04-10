@@ -1,4 +1,4 @@
-package baitap;
+package CBLS;
 
 import java.util.ArrayList;
 import java.util.Random;

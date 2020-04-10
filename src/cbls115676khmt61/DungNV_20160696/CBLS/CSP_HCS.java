@@ -1,4 +1,4 @@
-package baitap;
+package CBLS;
 
 import localsearch.model.*;
 import localsearch.constraints.alldifferent.AllDifferent;

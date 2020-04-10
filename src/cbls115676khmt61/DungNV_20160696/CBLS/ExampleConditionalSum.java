@@ -1,4 +1,4 @@
-package baitap;
+package CBLS;
 
 import localsearch.functions.conditionalsum.ConditionalSum;
 import localsearch.model.IFunction;
