@@ -8,3 +8,4 @@
 .vscode/*
 run.sh
 build.sh
+.idea
