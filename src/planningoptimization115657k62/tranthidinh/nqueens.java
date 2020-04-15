@@ -1,3 +1,4 @@
+package planningoptimization115657k62.tranthidinh;
 import HillClimbingSearch.HillClimbingSearch;
 import localsearch.constraints.alldifferent.AllDifferent;
 import localsearch.functions.basic.FuncPlus;
