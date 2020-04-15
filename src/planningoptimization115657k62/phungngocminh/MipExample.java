@@ -1,4 +1,4 @@
-package planningoptimization115657k62
+package planningoptimization115657k62;
 import com.google.ortools.linearsolver.MPConstraint;
 import com.google.ortools.linearsolver.MPObjective;
 import com.google.ortools.linearsolver.MPSolver;
