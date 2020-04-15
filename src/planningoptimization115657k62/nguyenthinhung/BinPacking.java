@@ -1,5 +1,7 @@
 package planningoptimization115657k62.nguyenthinhung;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.Scanner;
 
 import org.chocosolver.solver.Model;
@@ -13,11 +15,16 @@ import org.chocosolver.solver.variables.IntVar;
 
 
 public class BinPacking {
-	int N;
-	int H;
-	int W;
-	int[] w = new int[100];
-	int[] h = new int [100];
+	//int N;
+	//int H;
+	//int W;
+	int N = 3;
+	int H = 6;
+	int W = 4;
+	int[] w = {3,3,1};
+	int[] h = {2,4,6};
+	// int[] w = new int[100];
+	// int[] h = new int [100];
 	Model model = new Model("BP") ;
 	IntVar[] x = new IntVar[100];
 	IntVar[] y = new IntVar[100];
@@ -74,24 +81,32 @@ public class BinPacking {
 		}
 	}
 
-	public void readData() {
-		Scanner input = new Scanner("input.txt");
-		H = input.nextInt();
-		W = input.nextInt();
-		h = new int[100];
-		w = new int[100];
-		int i = 0;
-		while(input.nextInt() != -1) {
-			h[i++] = input.nextInt();
-			w[i++] = input.nextInt();
-		}
-		N = i;
-		input.close();
+	public void readData(String file_path) {
+		try {
+			File file = new File(file_path);
+            Scanner scanner = new Scanner(file);
+
+            W = scanner.nextInt();
+            H = scanner.nextInt();
+            int count = 0;
+            while (true) {
+                int tmp;
+                tmp = scanner.nextInt();
+                if (tmp == -1) break;
+                w[count] = tmp;
+                h[count] = scanner.nextInt();
+                count++;
+            }
+            N = count;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 	}
 	
 	public static void main(String[] args) {
 		BinPacking t = new BinPacking();
-		t.readData();
+		//t.readData("./input.txt");
 		t.buid();
 		t.Search();
 	}
