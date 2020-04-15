@@ -2,3 +2,11 @@
 /lib/
 .classpath
 /.settings/
+.project
+#nguyenvanduc
+**/nguyenvanduc/Test?.java
+.vscode/*
+run.sh
+build.sh
+.idea
+/.metadata/

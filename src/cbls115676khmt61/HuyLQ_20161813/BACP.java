@@ -1,6 +1,5 @@
-package CondiationalSum;
+package cbls115676khmt61.HuyLQ_20161813;
 
-import Leodoi.HillClimbingSearch;
 import localsearch.constraints.basic.LessOrEqual;
 import localsearch.constraints.basic.LessThan;
 import localsearch.functions.conditionalsum.ConditionalSum;
@@ -9,6 +8,7 @@ import localsearch.model.IConstraint;
 import localsearch.model.IFunction;
 import localsearch.model.LocalSearchManager;
 import localsearch.model.VarIntLS;
+import cbls115676khmt61.HuyLQ_20161813.HillClimbingSearch;
 
 public class BACP {
 	int N = 12, P = 4; //so mon hoc va so hoc ki danh so tu 0

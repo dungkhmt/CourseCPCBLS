@@ -17,10 +17,10 @@ public class TSPwithSEC {
 	
 	int N = 5;
 	int[][] c = {{0,4,2,5,6},
-			{2,0,5,2,7},
-			{1,2,0,6,3},
-			{7,5,8,0,3},
-			{1,2,4,3,0}};
+            {2,0,5,2,7},
+            {1,2,0,6,3},
+            {7,5,8,0,3},
+            {1,2,4,3,0}};
 	MPSolver solver;
 	MPVariable[][] X;
 	double inf = java.lang.Double.POSITIVE_INFINITY;
@@ -79,12 +79,12 @@ public class TSPwithSEC {
 		}
 		
 		for (int i = 0; i < N; i++) {
-			MPConstraint c1 = solver.makeConstraint(0, 1);
+			MPConstraint c1 = solver.makeConstraint(1, 1);
 			for (int j = 0; j < N; j++) {
 				c1.setCoefficient(X[i][j], 1);
 			}
 			
-			MPConstraint c2 = solver.makeConstraint(0, 1);
+			MPConstraint c2 = solver.makeConstraint(1, 1);
 			for (int j = 0; j < N; j++) {
 				c2.setCoefficient(X[j][i], 1);
 			}

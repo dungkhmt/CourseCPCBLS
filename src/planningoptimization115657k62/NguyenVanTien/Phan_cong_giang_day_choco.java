@@ -1,4 +1,4 @@
-package baiTapTrenLop;
+package planningoptimization115657k62.NguyenVanTien;
 
 import org.chocosolver.solver.Model;
 import org.chocosolver.solver.variables.IntVar;

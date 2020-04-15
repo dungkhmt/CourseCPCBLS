@@ -1,3 +1,5 @@
+package planningoptimization115657k62.phamthanhdong;
+
 import java.util.*;
 public class SubSetGenerator {
 
