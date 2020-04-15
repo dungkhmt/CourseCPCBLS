@@ -1,4 +1,4 @@
-package Queen;
+package cbls115676khmt61.HuyLQ_20161813;
 import localsearch.constraints.alldifferent.AllDifferent;
 import localsearch.functions.basic.FuncPlus;
 import localsearch.model.ConstraintSystem;

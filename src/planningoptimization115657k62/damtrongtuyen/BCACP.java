@@ -1,3 +1,5 @@
+package planningoptimization115657k62.damtrongtuyen;
+
 import org.chocosolver.solver.IModel;
 import org.chocosolver.solver.Model;
 import org.chocosolver.solver.variables.IntVar;
@@ -60,13 +62,13 @@ public class BCACP {
         Model model = new Model("BCAP");
         IntVar[][] x = model.intVarMatrix(P, N, 0, 1);
         for (int i = 0; i < P; i++) {
-            model.scalar(x[i], credits, ">=", lamda).post(); // tổng số tín chỉ
+            model.scalar(x[i], credits, ">=", lamda).post(); // tá»•ng sá»‘ tÃ­n chá»‰
             model.scalar(x[i], credits, "<=", gamma).post();
 
-            model.scalar(x[i], oneN, ">=", alpha).post(); // tổng số môn học
+            model.scalar(x[i], oneN, ">=", alpha).post(); // tá»•ng sá»‘ mÃ´n há»�c
             model.scalar(x[i], oneN, "<=", beta).post();
         }
-        for (int i = 0; i < N; i++) { // mỗi môn chỉ học trong 1 kì
+        for (int i = 0; i < N; i++) { // má»—i mÃ´n chá»‰ há»�c trong 1 kÃ¬
             IntVar[] y = new IntVar[P];
             for (int j = 0; j < P; j++) {
                 y[j] = x[j][i];

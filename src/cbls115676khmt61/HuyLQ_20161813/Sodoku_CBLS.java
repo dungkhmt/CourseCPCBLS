@@ -1,4 +1,4 @@
-package Sodoku;
+package cbls115676khmt61.HuyLQ_20161813;
 
 import java.util.ArrayList;
 import java.util.Random;

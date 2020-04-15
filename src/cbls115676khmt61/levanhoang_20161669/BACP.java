@@ -1,5 +1,6 @@
 package cbls115676khmt61.levanhoang_20161669;
 
+import cbls115676khmt61.levanhoang_20161669.HillClimbingSearch;
 import localsearch.constraints.basic.LessOrEqual;
 import localsearch.constraints.basic.LessThan;
 import localsearch.functions.conditionalsum.ConditionalSum;

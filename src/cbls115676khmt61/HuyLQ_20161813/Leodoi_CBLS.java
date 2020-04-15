@@ -1,4 +1,4 @@
-package Leodoi;
+package cbls115676khmt61.HuyLQ_20161813;
 
 import java.util.Random;
 
@@ -62,8 +62,8 @@ public class Leodoi_CBLS {
 		stateModel();
 		printSol();
 		System.out.println("init, S = " + S.violations());
-		HillClimbingSearch h = new HillClimbingSearch(S);
-		h.search(10000);
+		HillClimbingSearch h = new HillClimbingSearch();
+		h.search(S, 10000);
 		System.out.print("Best solution: ");
 		printSol();
 	}

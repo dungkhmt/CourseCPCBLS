@@ -1,4 +1,4 @@
-package Leodoi;
+package cbls115676khmt61.HuyLQ_20161813;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -14,45 +14,47 @@ public class HillClimbingSearch {
 			this.v = v;
 		}
 	}
-	private IConstraint c;
-	private ArrayList<AssignMove> cand;
-	private VarIntLS[] y;
-	private Random R;
-	public HillClimbingSearch(IConstraint c) {
-		this.c = c;
-		y = c.getVariables();
-		cand = new ArrayList<HillClimbingSearch.AssignMove>();
-		R = new Random();
-	}
-	public void exploreNeighborhood() {
-		this.cand.clear();
+	private Random R = new Random();
+	public void exploreNeighborhood(IConstraint c, VarIntLS[] x, ArrayList<AssignMove> candidate) {
+		candidate.clear();
 		int minDelta = Integer.MAX_VALUE;
-		for (int i = 0; i < y.length; i++) {
-			for (int v = y[i].getMinValue(); v <= y[i].getMaxValue(); v++) {
-				int d = c.getAssignDelta(y[i], v); //su thay doi muc do vi pham khi y[i] duoc gan gia tri v
+		for (int i = 0; i < x.length; i++) {
+			for (int v = x[i].getMinValue(); v <= x[i].getMaxValue(); v++) {
+				int d = c.getAssignDelta(x[i], v); //su thay doi muc do vi pham khi y[i] duoc gan gia tri v
 				if (d < minDelta) {
-					this.cand.clear();
-					this.cand.add(new AssignMove(i, v));
+					candidate.clear();
+					candidate.add(new AssignMove(i, v));
 					minDelta = d;
 				}
 				else if (d == minDelta){
-					this.cand.add(new AssignMove(i, v));
+					candidate.add(new AssignMove(i, v));
 				}
 			}
 		}
 	}
-	public void search(int maxIter) {
-		int it = 0;
-		while (it < maxIter && c.violations() > 0) {
-			exploreNeighborhood();
-			AssignMove m = cand.get(R.nextInt(cand.size()));
-			y[m.i].setValuePropagate(m.v);
-			System.out.print("iter " + it + ": ");
-			for (int i = 0; i < y.length; i++) {
-				System.out.print(y[i].getValue() + " ");
+	private void generateInitialSolution(VarIntLS[] x){
+		for(int i = 0; i < x.length; i++){
+			int v = R.nextInt(x[i].getMaxValue() - x[i].getMinValue() + 1) + x[i].getMinValue();
+			x[i].setValuePropagate(v);
+		}
+	}
+	public void search(IConstraint c, int maxIter){
+		VarIntLS[] x = c.getVariables();
+
+		generateInitialSolution(x);
+
+		int it = 0;// iteration
+		ArrayList<AssignMove> candidate = new ArrayList<AssignMove>();
+		while(it < maxIter && c.violations() > 0){
+			exploreNeighborhood(c, x, candidate);
+			if(candidate.size() == 0){
+				System.out.println("Reach local optimum");
+				break;
 			}
-			System.out.println(", violations: " + c.violations());
+			AssignMove m = candidate.get(R.nextInt(candidate.size()));// select randomly a move in candidate
+			x[m.i].setValuePropagate(m.v);// local move (assign value, update violations, data structures
 			it++;
+			System.out.println("Step " + it + ", violations = " + c.violations());
 		}
 	}
 }
