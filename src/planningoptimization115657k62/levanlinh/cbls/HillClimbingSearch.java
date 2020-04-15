@@ -32,10 +32,10 @@ public class HillClimbingSearch {
 		while (it < MaxIter && S.violations() > 0) {
 			cand = exploreNeighbors(cand);
 			
-			//if (cand == null) {
-			//	System.out.println("Reach local minimum!");
-			//	break;
-			//}	
+			if (cand.size() == 0) {
+				System.out.println("Reach local minimum!");
+				break;
+			}	
 			int i = R.nextInt(cand.size());
 			Move m = cand.get(i);
 			x[m.i].setValuePropagate(m.v);
@@ -52,13 +52,15 @@ public class HillClimbingSearch {
 			for (int v = x[i].getMinValue(); v <= x[i].getMaxValue(); v++)
 				if (v != x[i].getValue()) {
 					int delta = S.getAssignDelta(x[i], v);
-					if (delta < minDelta) {
-						cand.clear();
-						cand.add(new Move(i, v));
-						minDelta = delta;
-					}
-					if (delta == minDelta) {
-						cand.add(new Move(i, v));
+					if (delta < 0) {
+						if (delta < minDelta) {
+							cand.clear();
+							cand.add(new Move(i, v));
+							minDelta = delta;
+						}
+						if (delta == minDelta) {
+							cand.add(new Move(i, v));
+						}
 					}
 				}
 		return cand;
