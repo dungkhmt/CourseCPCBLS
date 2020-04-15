@@ -1,3 +1,5 @@
+package planningoptimization115657k62.phamthanhdong;
+
 //chuong trinh minh hoa voi cac giang buoc
 /*
  x + 2*y <= 14

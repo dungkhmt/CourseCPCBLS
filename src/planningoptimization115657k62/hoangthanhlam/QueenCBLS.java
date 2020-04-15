@@ -15,7 +15,7 @@ public class QueenCBLS {
 		this.n = n;
 	}
 	
-	public void test() {
+	public void search() {
 		// Khởi tạo manager
 		LocalSearchManager ls = new LocalSearchManager();
 		ConstraintSystem S = new ConstraintSystem(ls);
@@ -62,7 +62,7 @@ public class QueenCBLS {
 	public static void main(String[] args) {
 		System.out.println("_QueenCBLS_");
 		QueenCBLS Q = new QueenCBLS(1000);
-		Q.test();
+		Q.search();
 
 	}
 

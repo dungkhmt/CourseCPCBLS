@@ -1,13 +1,6 @@
 package cbls115676khmt61.levanhoang_20161669;
 
-import localsearch.constraints.basic.AND;
-import localsearch.constraints.basic.Implicate;
-import localsearch.constraints.basic.IsEqual;
-import localsearch.constraints.basic.LessOrEqual;
-import localsearch.constraints.basic.OR;
-import localsearch.functions.basic.FuncPlus;
 import localsearch.model.ConstraintSystem;
-import localsearch.model.IConstraint;
 import localsearch.model.LocalSearchManager;
 import localsearch.model.VarIntLS;
 

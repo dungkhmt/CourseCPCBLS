@@ -1,4 +1,4 @@
-package cbls115676khmt61.TranHuyHung_20164777;
+
 
 import localsearch.constraints.basic.AND;
 import localsearch.constraints.basic.Implicate;

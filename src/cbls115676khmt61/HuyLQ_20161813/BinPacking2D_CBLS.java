@@ -1,6 +1,6 @@
-package BinPacking2D;
+package cbls115676khmt61.HuyLQ_20161813;
 
-import Leodoi.HillClimbingSearch;
+import cbls115676khmt61.HuyLQ_20161813.HillClimbingSearch;
 import localsearch.constraints.basic.AND;
 import localsearch.constraints.basic.Implicate;
 import localsearch.constraints.basic.IsEqual;

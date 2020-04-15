@@ -1,4 +1,4 @@
-package Choco;
+package planningoptimization115657k62.phamvietbang.project.QHRB;
 import java.io.*;
 import org.chocosolver.solver.Model;
 import org.chocosolver.solver.variables.IntVar;
@@ -53,7 +53,7 @@ public class AcademicSemester {
 		for(int i=0;i<P;i++)b[i]=1;
 	}
 	public static void main(String [] args) throws Exception {
-		loadFile("D:\\bacp.txt");
+		loadFile("bacp.txt");
 		Model model= new Model();
 		IntVar x[][]=new IntVar[P][N];
 		for(int i=0;i<P;i++) {
