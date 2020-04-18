@@ -1,4 +1,4 @@
-package baitap;
+package cbls115676khmt61.DuongLeGiang_20161164;
 
 import localsearch.model.*;
 import localsearch.constraints.alldifferent.AllDifferent;
