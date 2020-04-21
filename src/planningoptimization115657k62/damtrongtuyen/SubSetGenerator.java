@@ -1,3 +1,5 @@
+package planningoptimization115657k62.damtrongtuyen;
+
 import java.util.HashSet;
 
 public class SubSetGenerator {
