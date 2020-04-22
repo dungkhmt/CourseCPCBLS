@@ -52,7 +52,7 @@ public class HillClimbingSearch {
 			for (int v = x[i].getMinValue(); v <= x[i].getMaxValue(); v++)
 				if (v != x[i].getValue()) {
 					int delta = S.getAssignDelta(x[i], v);
-					if (delta < 0) {
+					if (delta <= 0) {
 						if (delta < minDelta) {
 							cand.clear();
 							cand.add(new Move(i, v));

@@ -58,14 +58,14 @@ public class SudokuCBLS {
 		}
 	}
 	
-	public ArrayList<Move> ExploreNeighborhood(ArrayList<Move> cand) {
+	public void ExploreNeighborhood(ArrayList<Move> cand) {
 		cand.clear();
+		int minDelta = Integer.MAX_VALUE;
 		for (int i = 0; i < 9; ++i) {
-			int minDelta = Integer.MAX_VALUE;
 			for (int j = 0; j < 8; ++j) {
 				for (int k = j+1; k < 9; ++k) {
 					int delta = S.getSwapDelta(x[i][j], x[i][k]);
-					if (delta < 0) {
+					if (delta <= 0) {
 						if (delta < minDelta) {
 							minDelta = delta;
 							cand.clear();
@@ -78,7 +78,7 @@ public class SudokuCBLS {
 				}
 			}
 		}
-		return cand;
+		//return cand;
 	}
 	
 	public void search(int maxIter) {
@@ -86,7 +86,7 @@ public class SudokuCBLS {
 		ArrayList<Move> cand = new ArrayList<>();
 		int it = 0;
 		while (S.violations() > 0 && it < maxIter) {
-			cand = ExploreNeighborhood(cand);
+			ExploreNeighborhood(cand);
 			if (cand.size() == 0) {
 				System.out.println ("Reach local minimum!");
 				break;
