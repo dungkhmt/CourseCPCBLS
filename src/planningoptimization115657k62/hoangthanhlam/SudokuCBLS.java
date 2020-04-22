@@ -78,13 +78,15 @@ public class SudokuCBLS {
 	private void exploreNeighborhood(ArrayList<Move> cand){
 		int minDelta = Integer.MAX_VALUE;
 		cand.clear();
-		for(int i = 0; i < 9; i++){
-			for(int j1 = 0; j1 < 8; j1++){
-				for(int j2 = j1 + 1; j2 < 9; j2++){
+		for (int i = 0; i < 9; i++){
+			for (int j1 = 0; j1 < 8; j1++){
+				for (int j2 = j1 + 1; j2 < 9; j2++){
 					int delta = cs.getSwapDelta(x[i][j1], x[i][j2]);
-					if(delta < minDelta){
-						cand.clear(); cand.add(new Move(i,j1,j2)); minDelta = delta;
-					}else if(delta == minDelta){
+					if (delta < minDelta){
+						cand.clear();
+						cand.add(new Move(i,j1,j2));
+						minDelta = delta;
+					} else if (delta == minDelta){
 						cand.add(new Move(i,j1,j2));
 					}
 				}
@@ -97,9 +99,9 @@ public class SudokuCBLS {
 		generateInitSolution();
 		ArrayList<Move> cand = new ArrayList<Move>();
 		int it = 0;
-		while(it < 100000 && cs.violations() > 0){
+		while (it < 100000 && cs.violations() > 0){
 			exploreNeighborhood(cand);
-			if(cand.size() == 0){
+			if (cand.size() == 0){
 				break;
 			}
 			Move m = cand.get(R.nextInt(cand.size()));
@@ -111,8 +113,8 @@ public class SudokuCBLS {
 	}
 	
 	public void printSolution(){
-		for(int i = 0; i < 9; i++){
-			for(int j = 0; j < 9; j++){
+		for (int i = 0; i < 9; i++){
+			for (int j = 0; j < 9; j++){
 				System.out.print(x[i][j].getValue() + " ");
 			}
 			System.out.println();
