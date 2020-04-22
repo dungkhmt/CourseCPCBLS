@@ -2,10 +2,8 @@ package planningoptimization115657k62.hoangthanhlam;
 
 import org.chocosolver.solver.Model;
 import org.chocosolver.solver.Solver;
-import org.chocosolver.solver.search.strategy.Search;
-import org.chocosolver.solver.search.strategy.selectors.values.IntDomainMin;
-import org.chocosolver.solver.search.strategy.selectors.variables.FirstFail;
 import org.chocosolver.solver.variables.*;
+
 public class BinPacking {
 	int N = 3;
 	int W = 4;
