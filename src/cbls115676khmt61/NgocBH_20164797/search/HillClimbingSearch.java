@@ -17,25 +17,53 @@ import localsearch.model.IFunction;
 import localsearch.model.Invariant;
 import localsearch.model.VarIntLS;
 
-public class HillClimbingSearch {
+public class HillClimbingSearch implements LocalSearch{
+    /* 
+    parameters:
+        rand:
+        max_iter:
+        verbose:
+    functions:
+        void minimize_objective(IFunction f, Move move_temp)
+        void search_two_phase(IConstraint c, Move con_move_temp, IFunction f, Move func_move_temp)
+        void minimize_objective_with_constraint(IFunction f, IConstraint c)
+        void satisfy_constraint(IConstraint c)
+        void minimize_objective_with_constraint(IFunction f, IConstraint c, Move move_temp)
+        void satisfy_constraint(IConstraint c, Move move_temp)
+    */
     private Random rand;
-    private int MAX_ITER=100;
-    private boolean verbose=true;
+    private int max_iter;
+    private boolean verbose;
 
-    public HillClimbingSearch(int seed) {
-        this.rand = new Random(seed);
+    public HillClimbingSearch() {
+        this.rand = new Random();
+        this.verbose = true;
+        this.max_iter = 100;
     }
 
-    public HillClimbingSearch(int seed,boolean verbose) {
+    public HillClimbingSearch(int max_iter) {
+        this.rand = new Random();
+        this.verbose = true;
+        this.max_iter = max_iter;
+    }
+
+    public HillClimbingSearch(int max_iter,int seed) {
+        this.rand = new Random(seed);
+        this.verbose = true;
+        this.max_iter = max_iter;
+    }
+
+    public HillClimbingSearch(int max_iter,int seed, boolean verbose) {
         this.rand = new Random(seed);
         this.verbose = verbose;
+        this.max_iter = max_iter;
     }
 
-    public void set_max_iter(int max_iter) {
-        this.MAX_ITER = max_iter;
+    public void set_max_iteration(int max_iter) {
+        this.max_iter = max_iter;
     }
 
-    public Move jump_by_value(IConstraint c) {
+    private Move jump_by_value(IConstraint c) {
         VarIntLS[] y = c.getVariables();
         ArrayList<Move> candidates = new ArrayList<Move>();
         candidates.add(new AssignMove(0,0,false));
@@ -56,7 +84,7 @@ public class HillClimbingSearch {
         return sel_m;
     }
 
-    public Move jump_by_swapping(IConstraint c) {
+    private Move jump_by_swapping(IConstraint c) {
         VarIntLS[] y = c.getVariables();
         ArrayList<Move> candidates = new ArrayList<Move>();
         candidates.add(new SwapMove(0,0,false));
@@ -78,7 +106,7 @@ public class HillClimbingSearch {
         return sel_m;
     }
 
-    public Move jump_by_value(IFunction f) {
+    private Move jump_by_value(IFunction f) {
         VarIntLS[] y = f.getVariables();
         ArrayList<Move> candidates = new ArrayList<Move>();
         candidates.add(new AssignMove(0,0,false));
@@ -99,7 +127,7 @@ public class HillClimbingSearch {
         return sel_m;
     }
 
-    public Move jump_by_swapping(IFunction f) {
+    private Move jump_by_swapping(IFunction f) {
         VarIntLS[] y = f.getVariables();
         ArrayList<Move> candidates = new ArrayList<Move>();
         candidates.add(new SwapMove(0,0,false));
@@ -121,7 +149,7 @@ public class HillClimbingSearch {
         return sel_m;
     }
 
-    public Move jump_by_value(IConstraint c, IFunction f, VarIntLS[] y) {
+    private Move jump_by_value(IConstraint c, IFunction f, VarIntLS[] y) {
         ArrayList<Move> candidates = new ArrayList<Move>();
         candidates.add(new AssignMove(0, y[0].getValue(), false));
         int best_dc = Integer.MAX_VALUE;
@@ -149,7 +177,7 @@ public class HillClimbingSearch {
         return sel_m;
     }
 
-    public Move jump_by_swapping(IConstraint c, IFunction f, VarIntLS[] y) {
+    private Move jump_by_swapping(IConstraint c, IFunction f, VarIntLS[] y) {
         ArrayList<Move> candidates = new ArrayList<Move>();
         candidates.add(new SwapMove(0, 0, false));
         int best_dc = Integer.MAX_VALUE;
@@ -182,7 +210,7 @@ public class HillClimbingSearch {
         int it = 0;
         VarIntLS[] y = c.getVariables();
 
-        while ( it < MAX_ITER && c.violations() > 0 ) {
+        while ( it < max_iter && c.violations() > 0 ) {
             if (verbose) 
                 System.out.printf("iteration %d: violations = %d\n",it, c.violations());
 
@@ -211,7 +239,7 @@ public class HillClimbingSearch {
         VarIntLS[] y = new VarIntLS[varset.size()];
         varset.toArray(y);
 
-        while ( it < MAX_ITER ) {
+        while ( it < max_iter ) {
             if (verbose) 
                 System.out.printf("iteration %d: objective = %d and violations = %d\n", it, f.getValue(), c.violations());
             // for (int i = 0; i < y.length; i++) {
@@ -240,7 +268,7 @@ public class HillClimbingSearch {
         int it = 0;
         VarIntLS[] y = c.getVariables();
 
-        while ( it < MAX_ITER && c.violations() > 0 ) {
+        while ( it < max_iter && c.violations() > 0 ) {
             if (verbose) 
                 System.out.printf("iteration %d: violations = %d\n", it, c.violations());
             
@@ -269,7 +297,7 @@ public class HillClimbingSearch {
         VarIntLS[] y = new VarIntLS[varset.size()];
         varset.toArray(y);
 
-        while ( it < MAX_ITER ) {
+        while ( it < max_iter ) {
             if (verbose) 
                 System.out.printf("iteration %d: objective = %d and violations = %d\n",it, f.getValue(), c.violations());
             
@@ -302,7 +330,7 @@ public class HillClimbingSearch {
         int it = 0;
         VarIntLS[] y = f.getVariables();
 
-        while ( it < MAX_ITER ) {
+        while ( it < max_iter ) {
             if (verbose) 
                 System.out.printf("iteration %d: objective = %d\n",it, f.getValue());
             
