@@ -17,6 +17,15 @@ public class Queen {
 	ConstraintSystem cs;
 	int N = 50;
 	
+	class Move {
+		int i;
+		int v;
+		public Move(int i, int v) {
+			this.i = i;
+			this.v = v;
+		}
+	}
+	
 	public void buildModel() {
 		mgr = new LocalSearchManager();
 		x = new VarIntLS[N];
@@ -35,23 +44,18 @@ public class Queen {
 		
 		IFunction[] z = new IFunction[N];
 		for (int i = 0; i < N; i++) {
-			z[i] = new FuncMinus(x[i], i);
+			z[i] = new FuncPlus(x[i], -i);
 		}
 		cs.post(new AllDifferent(z));
 		mgr.close();
 	}
 	
-	class Move {
-		int i;
-		int v;
-		public Move(int i, int v) {
-			this.i = i;
-			this.v = v;
-		}
-	}
+	
 	
 	public void tabuSearch() {
+		buildModel();
 		int tbl = 20;
+		int maxStable = 100;
 		int tabu[][] = new int[N][N];
 		for (int i = 0; i < N; i++) {
 			for (int v = 0; v < N; v++) {
@@ -60,11 +64,12 @@ public class Queen {
 		}
 		int it = 0;
 		int best = cs.violations();
-		int minDelta = Integer.MAX_VALUE;
+		
 		Random r =  new Random();
 		ArrayList<Move> cand = new ArrayList<Move>();
-		while (it < 1000 && cs.violations() > 0) {
-			//cand.clear();
+		int nic = 0;
+		while (it < 10000 && cs.violations() > 0) {
+			int minDelta = Integer.MAX_VALUE;
 			for (int i = 0; i < N; i++) {
 				for (int v = 0; v < N; v++) {
 					if (x[i].getValue() != v) {
@@ -86,15 +91,23 @@ public class Queen {
 			Move m = cand.get(r.nextInt(cand.size()));
 			tabu[m.i][m.v] = it + tbl;
 			x[m.i].setValuePropagate(m.v);
-			best = cs.violations();
-			System.out.println("Iteration: " + it + ", violations: " + best);
+			if (cs.violations() < best) {
+				best = cs.violations();
+				nic = 0;
+			} else {
+				nic += 1;
+				if (nic >= maxStable) {
+					for(int i = 0; i < N; i++) x[i].setValuePropagate(r.nextInt(N));
+					System.out.println("nic > MaxStable. Random new state");
+				}
+			}
+			System.out.println("Iteration: " + it + ", violations: " + cs.violations());
 			it++;
 		}
 	}
 	
 	public static void main(String[] args) {
 		Queen app = new Queen();
-		app.buildModel();
 		app.tabuSearch();
 	}
 }
