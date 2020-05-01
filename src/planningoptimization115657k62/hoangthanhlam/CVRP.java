@@ -8,45 +8,31 @@ import localsearch.domainspecific.vehiclerouting.vrp.ConstraintSystemVR;
 import localsearch.domainspecific.vehiclerouting.vrp.IFunctionVR;
 import localsearch.domainspecific.vehiclerouting.vrp.VRManager;
 import localsearch.domainspecific.vehiclerouting.vrp.VarRoutesVR;
+import localsearch.domainspecific.vehiclerouting.vrp.constraints.leq.Leq;
 import localsearch.domainspecific.vehiclerouting.vrp.entities.ArcWeightsManager;
 import localsearch.domainspecific.vehiclerouting.vrp.entities.NodeWeightsManager;
 import localsearch.domainspecific.vehiclerouting.vrp.entities.Point;
 import localsearch.domainspecific.vehiclerouting.vrp.functions.AccumulatedEdgeWeightsOnPathVR;
 import localsearch.domainspecific.vehiclerouting.vrp.functions.AccumulatedNodeWeightsOnPathVR;
 import localsearch.domainspecific.vehiclerouting.vrp.functions.LexMultiFunctions;
-import localsearch.domainspecific.vehiclerouting.vrp.functions.MaxVR;
-import localsearch.domainspecific.vehiclerouting.vrp.functions.plus.Plus;
-import localsearch.domainspecific.vehiclerouting.vrp.functions.plus.PlusFunctionFunction;
+import localsearch.domainspecific.vehiclerouting.vrp.functions.TotalCostVR;
 import localsearch.domainspecific.vehiclerouting.vrp.invariants.AccumulatedWeightEdgesVR;
 import localsearch.domainspecific.vehiclerouting.vrp.invariants.AccumulatedWeightNodesVR;
 
-public class MiniProject {
-	int N = 6;
+public class CVRP {
 	int K = 2;
-    
-    int[] d;
-    int[][] t;
-	
-	public MiniProject (int N, int K) {
-		this.N = N;
-		this.K = K;
-		
-		Random rd = new Random();
-		int r = 9;
-		
-		this.d = new int[N+1];
-		this.t = new int[N+1][N+1];
-		for (int i = 0; i <= N; i++) {
-			d[i] = 1 + rd.nextInt(r);
-			for (int j = 0; j <= N; j++) {
-				if (i == j) t[i][j] = 0;
-				else {
-					t[i][j] = 1 + rd.nextInt(r);
-				}
-			}
-		}
-		d[0] = 0;
-	}
+	int N = 6;
+	int capacity = 11;
+	int[] d = {0,4,2,5,2,3,5};
+	int[][] t = {
+	{0,3,2,1,4,3,7},
+	{2,0,2,3,5,3,9},
+	{1,3,0,2,4,2,4},
+	{5,3,2,0,1,1,7},
+	{3,1,5,1,0,3,6},
+	{6,3,2,4,4,0,9},
+	{2,3,2,1,2,8,0}
+	};
 	
 	ArrayList<Point> start;
 	ArrayList<Point> end;
@@ -63,26 +49,10 @@ public class MiniProject {
 	LexMultiFunctions F;
 	
 	IFunctionVR obj;
+	IFunctionVR[] D;
 	IFunctionVR[] T;
-	Random R = new Random();
 	
-	public void printDataInput() {
-		System.out.println("t[][] = {");
-		for (int i = 0; i <= N; i++) {
-			System.out.print("\t");
-			for (int j = 0; j <= N; j++) {
-				System.out.print(t[i][j] + ", ");
-			}
-			System.out.println();
-		}
-		System.out.println("}");
-		
-		System.out.print("d[] = {");
-		for (int i = 0; i <= N; i++) {
-			System.out.print(d[i] + ", ");
-		}
-		System.out.println("}");
-	}
+	Random R = new Random();
 	
 	public void mapping() {
 		start = new ArrayList<Point>();
@@ -139,13 +109,15 @@ public class MiniProject {
 		AccumulatedWeightNodesVR accN = new AccumulatedWeightNodesVR(XR, nwm);
 		
 		T = new IFunctionVR[K];
+		D = new IFunctionVR[K];
 		for (int i = 1; i <= K; i++) {
 			Point t = XR.endPoint(i);
-			IFunctionVR _d = new AccumulatedNodeWeightsOnPathVR(accN, t);
-			IFunctionVR _t = new AccumulatedEdgeWeightsOnPathVR(accE, t);
-			T[i-1] = new Plus(_d, _t);
+			D[i-1] = new AccumulatedNodeWeightsOnPathVR(accN, t);
+			S.post(new Leq(D[i-1], capacity));
+			T[i-1] = new AccumulatedEdgeWeightsOnPathVR(accE, t);
+			
 		}
-		obj = new MaxVR(T);
+		obj = new TotalCostVR(XR, awm);
 		mgr.close();
 	}
 	
@@ -174,7 +146,7 @@ public class MiniProject {
 		candicate.clear();
 		int minDeltaC = Integer.MAX_VALUE;
 		double minDeltaF = minDeltaC;
-		for (int k = 1; k <= K; k++) {
+		for (int k = 1; k <= XR.getNbRoutes(); k++) {
 			for (Point y = XR.startPoint(k); y != XR.endPoint(k); y = XR.next(y)) {
 				for (Point x: clientPoint) {
 					if (x != y && x != XR.next(y)) {
@@ -182,6 +154,7 @@ public class MiniProject {
 						System.out.println("deltaC = " + deltaC);
 						double deltaF = obj.evaluateAddOnePoint(x, y);
 						System.out.println("deltaF = " + deltaF);
+						
 						if (!(deltaC < 0 || deltaC == 0 && deltaF < 0)) continue;
 						if (deltaC < minDeltaC || deltaC == minDeltaC && deltaF < minDeltaF) {
 							candicate.clear();
@@ -215,8 +188,7 @@ public class MiniProject {
 	}
 	
 	public static void main (String[] args) {
-		MiniProject mini = new MiniProject(6, 2);
-		mini.printDataInput();
+		CVRP mini = new CVRP();
 		mini.mapping();
 		mini.stateModel();
 		mini.search(100);
