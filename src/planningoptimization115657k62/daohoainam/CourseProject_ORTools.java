@@ -42,48 +42,11 @@ public class CourseProject_ORTools {
 		MPVariable[][] X;
 
 
-		
-		/* creat data*/
-		public void creat()  throws Exception{
-			
-			String filePath = new File("").getAbsolutePath();
-			// doc file Q(i,j)
-			  Scanner sc = new Scanner(new BufferedReader(new FileReader(filePath+"/src/planningoptimization115657k62/daohoainam/Q.txt")));
-			      while(sc.hasNextLine()) {
-			         for (int i=0; i<Q.length; i++) {
-			            String[] line = sc.nextLine().trim().split(" ");
-			            for (int j=0; j<line.length; j++) {
-			              Q[i][j] = Integer.parseInt(line[j]);
-			             
-			            }
-			         }
-			      }
-			      sc.close();
-			   
-			      // doc file d(i, j)
-			      Scanner sc_d = new Scanner(new BufferedReader(new FileReader(filePath+"/src/planningoptimization115657k62/daohoainam/distance.txt")));
-			      while(sc_d.hasNextLine()) {
-			         for (int i=0; i<d.length; i++) {
-			            String[] line = sc_d.nextLine().trim().split(" ");
-			            for (int j=0; j<line.length; j++) {
-			              d[i][j] = Integer.parseInt(line[j]);
-			            }
-			         }
-			      }
-			      sc_d.close();
-			      
-			      // doc file q(k)
-			     
-			      Scanner sc_q = new Scanner(new File(filePath+"/src/planningoptimization115657k62/daohoainam/need.txt"));
-			      int i = 0;
-			      while(sc_q.hasNextInt()){
-			         q[i++] = sc_q.nextInt();
-			      }
-			   
-			      sc_q.close();
-	   
-		}
 
+		/* load data from file */
+		public void creat()  throws Exception{	
+		}
+		
 		public void test() {
 			for(int i = 0; i < N+1; i++)
 				for(int j = 0; j < M+1; j++)
@@ -93,7 +56,7 @@ public class CourseProject_ORTools {
 		
 		public void solve() {
 			double INF = java.lang.Double.POSITIVE_INFINITY;
-			MPSolver solver = new MPSolver("TSP", MPSolver.OptimizationProblemType.CBC_MIXED_INTEGER_PROGRAMMING);
+			MPSolver solver = new MPSolver("Warehouse Delivery", MPSolver.OptimizationProblemType.CBC_MIXED_INTEGER_PROGRAMMING);
 			MPVariable[][] x = new MPVariable[rows][columns];
 			for (int i = 0; i < rows; i++) {
 				for (int j = 0; j < columns; j++) {

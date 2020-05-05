@@ -3,6 +3,7 @@ package planningoptimization115657k62.daohoainam;
 
 
 
+import java.util.ArrayList;
 import java.util.Scanner;
 import java.io.BufferedReader;
 import java.io.File;
@@ -12,11 +13,15 @@ import java.io.FileReader;
 import org.chocosolver.solver.Model;
 import org.chocosolver.solver.variables.IntVar;
 
+import choco.Choco;
+import choco.kernel.model.variables.integer.IntegerExpressionVariable;
+import choco.kernel.model.variables.integer.IntegerVariable;
+
 public class CourseProject {
 	// declare model 
 	Model model = new Model("Get the goods in the warehouse");
 	IntVar[][] roadmap; 
-	IntVar[] P;
+	
 	
     int min_result = java.lang.Integer.MAX_VALUE;
     int INF = java.lang.Integer.MAX_VALUE;
@@ -85,6 +90,10 @@ public class CourseProject {
 	
 	/* Solve problem */
 	public void Solve() {
+		IntVar[] P;
+		IntVar[] z;
+	
+
 	
 	roadmap = new IntVar[rows][columns];
 		
@@ -107,81 +116,92 @@ public class CourseProject {
 		
 		// make constrainst  at a time only a shelf be visited
 		// var sum in a row in range [0, 1] 
-		for(int i = 0; i < rows; i++) {
-			IntVar[] y = new IntVar[columns];
-			for(int j = 0; j < columns; j++) y[j] = roadmap[i][j];
-			model.scalar(y,  one_max_rows, "<=", 1).post(); 
-			if(i == 0) { // alway at least one shelf be visisted
-				model.scalar(y,  one_max_rows, "=", 1);
-			}
+		for(int i = 0; i <  rows; i++) {
+			model.scalar(roadmap[i],  one_max_columns, "<=", 1).post(); 
 		}
-		
 
-		// make constraint one shelf be visited at most ont time
-		int temp = 0;
-		for(int i = 0; i < columns; i++) {
-			IntVar[] y = new IntVar[rows];
-			for(int j = 0; j < rows; j++) y[j] = roadmap[j][i];
-			model.scalar(y,  one_max_columns, "<=", 1).post(); 
-			if(temp == 0) { // the end of road always point 0
-				model.scalar(y,  one_max_columns, "=", 1);
+		// make constraint one shelf be visited at most one time
+		for(int k = 0; k < columns; k++){
+			for(int q = 0; q < rows; q++)
+			    for(int p = 0; p < rows; p++)
+			    	if( p != q)
+			    		model.ifThen(model.arithm(roadmap[q][k], "=", 1), 
+			                                          model.arithm(roadmap[p][k], "=", 0));
 			}
-			temp += 1;
-		}
+
+		model.arithm(roadmap[0][0], "=", 0).post();
 		
-		
-		
-		IntVar[] z = new IntVar[rows];
-		z = model.intVarArray("z", rows, 0, columns);
+		for(int i = 0; i < rows-1; i++)
+			model.arithm(roadmap[i][0], "<=", roadmap[i+1][0]).post();
 		// In order to the order visit shelves start from 0 and continue
 		// make constrainst sum row ith >= sum row ith-1
 		// first get sum all rows
-		for(int i = 0; i < rows; i++) {
-			for(int j = 0; j < columns; j++) {
-				model.ifThen(model.arithm(roadmap[i][j], "=", 1), model.arithm(z[i], "=", model.intOffsetView(z[i],  1)));
-				model.ifThen(model.arithm(roadmap[i][j], "=", 0), model.arithm(z[i], "=", model.intOffsetView(z[i],  0)));
-			}
+		z = new IntVar[rows];
+		for(int i = 0; i < rows; i++)
+			z[i] = model.intVar(0, 1);
+		
+		for(int k = 0; k < rows; k++) {
+			for(int i = 0; i < rows; i++) {
+				model.ifThen(model.arithm(z[k], ">=", 0), model.sum(roadmap[i], "=", z[k]));
+			
+			}	
 		}
-		// then make constraint
-		for(int i = 0; i < rows-1; i++) {
+		model.arithm(z[0], "=", 1).post();
+		for(int i = 0; i < rows - 1; i++)
 			model.arithm(z[i], ">=", z[i+1]).post();
+	
+	// constraint units of product
+		P = new IntVar[N];
+		for(int k = 0; k < N; k++)
+			P[k] = model.intVar(0, 1000);
+		
+		for(int i = 0; i < N; i++) {
+			IntVar[][] P_sub = new IntVar[rows][columns];
+			for(int o = 0; o < rows; o++)
+				for(int r = 0; r < columns; r++)
+				P_sub[o][r] = model.intVar(0, 1000);
+			
+			model.ifThen(model.arithm(P[i], ">=", 0), model.sum(P_sub[i], "=", P[i]));
+
+			for(int temp = 0; temp < rows; temp++) // ke ao 0 luon co nhu cau lay bang 0
+				model.arithm(P_sub[i][0], "=", 0).post();
+			
+			for(int k = 0; k < rows; k++)
+				for(int j = 1;  j < columns; j++)
+					P_sub[i][j] = model.intScaleView(roadmap[i][j], Q[i][j-1] );	
+			model.arithm(P[i], ">=", q[i]).post();
+					
 		}
+			
 		
 		
-		
-		// constraint about units of product
-		P = new IntVar [N];
-		P = model.intVarArray("P", N+1, 0, 100); // assign value 0 for every var 
-		
-		for(int k = 0; k < N; k++) {	// loop for all product
-			for(int i = 0; i <  rows; i++ ) {
-				for(int j = 1; j < columns; j++) {       
-					 model.ifThen(model.arithm(roadmap[i][j], "=", 1), model.arithm(P[k], "=", model.intOffsetView(P[k],  Q[k][j-1]))); 
-					 model.ifThen(model.arithm(roadmap[i][j], "=", 0), model.arithm(P[k], "=", model.intOffsetView(P[k], 0)));
-				}
-			}
-		}
-		
-		for(int k = 0; k < N; k++) 
-			model.arithm(P[k], ">=", q[k]).post();
-		
-//		// rang buoc de hang luot di dau tien ko di vao ke 0 
-//				model.arithm(roadmap[0][0], "=", 0);
-				
-				
 		
 		// solve the problem	
-		model.getSolver().solve();
-        for(int i = 0; i < rows; i++ ) {
-        	System.out.println();
-            for(int j = 0; j < columns; j++) {
+		
+		while( model.getSolver().solve() ) {
+			 ArrayList<Integer> path = new ArrayList<Integer>();
+			for(int i = 0; i < rows; i++ ) {
+				System.out.println();
+				for(int j = 0; j < columns; j++) {
                     System.out.print(roadmap[i][j].getValue() + " ");
-            }
-        }
+                    if(roadmap[i][j].getValue() == 1) {
+                    	path.add(j);
+                    }
+				}
+			}
+			System.out.println();
+			System.out.println("Path:");
+			for(int k = 0; k < path.size(); k++) {
+				System.out.print(k + "  ");
+			}
+			
+        
+		}
+     
         System.out.println();
-        System.out.println("-----");
+        System.out.println("----------Group 7-------");
+        
 	}
-	
 	
 	public static void main(String args[]) {
 		CourseProject  courseProject= new CourseProject();
