@@ -13,9 +13,6 @@ import java.io.FileReader;
 import org.chocosolver.solver.Model;
 import org.chocosolver.solver.variables.IntVar;
 
-import choco.Choco;
-import choco.kernel.model.variables.integer.IntegerExpressionVariable;
-import choco.kernel.model.variables.integer.IntegerVariable;
 
 public class CourseProject {
 	// declare model 
@@ -92,7 +89,7 @@ public class CourseProject {
 	public void Solve() {
 		IntVar[] P;
 		IntVar[] z;
-	
+		int count = 0;
 
 	
 	roadmap = new IntVar[rows][columns];
@@ -177,9 +174,11 @@ public class CourseProject {
 		
 		
 		// solve the problem	
-		
-		while( model.getSolver().solve() ) {
+
+		while( model.getSolver().solve() && (count < 5)) {
+			;
 			 ArrayList<Integer> path = new ArrayList<Integer>();
+			path.add(0);
 			for(int i = 0; i < rows; i++ ) {
 				System.out.println();
 				for(int j = 0; j < columns; j++) {
@@ -189,17 +188,32 @@ public class CourseProject {
                     }
 				}
 			}
+			
+
 			System.out.println();
 			System.out.println("Path:");
 			for(int k = 0; k < path.size(); k++) {
-				System.out.print(k + "  ");
+				System.out.print(path.get(k) + "  ");
 			}
+		
 			
-        
+			count++;
+			
+			int temp = 0;
+			for(int a = 0; a < path.size() - 1; a++) {
+				int start = path.get(a);
+				int end = path.get(a+1);
+				temp += d[start][end];
+			}
+			if(min_result > temp)
+				min_result = temp;
+			
+				
 		}
      
         System.out.println();
-        System.out.println("----------Group 7-------");
+        System.out.println("Min:" + min_result);
+        System.out.println("----------Group 7-------------");
         
 	}
 	
