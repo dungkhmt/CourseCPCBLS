@@ -21,14 +21,13 @@ public class CourseProject {
 	IntVar[] z;
 	IntVar[] path;
 	IntVar[] distance;
-	IntVar[] column;
 	
 	
     int min_result = 0;
     
 	/* Declare global var */ 
 	int M = 5 ; //  number of shelves
-	int N = 3; // number of products
+	int N = 4; // number of products
 	int[][] Q; // matrix Q[i][j] is number of product ith in shelf j
 	int [][] d; //d[i][j] distance from point i to j 
 	int q[];  // q[i] is number of product ith employee needs
@@ -157,17 +156,6 @@ public class CourseProject {
 		for(int i = 0; i < rows - 1; i++)
 			model.arithm(z[i], ">=", z[i+1]).post();
 		
-		column = new IntVar[rows];
-		for(int i = 0; i < rows; i++)
-			column[i] = model.intVar(0, 1);
-		for(int i = 0; i < rows; i++) {
-			model.ifThen(model.arithm(column[i], ">=", 0), model.arithm(column[i], "=",roadmap[i][0] ));
-			
-		}
-		
-		model.sum(column, "=", 1).post();
-		
-		
 	
 	// constraint units of product     ***
 		P = new IntVar[N];
@@ -252,9 +240,7 @@ public class CourseProject {
 			 System.out.print(path[0].getValue() + " ");
 			 for(int i = 1; i < path.length; i++) {
 				 System.out.print(path[i].getValue() + " ");
-				 if(path[i].getValue() == 0 && path[i-1].getValue() == 0) {
-					 break;
-				 } 
+				  
 				 
 			 }
 			 System.out.println();
@@ -266,6 +252,7 @@ public class CourseProject {
 					 
 				 }
 			 }
+			 
 			 System.out.println();
 			 int min_result = d[path[0].getValue()][path[1].getValue()];
 				 for(int i = 1; i < M+1; i++) {
@@ -274,7 +261,7 @@ public class CourseProject {
 				 }
 				 System.out.println();
 				 System.out.println("cost_min:" + min_result);
-				
+				 System.out.println(OBJ);
 				
 		}
 
