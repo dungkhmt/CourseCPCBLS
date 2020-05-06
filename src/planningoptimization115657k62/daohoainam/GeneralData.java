@@ -9,24 +9,24 @@ import java.util.Random;
 public class GeneralData {
 	Random generator = new Random();
 	
-	int S = 2;
+	int S = 10;
 	int columns = S+1;
 	int rows = columns;
-	int need = 2;
+	int need = 5;
 	
 
 
 	
 	int min_distance = 1;
-	int max_distance = 100;
+	int max_distance = 50;
 	int range_dis = max_distance - min_distance;
 	
-	int min_unit = 5;
-	int max_unit = 25;
+	int min_unit = 3;
+	int max_unit = 10;
 	int range_unit = max_unit - min_unit;
 	
-	int min_need = 0;
-	int max_need = 10;
+	int min_need = 2;
+	int max_need = 15;
 	int range_need = max_need - min_need;
 	
 	public void Gen() throws IOException {
@@ -69,7 +69,8 @@ public class GeneralData {
 		  
 			  builder.append(d[i][j]+" ");//append to the output string
 	   }
-	   builder.append("\n");//append new line at the end of the row
+	   if(i != rows - 1)
+		   builder.append("\n");//append new line at the end of the row
 	  
 	}
 	BufferedWriter writer = new BufferedWriter(new FileWriter(filePath+"/src/planningoptimization115657k62/daohoainam/distance.txt"));
@@ -87,7 +88,8 @@ public class GeneralData {
 	      builder_Q.append(have[i][j]+" ");//append to the output string
 	     
 	   }
-	   builder_Q.append("\n");//append new line at the end of the row
+	   if(i != need-1)
+		   builder_Q.append("\n");//append new line at the end of the row
 
 	   
 	}
@@ -97,14 +99,11 @@ public class GeneralData {
 	
 	
 	// wire file need
-	
-	
 	 BufferedWriter outputWriter = null;
 	  outputWriter = new BufferedWriter(new FileWriter(filePath+"/src/planningoptimization115657k62/daohoainam/need.txt"));
 	  for (int i = 0; i < need_arr.length; i++) {
 	  
-	    outputWriter.write(need_arr[i]+" ");
-
+	    outputWriter.write(need_arr[i] +" ");
 	    //outputWriter.newLine();
 	  }
 	  outputWriter.flush();  
