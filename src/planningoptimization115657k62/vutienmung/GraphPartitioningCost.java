@@ -1,5 +1,14 @@
 package planningoptimization115657k62.vutienmung;
 
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Random;
+
+import localsearch.model.AbstractInvariant;
+import localsearch.model.IFunction;
+import localsearch.model.LocalSearchManager;
+import localsearch.model.VarIntLS;
+
 public class GraphPartitioningCost extends AbstractInvariant implements IFunction {
 	private LocalSearchManager mgr;
 	private VarIntLS[] x;
