@@ -8,30 +8,46 @@ import localsearch.constraints.basic.Implicate;
 import localsearch.constraints.basic.IsEqual;
 import localsearch.constraints.basic.LessOrEqual;
 import localsearch.constraints.basic.NotEqual;
+import localsearch.domainspecific.vehiclerouting.vrp.IFunctionVR;
 import localsearch.functions.basic.FuncPlus;
+import localsearch.functions.max_min.Max;
 import localsearch.model.ConstraintSystem;
 import localsearch.model.IConstraint;
+import localsearch.model.IFunction;
 import localsearch.model.LocalSearchManager;
 import localsearch.model.VarIntLS;
+import planningoptimization115657k62.hoangthanhlam.HillClimbing.AssignMove;
 
 public class MiniProjectHillClimbing {
 	int N = 6;
 	int K = 2;
     
-    int[] _d, d;
-    int[][] _t, t;
+    int[] d;
+    int[][] t;
+    
+    int[] _d = {0, 9, 6, 7, 6, 7, 9};
+    int[][] _t = {
+    		{0, 2, 8, 3, 7, 5, 3},
+    		{0, 0, 3, 5, 5, 9, 1},
+    		{0, 3, 0, 9, 9, 9, 7},
+    		{0, 9, 7, 0, 8, 3, 2},
+    		{0, 7, 8, 9, 0, 8, 2},
+    		{0, 8, 4, 7, 6, 0, 3},
+    		{0, 9, 3, 6, 8, 2, 0},
+    };
     
     LocalSearchManager mgr;
 	VarIntLS[] X;
 	VarIntLS[] Route;
 	VarIntLS[] T;
-	VarIntLS y;
+	// VarIntLS y;
+	IFunction obj;
 	ConstraintSystem S;
 	
 	public MiniProjectHillClimbing (int N, int K) {
 		this.N = N;
 		this.K = K;
-		
+		/*
 		Random rd = new Random();
 		int r = 9;
 		
@@ -40,13 +56,13 @@ public class MiniProjectHillClimbing {
 		for (int i = 0; i <= N; i++) {
 			_d[i] = 1 + rd.nextInt(r);
 			for (int j = 0; j <= N; j++) {
-				if (i == j) _t[i][j] = 0;
+				if (i == j || j == 0) _t[i][j] = 0;
 				else {
 					_t[i][j] = 1 + rd.nextInt(r);
 				}
 			}
 		}
-		_d[0] = 0;
+		_d[0] = 0; */
 	}
 	
 	public void printDataInput() {
@@ -131,12 +147,19 @@ public class MiniProjectHillClimbing {
 		
 		Route = new VarIntLS[N+2*K];
 		T = new VarIntLS[N+2*K];
-		for (int i = 0; i < N+2*K; i++) {
+		for (int i = 0; i < N; i++) {
 			Route[i] = new VarIntLS(mgr, 0, K-1);
 			T[i] = new VarIntLS(mgr, 0, total);
 		}
 		
-		y = new VarIntLS(mgr, 0, total);
+		for (int i = 0; i < K; i++) {
+			Route[N+i] = new VarIntLS(mgr, i, i);
+			Route[N+K+i] = new VarIntLS(mgr, i, i);
+			T[N+i] = new VarIntLS(mgr, 0, 0);
+			T[N+K+i] = new VarIntLS(mgr, 0, total);
+		}
+		
+		// y = new VarIntLS(mgr, 0, total);
 	}
 	
 	public void createConstraint() {
@@ -148,15 +171,15 @@ public class MiniProjectHillClimbing {
 				S.post(new NotEqual(X[i], j));
 			}
 		}
-		
+		/*
 		for (int i = 0; i < K; i++) {
-			Route[N+i].setValue(i);
-			Route[N+K+i].setValue(i);
+			S.post(new IsEqual(Route[N+i], i));
+			S.post(new IsEqual(Route[N+K+i], i));
 		}
 		
 		for (int i = 0; i < K; i++) {
-			T[N+i].setValue(0);
-		}
+			S.post(new IsEqual(T[N+i], 0));
+		} */
 		
 		for (int i = 0; i < N+K; i++) {
 			for (int j = 0; j < N+2*K; j++) {
@@ -168,80 +191,89 @@ public class MiniProjectHillClimbing {
 				S.post(new Implicate(c1, c3));
 			}
 		}
-		
+		/*
 		for (int i = 0; i < K; i++) {
 			S.post(new LessOrEqual(T[N+K+i], y));
-		}
-		// Error
-		// S.post(new );
+		} */
+		obj = new Max(T);
 		mgr.close();
 	}
 	
-	class Move {
-        int i; int j;
-        public Move(int i, int j) {
-            this.i = i; this.j = j;
-        }
-    }
-	
-	public void generateInitSolution() {
-		expandDataInput();
-		createModel();
-		createConstraint();
-		for (int i = 0; i < N+K; i++) {
-			int v = i;
-			if (i >= N) v = i + K;
-			X[i].setValuePropagate(v);
+	class AssignMove {
+		int i;
+		int v;
+		public AssignMove(int i, int v) {
+			this.i = i;
+			this.v = v;
 		}
+	}
+	
+	Random R = new Random();
+	
+	private void explorNeighborhood(VarIntLS[] x, ArrayList<AssignMove> candidate) {
+		int minDelta = Integer.MAX_VALUE;
+		double minObj = minDelta;
+		candidate.clear();
+		for (int i = 0; i < x.length; i++){
+			for (int v = x[i].getMinValue(); v <= x[i].getMaxValue(); v++) {
+				if (v == x[i].getValue()) continue;
+				int delta = S.getAssignDelta(x[i], v);
+				double deltaObj = obj.getAssignDelta(x[i], v);
+				// if (!(delta < 0 || delta == 0 && deltaObj <= 0)) continue;
+				if (delta < minDelta || delta == minDelta && deltaObj < minObj) {
+					candidate.clear();
+					candidate.add(new AssignMove(i,v));
+					minDelta = delta;
+					minObj = deltaObj;
+				} else if (delta == minDelta && deltaObj == minObj) {
+					candidate.add(new AssignMove(i,v));
+				}
+			}
+		}
+	}
+	
+	private void generateInitialSolution(VarIntLS[] x) {
+		for (int i = 0; i < x.length; i++) {
+			int v = R.nextInt(x[i].getMaxValue() - x[i].getMinValue() + 1) + x[i].getMinValue();
+			x[i].setValuePropagate(v);
+		}
+	}
+	
+	public void search(int maxIter) {
+		VarIntLS[] x = S.getVariables();
 		
+		generateInitialSolution(x);
+		
+		int it = 0;
+		ArrayList<AssignMove> candidate = new ArrayList<AssignMove>();
+		while (it < maxIter && S.violations() > 0) {
+			explorNeighborhood(x, candidate);
+			if (candidate.size() == 0) {
+				System.out.println("Reach local optimum");
+				break;
+			}
+			
+			AssignMove m = candidate.get(R.nextInt(candidate.size()));
+			x[m.i].setValuePropagate(m.v);
+			it++;
+			System.out.println("Step " + it + ": violations = " + S.violations() + ", obj = " + obj.getValue());
+			/*
+			for (int i = 0; i < K; i++) {
+				System.out.print("Route " + (i+1) + ": 0");
+				int next = X[N+i].getValue();
+				while (next < N) {
+					System.out.print(" -> " + (next + 1));
+					next = X[next].getValue();
+				}
+				System.out.println();
+			} */
+			
+		}
 	}
-	
-	public void satisfyConstraint() {
-		for (int i = 0; i < K; i++) {
-    		int _pre = N+i;
-    		while (_pre < N+K) {
-    			int _next = X[_pre].getValue();
-    			Route[_next].setValuePropagate(i);
-    			int _time = T[_pre].getValue() + t[_pre][_next] + d[_next];
-    			T[_next].setValuePropagate(_time);
-    			_pre = _next; 
-    		}
-    	}
-	}
-	
-    public void search(int maxIter) {
-    	generateInitSolution();
-        ArrayList<Move> cand = new ArrayList<Move>();
-        Random R = new Random();
-        int it = 0;
-        while(it < maxIter && S.violations() > 0) {
-        	// satisfyConstraint();
-            cand.clear();
-            int minDelta = Integer.MAX_VALUE;
-            for (int i = 0; i < N+K; i++) {
-                for (int j = i+1; j < N+K; j++) {
-                    int delta = S.getSwapDelta(X[i], X[j]);
-                    System.out.println("\tDelta = " + delta);
-                    if (delta < minDelta) {
-                        cand.clear();
-                        cand.add(new Move(i, j));
-                        minDelta = delta;
-                    } else if (delta == minDelta) {
-                        cand.add(new Move(i, j));
-                    }
-                }
-            }
-            int idx = R.nextInt(cand.size());   
-            Move m = cand.get(idx);
-            X[m.i].swapValuePropagate(X[m.j]);
-            satisfyConstraint();
-            System.out.println("Step " + it + ", violations = " + S.violations());
-            it++;
-        }
-    }
 	
 	public void test(int maxIter) {
 		expandDataInput();
+		// printDataInput();
 		createModel();
 		createConstraint();
 		search(maxIter);
@@ -249,6 +281,6 @@ public class MiniProjectHillClimbing {
 	
 	public static void main (String[] args) {
 		MiniProjectHillClimbing mini = new MiniProjectHillClimbing(6, 2);
-		mini.search(1000);
+		mini.test(200);
 	}
 }

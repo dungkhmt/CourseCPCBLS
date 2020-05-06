@@ -33,7 +33,7 @@ public class MiniProjectChoco {
 		for (int i = 0; i <= N; i++) {
 			_d[i] = 1 + rd.nextInt(r);
 			for (int j = 0; j <= N; j++) {
-				if (i == j) _t[i][j] = 0;
+				if (i == j || j == 0) _t[i][j] = 0;
 				else {
 					_t[i][j] = 1 + rd.nextInt(r);
 				}
