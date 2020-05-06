@@ -1,12 +1,12 @@
 package planningoptimization115657k62.daohoainam;
 
-
+import planningoptimization115657k62.daohoainam.GeneralData;
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
-
+import java.io.IOException;
 
 import org.chocosolver.solver.Model;
 import org.chocosolver.solver.Solver;
@@ -26,8 +26,8 @@ public class CourseProject {
     int min_result = 0;
     
 	/* Declare global var */ 
-	int M = 5 ; //  number of shelves
-	int N = 4; // number of products
+	int M = 2; //  number of shelves
+	int N = 2; // number of products
 	int[][] Q; // matrix Q[i][j] is number of product ith in shelf j
 	int [][] d; //d[i][j] distance from point i to j 
 	int q[];  // q[i] is number of product ith employee needs
@@ -274,6 +274,15 @@ public class CourseProject {
 	} 
 	
 	public static void main(String args[]) {
+		
+		GeneralData generalData = new GeneralData();
+		try {
+			generalData.Gen();
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
 		CourseProject  courseProject= new CourseProject();
 		try {
 			courseProject.creat();
@@ -282,9 +291,9 @@ public class CourseProject {
 		}
 
 		courseProject.getMaxUnits();
-	//	courseProject.test();
+	courseProject.test();
 		try {
-		courseProject.creatConstraint();
+	courseProject.creatConstraint();
 	courseProject.Solve();
 		} 
 		catch(OutOfMemoryError oome){
