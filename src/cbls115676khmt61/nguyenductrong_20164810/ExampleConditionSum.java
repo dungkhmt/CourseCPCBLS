@@ -1,4 +1,4 @@
-package BT;
+package cbls115676khmt61.nguyenductrong_20164810;
 
 import localsearch.functions.conditionalsum.ConditionalSum;
 import localsearch.model.IFunction;
