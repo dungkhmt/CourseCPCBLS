@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<qualifiedTypeNameHistroy>
+<fullyQualifiedTypeName name="java.lang.Integer"/>
+<fullyQualifiedTypeName name="n_queen"/>
+<fullyQualifiedTypeName name="localsearch.functions.conditionalsum.ConditionalSum"/>
+<fullyQualifiedTypeName name="localsearch.model.IFunction"/>
+<fullyQualifiedTypeName name="localsearch.selectors.MinMaxSelector"/>
+<fullyQualifiedTypeName name="Baitap.NQueen"/>
+<fullyQualifiedTypeName name="Baitap.Hill"/>
+<fullyQualifiedTypeName name="localsearch.functions.basic.FuncPlus"/>
+<fullyQualifiedTypeName name="localsearch.constraints.basic.NotEqual"/>
+<fullyQualifiedTypeName name="localsearch.constraints.basic.IsEqual"/>
+<fullyQualifiedTypeName name="localsearch.constraints.basic.Implicate"/>
+<fullyQualifiedTypeName name="localsearch.constraints.basic.LessOrEqual"/>
+<fullyQualifiedTypeName name="localsearch.functions.sum.Sum"/>
+<fullyQualifiedTypeName name="localsearch.constraints.alldifferent.AllDifferent"/>
+<fullyQualifiedTypeName name="java.util.Random"/>
+<fullyQualifiedTypeName name="java.util.ArrayList"/>
+<fullyQualifiedTypeName name="Baitap.Sudoku"/>
+<fullyQualifiedTypeName name="localsearch.model.LocalSearchManager"/>
+<fullyQualifiedTypeName name="localsearch.model.VarIntLS"/>
+<fullyQualifiedTypeName name="localsearch.model.ConstraintSystem"/>
+<fullyQualifiedTypeName name="localsearch.model.IConstraint"/>
+<fullyQualifiedTypeName name="localsearch.constraints.basic.LessThan"/>
+</qualifiedTypeNameHistroy>
