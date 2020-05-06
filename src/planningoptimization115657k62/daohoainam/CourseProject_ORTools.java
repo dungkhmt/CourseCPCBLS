@@ -168,8 +168,8 @@ public class CourseProject_ORTools {
 				e.printStackTrace();
 			}
 			
-			//app.test();
-			app.solve();
+			app.test();
+			//app.solve();
 		}
 
 
