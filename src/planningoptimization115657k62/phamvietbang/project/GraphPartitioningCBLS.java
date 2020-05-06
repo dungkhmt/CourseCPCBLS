@@ -113,7 +113,7 @@ public class GraphPartitioningCBLS {
 		
 		
 		printGraph();
-		//for(int i = 0; i < N/2; i++) x[i].setValuePropagate(1);
+		
 		System.out.println("init obj = " + obj());
 		printCrossEdges();
 		
@@ -121,14 +121,6 @@ public class GraphPartitioningCBLS {
 		ArrayList<SwapMove> cand = new ArrayList<SwapMove>();
 		int it = 0;
 		int cur = f.getValue();
-		/*
-		int delta = f.getSwapDelta(x[2], x[3]);
-		x[2].swapValuePropagate(x[3]);
-		System.out.println("cur = " + cur + ", delta = " + delta + ", new = " + f.getValue()
-				 + ", x[" + 2 + "] <-> x[" + 3 + "]");
-		printCrossEdges();
-		if(true) return;
-		*/
 		
 		while(it < maxIter){
 			cand.clear();
@@ -173,7 +165,6 @@ public class GraphPartitioningCBLS {
 	public void search2(int maxIter){
 		ArrayList<AssignMove> cand = new ArrayList<AssignMove>();
 		int it = 0;
-		// F(S.violations(), f)
 		while(it < maxIter){
 			cand.clear();
 			int minDeltaS = Integer.MAX_VALUE;
@@ -232,12 +223,9 @@ public class GraphPartitioningCBLS {
 		System.out.println("minf = " + minf + " maxf = " + maxf + ", avr = " + avr);
 	}
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
 		GraphPartitioningCBLS app = new GraphPartitioningCBLS();
 		String fn = "data/GraphPartitioning/gp-100.txt";
-		//app.genData(fn, 6, 8);
 		app.readData(fn);
-		//app.runExpr();
 		app.buildModel();
 		app.search1(10000);
 //		app.search2(100000);

@@ -53,13 +53,11 @@ public class GraphPartitioningCost extends AbstractInvariant implements IFunctio
 	}
 	@Override
 	public VarIntLS[] getVariables() {
-		// TODO Auto-generated method stub
 		return x;
 	}
 
 	@Override
 	public void propagateInt(VarIntLS z, int val) {
-		// TODO Auto-generated method stub
 		int old = z.getOldValue();
 		if(map.get(z) == null) return;
 		if(z.getValue() == old) return;
@@ -76,7 +74,6 @@ public class GraphPartitioningCost extends AbstractInvariant implements IFunctio
 
 	@Override
 	public void initPropagate() {
-		// TODO Auto-generated method stub
 		// initialize data structures of the component
 		System.out.println("GraphPartitioningCost::initPropagate");
 		value = 0;
@@ -90,37 +87,31 @@ public class GraphPartitioningCost extends AbstractInvariant implements IFunctio
 
 	@Override
 	public LocalSearchManager getLocalSearchManager() {
-		// TODO Auto-generated method stub
 		return mgr;
 	}
 
 	@Override
 	public boolean verify() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	public int getMinValue() {
-		// TODO Auto-generated method stub
 		return minValue;
 	}
 
 	@Override
 	public int getMaxValue() {
-		// TODO Auto-generated method stub
 		return maxValue;
 	}
 
 	@Override
 	public int getValue() {
-		// TODO Auto-generated method stub
 		return value;// current value of the function
 	}
 
 	@Override
 	public int getAssignDelta(VarIntLS z, int val) {
-		// TODO Auto-generated method stub
 		if(map.get(z) == null) return 0;
 		int u = map.get(z);// get corresponding node
 		if(x[u].getValue() == val) return 0;
@@ -138,7 +129,6 @@ public class GraphPartitioningCost extends AbstractInvariant implements IFunctio
 
 	@Override
 	public int getSwapDelta(VarIntLS z, VarIntLS y) {
-		// TODO Auto-generated method stub
 		if(map.get(z) == null) return getAssignDelta(y,z.getValue());
 		if(map.get(y) == null) return getAssignDelta(z,y.getValue());
 		int nz = map.get(z);
