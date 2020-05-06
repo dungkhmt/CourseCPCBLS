@@ -261,7 +261,7 @@ public class CourseProject {
 				 }
 				 System.out.println();
 				 System.out.println("cost_min:" + min_result);
-				 System.out.println(OBJ);
+			
 				
 		}
 
