@@ -16,6 +16,7 @@ public class CourseProject {
 	
 	// declare model 
 	Model model = new Model("Get the goods in the warehouse");
+	IntVar OBJ = model.intVar("objective", 0, 99999999);		
 	IntVar[] path;
 	IntVar[] distance;
 	IntVar[] P;
@@ -23,8 +24,8 @@ public class CourseProject {
     int min_result = 0;
     
 	/* Declare global variable */ 
-	int M = 3; //  number of shelves
-	int N = 6; // number of products
+	int M = 5; //  number of shelves
+	int N = 10; // number of products
 	int[][] Q; // matrix Q[i][j] is number of product ith in shelf j
 	int [][] d; //d[i][j] distance from point i to j 
 	int q[];  // q[i] is number of product ith employee needs
@@ -106,6 +107,19 @@ public class CourseProject {
 			
 	}
 	
+	public void showInfor() {
+		System.out.println("Max unit all shelves have:");
+		for(int i = 0; i < N; i++)
+			System.out.print(max_units[i] + " ");
+		
+		System.out.println();
+		System.out.println("The employee need");
+		for(int i = 0; i < N; i++)
+			System.out.print(q[i] + " ");
+		
+		System.out.println();
+		System.out.println();
+	}
 	/* make constraint */
 	public void creatConstraint() {
 		System.gc();
@@ -139,18 +153,12 @@ public class CourseProject {
 		}
 		
 		// make constraint unit of product
-		P = new IntVar[N];  // units of N products
-		for(int i = 0;  i < P.length; i++) {
-			P[i] = model.intVar(0, max_units[i]);
-		}
-		
 		for(int i = 0; i < N; i++) {
 			IntVar[] p_sub = new IntVar[path.length];
 			for(int j = 0; j < p_sub.length; j++)
 				p_sub[j] = model.intVar(0, 99999);
 			
-			model.sum(p_sub, "=", P[i]).post();
-			model.arithm(P[i], ">=", q[i]).post();
+			model.sum(p_sub, ">=", q[i]).post();
 			
 			for(int j = 0; j < path.length; j++) {
 				model.ifThen(model.arithm(path[j], "=", 0), model.arithm(p_sub[j], "=", 0));
@@ -177,8 +185,8 @@ public class CourseProject {
 		for(int i = 0; i < scalar_dis.length; i++)
 			scalar_dis[i] = 1;
 		
-		IntVar OBJ = model.intVar("objective", 0, 99999999);		
-		model.scalar(distance, scalar_dis,"=", OBJ).post();
+		
+		model.scalar(distance, scalar_dis,"<=", OBJ).post();
 		model.setObjective(Model.MINIMIZE, OBJ);
 		
 
@@ -189,15 +197,12 @@ public class CourseProject {
 				  
 				 
 			 }
-			 System.out.println();
-		
-			 System.out.println();
 				 for(int i = 0; i < path.length - 1; i++) {
 						min_result += d[path[i].getValue()][path[i+1].getValue()];
 				 }
 				 System.out.println();
 				 System.out.println("cost_min:" + min_result);
-	
+				// System.out.println(OBJ);
 		}
 
 
@@ -224,8 +229,10 @@ public class CourseProject {
 		}
 
 		courseProject.getMaxUnits();
-		courseProject.test();
+		courseProject.showInfor();
+		//courseProject.test();
 		try {
+	
 	courseProject.creatConstraint();
 	courseProject.Solve();
 		} 
@@ -235,6 +242,5 @@ public class CourseProject {
 		}
 		Runtime.getRuntime().gc();			
 	}
-	
 	
 }

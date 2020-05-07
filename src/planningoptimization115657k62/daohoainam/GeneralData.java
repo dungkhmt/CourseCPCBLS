@@ -9,8 +9,8 @@ import java.util.Random;
 public class GeneralData {
 	Random generator = new Random();
 	
-	int S = 3;
-	int need = 6;
+	int S = 5;
+	int need = 10;
 	
 	int rows = S;
 	int columns = S;
@@ -19,15 +19,15 @@ public class GeneralData {
 
 	
 	int min_distance = 1;
-	int max_distance = 50;
+	int max_distance = 25;
 	int range_dis = max_distance - min_distance;
 	
-	int min_unit = 2;
-	int max_unit = 25;
+	int min_unit = 0;
+	int max_unit = 15;
 	int range_unit = max_unit - min_unit;
 	
 	int min_need = 2;
-	int max_need = 10;
+	int max_need = 25;
 	int range_need = max_need - min_need;
 	
 	public void Gen() throws IOException {
