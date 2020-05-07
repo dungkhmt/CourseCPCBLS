@@ -16,7 +16,9 @@ public class CourseProject {
 	
 	// declare model 
 	Model model = new Model("Get the goods in the warehouse");
-	IntVar OBJ = model.intVar("objective", 0, 99999999);		
+	IntVar OBJ = model.intVar("objective", 0, 99999999);	
+	
+	
 	IntVar[] path;
 	IntVar[] distance;
 	IntVar[] P;
@@ -127,9 +129,10 @@ public class CourseProject {
 		// make constraint the value of path[i] must be in range[0:M]
 		path = new IntVar[rows+2];
 		for(int i = 0; i < path.length; i++)
-			path[i] = model.intVar(0, M);
+			path[i] = model.intVar("path[" + i + "]",0, M);
 		
-		model.arithm(path[0], "=", 0).post(); // the start pont
+		model.arithm(path[0], "=", 0).post(); // the start point
+		model.arithm(path[1], "!=", 0).post();
 		model.arithm(path[rows+1], "=", 0).post(); // the end point
 		
 		
@@ -144,9 +147,8 @@ public class CourseProject {
 			
 		}	
 		
-		// make constraint to ensure the point 0 in path when the employrr
+		// make constraint to ensure the point 0 in path when the employê
 		// visited all need shelves
-		model.arithm(path[1], "!=", 0).post();
 		for(int i = 2; i < path.length; i++) {
 			model.ifThen(model.arithm(path[i],"!=" , 0),
 					model.arithm(path[i-1], "!=", 0));
@@ -154,9 +156,10 @@ public class CourseProject {
 		
 		// make constraint unit of product
 		for(int i = 0; i < N; i++) {
+			
 			IntVar[] p_sub = new IntVar[path.length];
 			for(int j = 0; j < p_sub.length; j++)
-				p_sub[j] = model.intVar(0, 99999);
+				p_sub[j] = model.intVar("p_sub[" + j + "]", 0, max_units[i]);
 			
 			model.sum(p_sub, ">=", q[i]).post();
 			
@@ -168,9 +171,9 @@ public class CourseProject {
 		}
 		
 		// make the constraint distance[i]
-		distance = new IntVar[rows+1]; // add 2 times the start and end point
+		distance = new IntVar[path.length-1]; // add 2 times the start and end point
 		for(int i = 0; i < distance.length; i++)
-			distance[i] = model.intVar(0, 9999999);
+			distance[i] = model.intVar("distance[" + i + "]", 0, 9999999);
 		
 		for(int i = 0; i < distance.length; i++)
 			model.arithm(distance[i], "=", d[path[i].getValue()][path[i+1].getValue()]).post();		
@@ -186,7 +189,7 @@ public class CourseProject {
 			scalar_dis[i] = 1;
 		
 		
-		model.scalar(distance, scalar_dis,"<=", OBJ).post();
+		model.scalar(distance, scalar_dis,"=", OBJ).post();
 		model.setObjective(Model.MINIMIZE, OBJ);
 		
 
