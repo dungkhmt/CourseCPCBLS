@@ -9,8 +9,8 @@ import java.util.Random;
 public class GeneralData {
 	Random generator = new Random();
 	
-	int S = 5;
-	int need = 10;
+	int S = 10;
+	int need = 15;
 	
 	int rows = S;
 	int columns = S;
@@ -32,8 +32,8 @@ public class GeneralData {
 	
 	public void Gen() throws IOException {
 		
-	int have[][] = new int[need][S];
-	int need_arr[] = new int[need];
+	int have[][] = new int[need+1][S];
+	int need_arr[] = new int[need+1];
 	int d[][] = new int[rows+1][columns+1];
 	// general data for distance
 	for(int i = 0; i < rows + 1; i++) {
@@ -47,16 +47,24 @@ public class GeneralData {
 	}
 	
 	// general for need
-	for(int i = 0; i < need; i++) {
+	for(int i = 0; i < need_arr.length; i++) {
+		if(i == 0) need_arr[i] = 0;
+		else {
 		need_arr[i] = generator.nextInt((max_need - min_need) + 1) + min_need;
+		}
 	}
 	
 
 	// general data for Q
-	for(int i = 0; i < need; i++)
+	for(int i = 0; i < have.length; i++)
 		for(int j = 0; j < S; j++) {
-			have[i][j] = generator.nextInt((max_unit- min_unit) + 1) + min_unit;
+			if(i == 0) {
+				have[i][j] = 0;
+			}else {
+				have[i][j] = generator.nextInt((max_unit- min_unit) + 1) + min_unit;
+			}
 		}
+	
 	
 	/* write file */
 	// file distance
@@ -82,14 +90,14 @@ public class GeneralData {
 	// write file Q
 	
 	StringBuilder builder_Q = new StringBuilder();
-	for(int i = 0; i < need; i++)//for each row
+	for(int i = 0; i < have.length; i++)//for each row
 	{
 	   for(int j = 0; j < S; j++)//for each column
 	   {
 	      builder_Q.append(have[i][j]+" ");//append to the output string
 	     
 	   }
-	   if(i != need-1)
+	   if(i != have.length-1)
 		   builder_Q.append("\n");//append new line at the end of the row
 
 	   

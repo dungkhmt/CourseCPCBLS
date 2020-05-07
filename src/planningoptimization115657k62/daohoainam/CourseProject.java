@@ -9,6 +9,7 @@ import java.io.IOException;
 
 import org.chocosolver.solver.Model;
 import org.chocosolver.solver.Solver;
+import org.chocosolver.solver.variables.BoolVar;
 import org.chocosolver.solver.variables.IntVar;
 
 
@@ -21,17 +22,17 @@ public class CourseProject {
 	
 	IntVar[] path;
 	IntVar[] distance;
-	IntVar[] P;
-	
+	IntVar[][] P;
     int min_result = 0;
     
 	/* Declare global variable */ 
-	int M = 5; //  number of shelves
-	int N = 10; // number of products
+	int M = 10; //  number of shelves
+	int N = 15; // number of products
 	int[][] Q; // matrix Q[i][j] is number of product ith in shelf j
 	int [][] d; //d[i][j] distance from point i to j 
 	int q[];  // q[i] is number of product ith employee needs
 	int max_units[];
+	int[] oneP;
 	int rows =  M ; //  the times, because the employee at most visit M shelves 
 	int columns = M; // the number of shelve
 	
@@ -44,7 +45,7 @@ public class CourseProject {
 		// read file Q(i,j) 
 		  Scanner sc = new Scanner(new BufferedReader(new FileReader(filePath+"/src/planningoptimization115657k62/daohoainam/Q.txt")));
 		      while(sc.hasNextLine()) {
-		    	  Q = new int[N][M];
+		    	  Q = new int[N+1][M];
 		         for (int i = 0; i < Q.length; i++) {
 		            String[] line = sc.nextLine().trim().split(" ");
 		            for (int j = 0; j < line.length; j++) {
@@ -68,7 +69,7 @@ public class CourseProject {
 		      sc_d.close();
 		      
 		      // read file q(k)
-		      q = new int[N];
+		      q = new int[N+1];
 		      Scanner sc_q = new Scanner(new File(filePath+"/src/planningoptimization115657k62/daohoainam/need.txt"));
 		      int i = 0;
 		      while(sc_q.hasNextInt()){
@@ -78,7 +79,7 @@ public class CourseProject {
 	}
 	
 	public void test() {
-		for(int i = 0; i < N; i++) {
+		for(int i = 0; i < Q.length; i++) {
 			System.out.println();
 			for(int j = 0; j < M; j++)
 				System.out.print(Q[i][j] + " ");
@@ -87,12 +88,12 @@ public class CourseProject {
 		
 		System.out.println();
 		
-		for(int i = 0; i < N; i++)
+		for(int i = 0; i < max_units.length; i++)
 			System.out.print(max_units[i] + " ");
 		
 		System.out.println();
 		
-		for(int i = 0; i < N; i++)
+		for(int i = 0; i < q.length; i++)
 			System.out.print(q[i] + " ");
 		
 		System.out.println();
@@ -111,13 +112,14 @@ public class CourseProject {
 	
 	public void showInfor() {
 		System.out.println("Max unit all shelves have:");
-		for(int i = 0; i < N; i++)
+		for(int i = 0; i < max_units.length; i++)
 			System.out.print(max_units[i] + " ");
 		
 		System.out.println();
 		System.out.println("The employee need");
-		for(int i = 0; i < N; i++)
+		for(int i = 0; i < q.length; i++)
 			System.out.print(q[i] + " ");
+		
 		
 		System.out.println();
 		System.out.println();
@@ -126,21 +128,22 @@ public class CourseProject {
 	public void creatConstraint() {
 		System.gc();
 		
+		
 		// make constraint the value of path[i] must be in range[0:M]
 		path = new IntVar[rows+2];
+		System.out.println("Length of path:" + path.length);
 		for(int i = 0; i < path.length; i++)
-			path[i] = model.intVar("path[" + i + "]",0, M);
+			path[i] = model.intVar("path[" + i + "]", 0, M);
 		
 		model.arithm(path[0], "=", 0).post(); // the start point
 		model.arithm(path[1], "!=", 0).post();
-		model.arithm(path[rows+1], "=", 0).post(); // the end point
-		
+		model.arithm(path[path.length-1], "=", 0).post(); // the end point
 		
 		// make the constraint one shelf must be visited at most one time(EXCEPT 0th point)
 		for(int i = 0; i < path.length; i++) {
 			for(int j = 0; j < path.length; j++) {
 				if(i != j) { // with 2 distinct times
-					model.ifThen(model.arithm(path[i], "!=", 0 ),  // and greater than 0
+					model.ifThen(model.arithm(path[i], ">", 0 ),  // and greater than 0
 							model.arithm(path[i], "!=", path[j])); // must be distinct
 				}
 			}
@@ -155,18 +158,21 @@ public class CourseProject {
 		}
 		
 		// make constraint unit of product
+		P = new IntVar[N][path.length];
 		for(int i = 0; i < N; i++) {
-			
-			IntVar[] p_sub = new IntVar[path.length];
-			for(int j = 0; j < p_sub.length; j++)
-				p_sub[j] = model.intVar("p_sub[" + j + "]", 0, max_units[i]);
-			
-			model.sum(p_sub, ">=", q[i]).post();
-			
 			for(int j = 0; j < path.length; j++) {
-				model.ifThen(model.arithm(path[j], "=", 0), model.arithm(p_sub[j], "=", 0));
-				model.ifThen(model.arithm(path[j], "!=", 0), model.arithm(p_sub[j], "=", Q[i][path[j].getValue()]-1));
+				P[i][j] = model.intVar("P[" + i + "," + j + "]" , 0, max_units[i]);
 			}
+		}
+		
+		for(int i = 0; i < N; i++) {
+			for(int j  = 0; j < path.length; j++) {
+				model.ifThen(model.arithm(P[i][j], ">=", 0), 
+						model.arithm(P[i][j], "=", Q[i][path[j].getValue()]));
+
+			}
+			
+			model.sum(P[i], ">=", q[i]).post();
 		
 		}
 		
@@ -205,7 +211,8 @@ public class CourseProject {
 				 }
 				 System.out.println();
 				 System.out.println("cost_min:" + min_result);
-				// System.out.println(OBJ);
+				 
+
 		}
 
 
@@ -233,7 +240,7 @@ public class CourseProject {
 
 		courseProject.getMaxUnits();
 		courseProject.showInfor();
-		//courseProject.test();
+	//	courseProject.test();
 		try {
 	
 	courseProject.creatConstraint();
