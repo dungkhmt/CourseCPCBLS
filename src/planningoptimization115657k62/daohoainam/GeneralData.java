@@ -9,10 +9,11 @@ import java.util.Random;
 public class GeneralData {
 	Random generator = new Random();
 	
-	int S = 10;
-	int columns = S+1;
-	int rows = columns;
-	int need = 5;
+	int S = 3;
+	int need = 6;
+	
+	int rows = S;
+	int columns = S;
 	
 
 
@@ -21,22 +22,22 @@ public class GeneralData {
 	int max_distance = 50;
 	int range_dis = max_distance - min_distance;
 	
-	int min_unit = 3;
-	int max_unit = 10;
+	int min_unit = 2;
+	int max_unit = 25;
 	int range_unit = max_unit - min_unit;
 	
 	int min_need = 2;
-	int max_need = 15;
+	int max_need = 10;
 	int range_need = max_need - min_need;
 	
 	public void Gen() throws IOException {
 		
-	int have[][] = new int[need][columns-1];
+	int have[][] = new int[need][S];
 	int need_arr[] = new int[need];
-	int d[][] = new int[rows][columns];
+	int d[][] = new int[rows+1][columns+1];
 	// general data for distance
-	for(int i = 0; i < rows; i++) {
-		for(int j = 0; j < columns; j++) {
+	for(int i = 0; i < rows + 1; i++) {
+		for(int j = 0; j < columns + 1 ; j++) {
 			if(i == j)
 				d[i][j] = 0;
 			else {
@@ -62,14 +63,14 @@ public class GeneralData {
 	String filePath = new File("").getAbsolutePath();
 	
 	StringBuilder builder = new StringBuilder();
-	for(int i = 0; i < rows; i++)//for each row
+	for(int i = 0; i < d.length; i++)//for each row
 	{
-	   for(int j = 0; j < columns; j++)//for each column
+	   for(int j = 0; j < columns+1; j++)//for each column
 	   {
 		  
 			  builder.append(d[i][j]+" ");//append to the output string
 	   }
-	   if(i != rows - 1)
+	   if(i != d.length - 1)
 		   builder.append("\n");//append new line at the end of the row
 	  
 	}
