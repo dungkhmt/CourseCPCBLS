@@ -21,8 +21,7 @@ public class CourseProject {
 	IntVar[][] matrix;
 	IntVar[] z;
 	IntVar[][] P;
-	IntVar[] path;
-	IntVar[] distance;
+	IntVar[] flatten;
     int min_result = 0;
     
 	/* Declare global variable */ 
@@ -207,48 +206,73 @@ public class CourseProject {
 	        }
 	        for(int k = 0; k < rows; k++)
 	            for(int j = 1;  j < columns; j++)
-	                P_sub[k][j] = (model.intScaleView(matrix[k][j], Q[i][j-1]));    
+	             model.arithm(P_sub[k][j], "=", model.intScaleView(matrix[k][j], Q[i][j-1])).post();   
 	                
 	    }
 	    
-	  // make constraint to get path
-	    path = new IntVar[rows+2];
-	    for(int i = 0; i < path.length; i++)
-	    	path[i] = model.intVar(0, M);
-	    
-	    for(int i = 0; i < path.length; i++) {
-	    	for(int j = 0; j < path.length-1; j++) {
-	    		if(i!= j) {
-	    			model.ifThen(model.arithm(path[i], ">", 0),
-	    					model.arithm(path[i], "!=", path[j]));
-	    		}
-	    	}
-	    }
-	    
-	    
-	    for(int i = 2; i < path.length; i++) {
-	    	model.ifThen(model.arithm(path[i], "!=", 0), 
-	    			model.arithm(path[i-1], "!=", 0));
-	    }
-	    
-	    model.arithm(path[0], "=", 0).post();
-	    model.arithm(path[path.length-1], "=", 0).post();
-	    
-	    for(int i = 0; i < rows; i++)
-	    	for(int j = 0; j < columns-1; j++) {
-	    		model.ifThen(model.arithm(matrix[i][j], ">", matrix[i][j+1]),
-	    				model.arithm(path[i+1], "=", j));
-	    		model.ifThen(model.arithm(matrix[i][j+1], ">", matrix[i][j]),
-	    				model.arithm(path[i+1], "=", j+1));
-
-	    	}
-	    
 	    // make constraint distance **********************
-	    distance = new IntVar[path.length-1];
-	    for(int i = 0; i < distance.length; i++) {
-	    	distance[i] = model.intVar(0,  999);
-	    }
+	 
+	   flatten = new IntVar[(rows+1) * columns];
+	   for(int i = 0; i < flatten.length; i++) {
+		  flatten[i] = model.intVar("flatten[" + i + "]" , 0, 999);
+	  }
 	   
+	   
+	   for(int j = 0; j < columns; j++) {
+		   model.arithm(flatten[j], "=", 
+				   model.intScaleView(matrix[0][j], d[0][j] )).post();
+	   }
+	   
+	 
+	   for(int i = 0; i < matrix.length ; i++) {
+		   for(int j = 0; j < columns; j++) {
+				   if(i == matrix.length - 1) {
+					   model.arithm(flatten[(i+1) * columns + j], "=", 
+							   model.intScaleView(matrix[i][j], d[j][0] )).post();
+				   }
+				   
+				   else {
+					 
+					   IntVar b = model.intVar(1,2 );
+						  model.ifThen(model.arithm(z[i+1], "=", 0), model.arithm(b, "=", 1));
+						  model.ifThen(model.arithm(z[i+1], "=", 1), model.arithm(b, "=", 2));
+						  
+						  IntVar b_2 = model.intVar(1,2);
+						  model.ifThen(model.arithm(matrix[i][j], "=", 0), model.arithm(b_2, "=", 1));
+						  model.ifThen(model.arithm(matrix[i][j], "=", 1), model.arithm(b_2, "=", 2));
+						  
+						  IntVar c = model.intVar(0,4);
+						  model.arithm(b,"+",b_2,"=", c).post();
+						  
+						  IntVar d_ = model.intVar(5, 10);
+						  d_ = model.intScaleView(b, 5);
+						  
+						  
+						  
+						  IntVar d2 = model.intVar(1, 12);
+						  model.arithm(d_,"+",b_2,"=", d2).post();
+						  
+						  
+						  
+					  
+					  
+					   for(int k = 0; k < columns; k++) {
+						   model.ifThen(model.arithm(c, "=", 4), model.arithm(flatten[(i+1) * columns + k], "=", 
+						   model.intScaleView(matrix[i+1][k], d[j][k] )));
+						   
+						   if(k < columns -1)
+							   model.ifThen(model.arithm(d2, "=", 7), model.arithm(flatten[(i+1) * columns + k], "=", 0));
+						   if(k == columns -1)
+							   model.ifThen(model.arithm(d2, "=", 7), model.arithm(flatten[(i+1) * columns + k], "=", d[j][0]));
+				   
+					   }
+					   
+ 
+ 
+				   }
+			 
+		   }
+	   }
 	   
 	   //*******************************
 	}
@@ -258,34 +282,35 @@ public class CourseProject {
 	/* Solve problem */
 	public void Solve() {
 		Solver solver = model.getSolver();
-		
-		int[] scalar_dis = new int[distance.length];
-		for(int i = 0; i < scalar_dis.length; i++)
-			scalar_dis[i] = 1;
-		
-		
-		model.scalar(distance, scalar_dis,"=", OBJ).post();
+		model.sum(flatten, "=", OBJ).post();
 		model.setObjective(Model.MINIMIZE, OBJ);
 
 
 		
 			 while(solver.solve()) {
-			 System.out.print("Path: ");
-			 for(int i = 0; i < path.length; i++) {
-				 System.out.print(path[i].getValue() + " ");
-				  
-			 }
-				 for(int i = 0; i < path.length - 1; i++) {
-						min_result += d[path[i].getValue()][path[i+1].getValue()];
-				 }
-				 System.out.println();
-				 System.out.println("cost_min:" + min_result);
+		//solver.solve();
 				 System.out.println(OBJ);
-				 
-				 for(int i = 0; i < distance.length; i++) {
-					 System.out.println(distance[i].getValue());
+				 for(int i = 0; i < matrix.length; i++) {
+					 System.out.println();
+					 for(int j = 0; j < columns; j++ ) {
+						 System.out.print(matrix[i][j].getValue() + " ") ;
+					 }
 				 }
-		 
+				 
+				 System.out.println();
+				 System.out.println("flatten:");
+				 System.out.println();
+				 for(int i = 0; i < flatten.length; i++) {
+					
+					 System.out.print(flatten[i].getValue() + " ");
+				 }
+				 for(int t = 0; t < N; t++) {
+					   System.out.println();
+					   for(int t2 = 0; t2 < rows; t2++) {
+						   System.out.print(P[t][t2].getValue() + " ");
+					   }
+				   }
+					   
 		
 			 }
 
@@ -296,13 +321,13 @@ public class CourseProject {
 	
 	public static void main(String args[]) {
 		
-//		GeneralData generalData = new GeneralData();
-//		try {
-//			generalData.Gen();
-//		} catch (IOException e1) {
-//			e1.printStackTrace();
-//		}
-//		
+		GeneralData generalData = new GeneralData();
+		try {
+			generalData.Gen();
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
+		
 		CourseProject  courseProject= new CourseProject();
 		try {
 			courseProject.creat();
