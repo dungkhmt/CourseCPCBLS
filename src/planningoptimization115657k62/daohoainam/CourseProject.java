@@ -16,7 +16,7 @@ public class CourseProject {
 	
 	// declare model 
 	Model model = new Model("Get the goods in the warehouse");
-	IntVar OBJ = model.intVar("objective", 0, 99999999);	
+
 	
 	IntVar[][] matrix;
 	IntVar[] z;
@@ -26,7 +26,7 @@ public class CourseProject {
     
 	/* Declare global variable */ 
 	int M = 10; //  number of shelves
-	int N = 15; // number of products
+	int N = 20; // number of products
 	int[][] Q; // matrix Q[i][j] is number of product ith in shelf j
 	int [][] d; //d[i][j] distance from point i to j 
 	int q[];  // q[i] is number of product ith employee needs
@@ -35,6 +35,7 @@ public class CourseProject {
 	int[] oneP;
 	int rows =  M ; //  the times, because the employee at most visit M shelves 
 	int columns = M + 1; // the number of shelves
+	int max_S = - 1;
 	
 
 	
@@ -122,6 +123,14 @@ public class CourseProject {
 		System.out.println("Oh good! We have more than need !");
 	}
 	
+	public void findMaxBound() {
+		for(int i = 0; i < d.length; i++) {
+			for(int j = 0; j < columns; j ++)
+				max_S = Math.max(max_S, d[i][j] );
+		}
+		
+		max_S = max_S * (M+1);
+	}
 	/* make constraint */
 	public void creatConstraint() {		
 		matrix = new IntVar[M][M+1];
@@ -286,6 +295,7 @@ public class CourseProject {
 	
 	/* Solve problem */
 	public void Solve() {
+		IntVar OBJ = model.intVar("objective", 1, max_S);	
 		Solver solver = model.getSolver();
 		model.sum(flatten, "=", OBJ).post();
 		model.setObjective(Model.MINIMIZE, OBJ);
@@ -293,6 +303,7 @@ public class CourseProject {
 
 		
 	 while(solver.solve()) {
+		
 		solver.solve();
 				 System.out.println(OBJ);
 				 System.out.println("Path now:" + " ");
@@ -319,7 +330,7 @@ public class CourseProject {
 					 }
 				 }
 				 System.out.println();
-				 System.out.println("Sum units of shelve be visited:");
+				 System.out.println("Sum units of shelves be visited:");
 				 for(int k = 0; k  < units_have_optimizer.length; k++) {
 					 System.out.print(units_have_optimizer[k] + " ");
 					
@@ -334,7 +345,7 @@ public class CourseProject {
 					 }
 				 }
 				 if(t_ == units_have_optimizer.length) {
-					 System.out.println("Oh, good all constraint be satfied!");
+					 System.out.println("Oh, good all constraint be satisfied!");
 				 }
 				 
 				 System.out.println();
@@ -380,7 +391,7 @@ public class CourseProject {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
+		courseProject.findMaxBound();
 		courseProject.getMaxUnits();
 		courseProject.showInfor();
 		courseProject.checkNeed();

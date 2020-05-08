@@ -10,7 +10,7 @@ public class GeneralData {
 	Random generator = new Random();
 	
 	int S = 10;
-	int need = 15;
+	int need = 20;
 	
 	int rows = S;
 	int columns = S;
@@ -23,11 +23,11 @@ public class GeneralData {
 	int range_dis = max_distance - min_distance;
 	
 	int min_unit = 3;
-	int max_unit = 6;
+	int max_unit = 10;
 	int range_unit = max_unit - min_unit;
 	
 	int min_need = 5;
-	int max_need = 15;
+	int max_need = 35;
 	int range_need = max_need - min_need;
 	
 	public void Gen() throws IOException {
