@@ -135,7 +135,7 @@ public class CourseProject {
 		
 		
 
-		  // creat scalar columns and rows
+		  // create scalar columns and rows
 	    int[] one_max_rows = new int[rows];
 	    int[] one_max_columns = new int[columns];
 	    for(int i = 0; i < rows; i++)
@@ -246,51 +246,48 @@ public class CourseProject {
 	    // make constraint distance **********************
 	    distance = new IntVar[path.length-1];
 	    for(int i = 0; i < distance.length; i++) {
-	    	distance[i] = model.intVar(0, 9999);
+	    	distance[i] = model.intVar(0,  999);
 	    }
-	    
-
-	  
+	   
 	   
 	   //*******************************
 	}
 
-    
-    /////////////////////////////////
+ 
 	
 	/* Solve problem */
 	public void Solve() {
 		Solver solver = model.getSolver();
-//		
-//		int[] scalar_dis = new int[distance.length];
-//		for(int i = 0; i < scalar_dis.length; i++)
-//			scalar_dis[i] = 1;
-//		
-//		
-//		model.scalar(distance, scalar_dis,"=", OBJ).post();
-//		model.setObjective(Model.MINIMIZE, OBJ);
-		solver.findAllSolutions();
+		
+		int[] scalar_dis = new int[distance.length];
+		for(int i = 0; i < scalar_dis.length; i++)
+			scalar_dis[i] = 1;
+		
+		
+		model.scalar(distance, scalar_dis,"=", OBJ).post();
+		model.setObjective(Model.MINIMIZE, OBJ);
 
-//		
-//			 while(solver.solve()) {
-//			 System.out.print("Path: ");
-//			 for(int i = 0; i < path.length; i++) {
-//				 System.out.print(path[i].getValue() + " ");
-//				  
-//			 }
-//				 for(int i = 0; i < path.length - 1; i++) {
-//						min_result += d[path[i].getValue()][path[i+1].getValue()];
-//				 }
-//				 System.out.println();
-//				 System.out.println("cost_min:" + min_result);
-//				 System.out.println(OBJ);
-//				 
-//				 for(int i = 0; i < distance.length; i++) {
-//					 System.out.println(distance[i].getValue());
-//				 }
-//		 
-//		
-//			 }
+
+		
+			 while(solver.solve()) {
+			 System.out.print("Path: ");
+			 for(int i = 0; i < path.length; i++) {
+				 System.out.print(path[i].getValue() + " ");
+				  
+			 }
+				 for(int i = 0; i < path.length - 1; i++) {
+						min_result += d[path[i].getValue()][path[i+1].getValue()];
+				 }
+				 System.out.println();
+				 System.out.println("cost_min:" + min_result);
+				 System.out.println(OBJ);
+				 
+				 for(int i = 0; i < distance.length; i++) {
+					 System.out.println(distance[i].getValue());
+				 }
+		 
+		
+			 }
 
 		System.out.println();
         System.out.println("                            ---------- Group 7 -------------              ");
@@ -305,7 +302,7 @@ public class CourseProject {
 //		} catch (IOException e1) {
 //			e1.printStackTrace();
 //		}
-		
+//		
 		CourseProject  courseProject= new CourseProject();
 		try {
 			courseProject.creat();
@@ -319,8 +316,8 @@ public class CourseProject {
 		courseProject.test();
 		try {
 	
-	courseProject.creatConstraint();
-	courseProject.Solve();
+			courseProject.creatConstraint();
+			courseProject.Solve();
 		} 
 		catch(OutOfMemoryError oome){
 			System.out.println("oh");
