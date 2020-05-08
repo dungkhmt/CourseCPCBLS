@@ -208,7 +208,9 @@ public class CourseProject {
 	        
 	        }    
 	    }
+	    // at least one shelf be visited
 	    model.arithm(z[0], "=", 1).post();
+	    
 	    for(int i = 0; i < rows - 1; i++)
 	        model.arithm(z[i], ">=", z[i+1]).post();
 	
@@ -322,8 +324,6 @@ public class CourseProject {
 
 		
 	 while(solver.solve()) {
-		
-		solver.solve();
 				 System.out.println(OBJ);
 				 System.out.println("Path now:" + " ");
 				 for(int i = 0; i < matrix.length; i++) {
@@ -334,6 +334,18 @@ public class CourseProject {
 						 }
 					 }
 				 }
+				 System.out.println();
+				 for(int i = 0; i < matrix.length; i++) {
+					 System.out.println();
+					 for(int j = 0; j < columns; j++ ) {
+							
+						 System.out.print(matrix[i][j].getValue() + " ");
+						 }
+					 }
+				 
+				 
+				 
+				 
 				 units_have_optimizer = new int[N];
 				 for(int k = 0; k  < units_have_optimizer.length; k++)
 					 units_have_optimizer[k] = 0;
@@ -391,6 +403,9 @@ public class CourseProject {
 			 }
 
 		System.out.println();
+		
+		solver.printStatistics();
+
         System.out.println("                            ---------- Group 7 -------------              ");
         
 	} 
