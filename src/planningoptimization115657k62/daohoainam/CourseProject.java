@@ -25,8 +25,8 @@ public class CourseProject {
     int min_result = 0;
     
 	/* Declare global variable */ 
-	int M = 2; //  number of shelves
-	int N = 1; // number of products
+	int M = 10; //  number of shelves
+	int N = 15; // number of products
 	int[][] Q; // matrix Q[i][j] is number of product ith in shelf j
 	int [][] d; //d[i][j] distance from point i to j 
 	int q[];  // q[i] is number of product ith employee needs
@@ -290,26 +290,17 @@ public class CourseProject {
 			 while(solver.solve()) {
 		//solver.solve();
 				 System.out.println(OBJ);
+				 System.out.println("Path now:" + " ");
 				 for(int i = 0; i < matrix.length; i++) {
-					 System.out.println();
 					 for(int j = 0; j < columns; j++ ) {
-						 System.out.print(matrix[i][j].getValue() + " ") ;
+						 if(matrix[i][j].getValue() == 1) {
+							
+						 System.out.print(j + " ");
+						 }
 					 }
 				 }
 				 
 				 System.out.println();
-				 System.out.println("flatten:");
-				 System.out.println();
-				 for(int i = 0; i < flatten.length; i++) {
-					
-					 System.out.print(flatten[i].getValue() + " ");
-				 }
-				 for(int t = 0; t < N; t++) {
-					   System.out.println();
-					   for(int t2 = 0; t2 < rows; t2++) {
-						   System.out.print(P[t][t2].getValue() + " ");
-					   }
-				   }
 					   
 		
 			 }
@@ -338,7 +329,7 @@ public class CourseProject {
 		courseProject.getMaxUnits();
 		courseProject.showInfor();
 		courseProject.checkNeed();
-		courseProject.test();
+	//	courseProject.test();
 		try {
 	
 			courseProject.creatConstraint();
