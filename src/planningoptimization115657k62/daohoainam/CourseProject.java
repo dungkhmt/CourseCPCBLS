@@ -25,8 +25,8 @@ public class CourseProject {
     int min_result = 0;
     
 	/* Declare global variable */ 
-	int M = 10; //  number of shelves
-	int N = 20; // number of products
+	int M = 5; //  number of shelves
+	int N = 5; // number of products
 	int[][] Q; // matrix Q[i][j] is number of product ith in shelf j
 	int [][] d; //d[i][j] distance from point i to j 
 	int q[];  // q[i] is number of product ith employee needs
@@ -36,6 +36,7 @@ public class CourseProject {
 	int rows =  M ; //  the times, because the employee at most visit M shelves 
 	int columns = M + 1; // the number of shelves
 	int max_S = - 1;
+	int min_S = 99999999;
 	
 
 	
@@ -131,6 +132,24 @@ public class CourseProject {
 		
 		max_S = max_S * (M+1);
 	}
+	
+	
+	
+	public void findMinBound() {
+		for(int i = 0; i < d.length; i++) {
+			for(int j = 0; j < columns; j ++) {
+				if(d[i][j] != 0)
+				min_S = Math.min(min_S, d[i][j] );
+				
+			}
+		}
+		
+		min_S = min_S * 2;
+		System.out.println("Min S:" + min_S);
+		System.out.println();
+	}
+	
+	
 	/* make constraint */
 	public void creatConstraint() {		
 		matrix = new IntVar[M][M+1];
@@ -295,7 +314,7 @@ public class CourseProject {
 	
 	/* Solve problem */
 	public void Solve() {
-		IntVar OBJ = model.intVar("objective", 1, max_S);	
+		IntVar OBJ = model.intVar("objective", min_S, max_S);	
 		Solver solver = model.getSolver();
 		model.sum(flatten, "=", OBJ).post();
 		model.setObjective(Model.MINIMIZE, OBJ);
@@ -392,6 +411,7 @@ public class CourseProject {
 			e.printStackTrace();
 		}
 		courseProject.findMaxBound();
+		courseProject.findMinBound();
 		courseProject.getMaxUnits();
 		courseProject.showInfor();
 		courseProject.checkNeed();
