@@ -6,11 +6,11 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Random;
 
-public class Init {
+public class Init{
 	Random generator = new Random();
 	
 	int S = 10;
-	int need = 5;
+	int need = 20;
 	
 	int rows = S;
 	int columns = S;
@@ -22,18 +22,18 @@ public class Init {
 	int max_distance = 25;
 	int range_dis = max_distance - min_distance;
 	
-	int min_unit = 0;
-	int max_unit = 15;
+	int min_unit = 3;
+	int max_unit = 10;
 	int range_unit = max_unit - min_unit;
 	
-	int min_need = 2;
-	int max_need = 25;
+	int min_need = 5;
+	int max_need = 35;
 	int range_need = max_need - min_need;
 	
 	public void Gen() throws IOException {
 		
-	int have[][] = new int[need+1][S];
-	int need_arr[] = new int[need+1];
+	int have[][] = new int[need][S];
+	int need_arr[] = new int[need];
 	int d[][] = new int[rows+1][columns+1];
 	// general data for distance
 	for(int i = 0; i < rows + 1; i++) {
@@ -48,21 +48,15 @@ public class Init {
 	
 	// general for need
 	for(int i = 0; i < need_arr.length; i++) {
-		if(i == 0) need_arr[i] = 0;
-		else {
 		need_arr[i] = generator.nextInt((max_need - min_need) + 1) + min_need;
-		}
 	}
 	
 
 	// general data for Q
 	for(int i = 0; i < have.length; i++)
 		for(int j = 0; j < S; j++) {
-			if(i == 0) {
-				have[i][j] = 0;
-			}else {
-				have[i][j] = generator.nextInt((max_unit- min_unit) + 1) + min_unit;
-			}
+			have[i][j] = generator.nextInt((max_unit- min_unit) + 1) + min_unit;
+			
 		}
 	
 	
