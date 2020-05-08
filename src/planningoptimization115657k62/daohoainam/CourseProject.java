@@ -31,6 +31,7 @@ public class CourseProject {
 	int [][] d; //d[i][j] distance from point i to j 
 	int q[];  // q[i] is number of product ith employee needs
 	int max_units[];
+	int[] units_have_optimizer;
 	int[] oneP;
 	int rows =  M ; //  the times, because the employee at most visit M shelves 
 	int columns = M + 1; // the number of shelves
@@ -184,7 +185,7 @@ public class CourseProject {
 	        model.arithm(z[i], ">=", z[i+1]).post();
 	
 
-	// make constraint units of product
+	// make constraint units of product ***************
 	    P = new IntVar[N][rows];
 	    for(int k = 0; k < N; k++)
 	       for(int j = 0; j < rows; j++) {
@@ -204,10 +205,13 @@ public class CourseProject {
 	        for(int r = 0; r < rows; r++){
 	        		model.sum(P_sub[r], "=", P[i][r]).post();
 	        }
-	        for(int k = 0; k < rows; k++)
+	        for(int k = 0; k < rows; k++) {
 	            for(int j = 1;  j < columns; j++)
-	             model.arithm(P_sub[k][j], "=", model.intScaleView(matrix[k][j], Q[i][j-1])).post();   
-	                
+	             model.arithm(P_sub[k][j], "=", model.intScaleView(matrix[k][j], Q[i][j-1])).post();
+	            
+	            model.arithm(P_sub[k][0], "=", 0).post();
+	        
+	        }
 	    }
 	    
 	    // make constraint distance **********************
@@ -252,9 +256,6 @@ public class CourseProject {
 						  IntVar d2 = model.intVar(1, 12);
 						  model.arithm(d_,"+",b_2,"=", d2).post();
 						  
-						  
-						  
-					  
 					  
 					   for(int k = 0; k < columns; k++) {
 						   model.ifThen(model.arithm(c, "=", 4), model.arithm(flatten[(i+1) * columns + k], "=", 
@@ -266,6 +267,10 @@ public class CourseProject {
 							   model.ifThen(model.arithm(d2, "=", 7), model.arithm(flatten[(i+1) * columns + k], "=", d[j][0]));
 				   
 					   }
+					   
+					   
+					   
+					   
 					   
  
  
@@ -287,8 +292,8 @@ public class CourseProject {
 
 
 		
-			 while(solver.solve()) {
-		//solver.solve();
+	 while(solver.solve()) {
+		solver.solve();
 				 System.out.println(OBJ);
 				 System.out.println("Path now:" + " ");
 				 for(int i = 0; i < matrix.length; i++) {
@@ -299,6 +304,56 @@ public class CourseProject {
 						 }
 					 }
 				 }
+				 units_have_optimizer = new int[N];
+				 for(int k = 0; k  < units_have_optimizer.length; k++)
+					 units_have_optimizer[k] = 0;
+				 
+				 for(int k = 0; k  < units_have_optimizer.length; k++) {
+					 for(int i = 0; i < matrix.length; i++) {
+						 for(int j = 1; j < columns; j++ ) {
+							 if(matrix[i][j].getValue() == 1) {
+								 units_have_optimizer[k] += Q[k][j-1];
+			
+							 }
+						 }
+					 }
+				 }
+				 System.out.println();
+				 System.out.println("Sum units of shelve be visited:");
+				 for(int k = 0; k  < units_have_optimizer.length; k++) {
+					 System.out.print(units_have_optimizer[k] + " ");
+					
+				 }
+				 
+				 System.out.println();
+				 int t_;
+				 for( t_ = 0; t_  < units_have_optimizer.length; t_++) {
+					 if (units_have_optimizer[t_] < q[t_]){
+						 System.out.println("What wrong :(");
+						 break;
+					 }
+				 }
+				 if(t_ == units_have_optimizer.length) {
+					 System.out.println("Oh, good all constraint be satfied!");
+				 }
+				 
+				 System.out.println();
+				 
+				 System.out.println();
+				 
+				 
+				 for(int k = 0; k < N; k++) {
+					 System.out.println();
+				       for(int j = 0; j < rows; j++) {
+				    	   System.out.print(P[k][j].getValue() + " ");
+				       }
+				 
+				 }
+				 System.out.println();
+				 System.out.println("----------");
+				 
+				 
+				 
 				 
 				 System.out.println();
 					   

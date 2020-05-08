@@ -23,11 +23,11 @@ public class GeneralData {
 	int range_dis = max_distance - min_distance;
 	
 	int min_unit = 3;
-	int max_unit = 12;
+	int max_unit = 6;
 	int range_unit = max_unit - min_unit;
 	
 	int min_need = 5;
-	int max_need = 30;
+	int max_need = 15;
 	int range_need = max_need - min_need;
 	
 	public void Gen() throws IOException {
