@@ -9,7 +9,7 @@ import java.util.Random;
 public class GeneralData {
 	Random generator = new Random();
 	
-	int S = 5;
+	int S = 15;
 	int need = 5;
 	
 	int rows = S;
