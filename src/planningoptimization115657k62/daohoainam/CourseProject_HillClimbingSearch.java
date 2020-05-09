@@ -13,6 +13,7 @@ import localsearch.model.IFunction;
 import localsearch.model.LocalSearchManager;
 import localsearch.model.VarIntLS;
 
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -24,7 +25,7 @@ public class CourseProject_HillClimbingSearch {
 	
 	/* Declare global variable */ 
 	int M = 15; //  number of shelves
-	int N = 5; // number of products
+	int N = 7; // number of products
 	int[][] Q; // matrix Q[i][j] is number of product ith in shelf j
 	int [][] d; //d[i][j] distance from point i to j 
 	int q[];  // q[i] is number of product ith employee needs
@@ -41,7 +42,7 @@ public class CourseProject_HillClimbingSearch {
 		LocalSearchManager mgr = new LocalSearchManager();
 		ConstraintSystem S = new ConstraintSystem(mgr);
 		VarIntLS []path = new VarIntLS[M+2];
-		IFunction [] P = new IFunction[N];
+		//IFunction [] P = new IFunction[N];
 		
 
 	/* load data from file */
@@ -154,6 +155,7 @@ public class CourseProject_HillClimbingSearch {
 	public void makeConstraint() {
 		
 		// make constraint range of VarIntLS
+		path = new VarIntLS[N];
 		for(int i = 0; i < path.length; i++) {
 			path[i] = new VarIntLS(mgr, 0, M);
 		}
@@ -183,29 +185,52 @@ public class CourseProject_HillClimbingSearch {
 		}
 		
 		// make constraint units of product
-		for(int k = 0; k < N; k++) {
-			for(int i = 1; i < path.length; i++) {
-				if(path[i].getValue() != 0) {
-				P[k] = new FuncPlus(P[k], Q[k][path[i].getValue()-1]);
-				}
-			}
-			
-		}
+//		for(int k = 0; k < N; k++) {
+//			for(int i = 1; i < path.length; i++) {
+//				if(path[i].getValue() != 0) {
+//				P[k] = new FuncPlus(P[k], Q[k][path[i].getValue()-1]);
+//				}else {
+//					P[k] = new FuncPlus(P[k], 0);
+//				}
+//			}
+//			
+//			S.post(new LessOrEqual(q[k], P[k]));
+//		}
 		
-		//
+		//make constraint to optimizer distance
+		
 		
 		
 		
 	}
 	
 	public void Solve() {
+		HillClimbingSearch searcher = new HillClimbingSearch();
+		searcher.search(S,10000);
+		
+		for(int i = 0; i < path.length; i++)
+			System.out.print(path[i].getValue() + " ");
 		mgr.close();
 	}
 	
 	public static void main(String[] args) throws Exception {
 		CourseProject_HillClimbingSearch CP_HCS = new CourseProject_HillClimbingSearch();
+		GeneralData generalData = new GeneralData();
+		try {
+			generalData.Gen();
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
+		
+		
 		CP_HCS.creat();
-		CP_HCS.test();
+		CP_HCS.Solve();
+		
+	
+		
+			
+	
+	
 		
 		
 		

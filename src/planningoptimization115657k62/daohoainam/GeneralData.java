@@ -10,7 +10,7 @@ public class GeneralData {
 	Random generator = new Random();
 	
 	int S = 15;
-	int need = 5;
+	int need = 7;
 	
 	int rows = S;
 	int columns = S;
