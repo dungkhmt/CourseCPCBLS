@@ -8,11 +8,13 @@ import localsearch.constraints.basic.IsEqual;
 import localsearch.constraints.basic.LessOrEqual;
 import localsearch.constraints.basic.NotEqual;
 import localsearch.functions.basic.FuncPlus;
+import localsearch.functions.sum.Sum;
 import localsearch.model.ConstraintSystem;
 import localsearch.model.IConstraint;
 import localsearch.model.IFunction;
 import localsearch.model.LocalSearchManager;
 import localsearch.model.VarIntLS;
+
 
 
 import java.io.BufferedReader;
@@ -42,8 +44,8 @@ public class CourseProject_HillClimbingSearch {
 	// declare model
 		LocalSearchManager mgr = new LocalSearchManager();
 		ConstraintSystem S = new ConstraintSystem(mgr);
-		VarIntLS []path = new VarIntLS[M+2];
-		IFunction [] P = new IFunction[N];
+		VarIntLS []path;
+		VarIntLS [] P;
 		
 		
 
@@ -155,58 +157,37 @@ public class CourseProject_HillClimbingSearch {
 	}
 	
 	public void makeConstraint() {
-		
-			
-			
-		
 		// make constraint range of VarIntLS
-		path = new VarIntLS[N];
-		for(int i = 0; i < path.length; i++) {
-			path[i] = new VarIntLS(mgr, 0, M);
-		}
+		
 		
 		
 		
 		// make constraint to ensure the start and end point always 0
-		S.post(new IsEqual(path[0], 0) );
-		 S.post(new IsEqual(path[path.length-1], 0));
+		
 
 		// make the constraint to ensure always at least one shelf be visited
-		S.post(new NotEqual(path[1], 0) ) ;
+
 		
 
 		// make constraint to ensure the value difference 0 be visited at most one time
-		for(int i = 0; i < path.length; i++) {
-			for(int j = 0; j < path.length; j++) {
-				if(i != j) {
-				S.post((new Implicate(new NotEqual(path[i], 0),
-						new NotEqual(path[i], path[j]))) );
-				}
-			}
-		}
+
 		
 		// make constraint to ensure the  0 point at start and end  
 		//all shelve be visited 
-		for(int i = 2; i < path.length; i++) {
-			S.post(new Implicate(new NotEqual(path[i], 0),
-					new NotEqual(path[i-1], 0)));
+	
+		// make constraint units of product
+		P = new VarIntLS[N];
+		for(int i = 0; i < P.length; i++) {
+			P[i] = new VarIntLS(mgr, 0, max_units[i]);
 		}
 		
-		// make constraint units of product
-//		P = new IFunction[N];
-//		for(int k = 0; k < N; k++) {
-//			for(int i = 1; i < path.length; i++) {
-//				if(path[i].getValue() != 0) {
-//				P[k] = new FuncPlus(P[k], Q[k][path[i].getValue()-1]);
-//				}else {
-//					P[k] = new FuncPlus(P[k], 0);
-//				}
-//			}
-//			
-//			S.post(new LessOrEqual(q[k], P[k]));
-//		}
-		
+		for(int i = 0; i < P.length; i++) {
+		S.post( new LessOrEqual(q[i], P[i]));
+			
+		}
+
 		//make constraint to optimizer distance
+		
 		
 	
 		
@@ -215,13 +196,17 @@ public class CourseProject_HillClimbingSearch {
 	
 	public void Solve() {
 		
+		
+		
 		mgr.close();
 		HillClimbingSearch searcher = new HillClimbingSearch();
-		searcher.search(S,10000);
+		searcher.hillClimbing(S, 1000);
 		
 		for(int i = 0; i < path.length; i++)
 			System.out.print(path[i].getValue() + " ");
-	
+		
+		System.out.println();
+
 	}
 	
 	public static void main(String[] args) throws Exception {
@@ -233,6 +218,7 @@ public class CourseProject_HillClimbingSearch {
 //			e1.printStackTrace();
 //		}
 		CP_HCS.creat();
+		CP_HCS.getMaxUnits();
 		CP_HCS.makeConstraint();
 		CP_HCS.Solve();
 		
