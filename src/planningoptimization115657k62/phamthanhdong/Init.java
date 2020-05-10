@@ -6,11 +6,11 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Random;
 
-public class Init{
+public class Init {
 	Random generator = new Random();
 	
-	int S = 10;
-	int need = 20;
+	int S = 3;
+	int need = 3;//N
 	
 	int rows = S;
 	int columns = S;
@@ -23,7 +23,7 @@ public class Init{
 	int range_dis = max_distance - min_distance;
 	
 	int min_unit = 3;
-	int max_unit = 10;
+	int max_unit = 15;
 	int range_unit = max_unit - min_unit;
 	
 	int min_need = 5;
