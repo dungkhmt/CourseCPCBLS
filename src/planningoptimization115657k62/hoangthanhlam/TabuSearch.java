@@ -1,12 +1,13 @@
-package com.company.localsearch;
+package planningoptimization115657k62.hoangthanhlam;
 
 import java.util.ArrayList;
 import java.util.Random;
 
 import localsearch.model.IConstraint;
+import localsearch.model.IFunction;
 import localsearch.model.VarIntLS;
 
-public class MyTabuSearch {
+public class TabuSearch {
 	class Move{
 		int i;
 		int v;
@@ -23,18 +24,9 @@ public class MyTabuSearch {
 	int bestViolations;
 	Random R = new Random();
 	int nic = 0;
-	public MyTabuSearch(IConstraint c){
+	public TabuSearch(){
 		// assumption minValue of domain >= 0
-		this.c = c;
-		x = c.getVariables();
-		N = x.length;
-		D = 0;
-		for(int i = 0; i < x.length; i++)
-			D = D < x[i].getMaxValue() ? x[i].getMaxValue() : D;
-		tabu = new int[N][D+1];
-		for(int i = 0; i < N; i++)
-			for(int v = 0;v <= D; v++)
-				tabu[i][v] = -1;
+		
 		
 	}
 	private void restart(){
@@ -46,7 +38,23 @@ public class MyTabuSearch {
 			bestViolations = c.violations();
 		}
 	}
-	public void search(int maxIter, int tblen, int maxStable){
+	public void search(IConstraint c, IFunction f, int tblen, int maxStable){
+		// tim loi giai thoa man rang buoc c, dong thoi minimize function f
+		
+		
+	}
+	public void search(IConstraint c, int maxIter, int tblen, int maxStable){
+		this.c = c;
+		x = c.getVariables();
+		N = x.length;
+		D = 0;
+		for(int i = 0; i < x.length; i++)
+			D = D < x[i].getMaxValue() ? x[i].getMaxValue() : D;
+		tabu = new int[N][D+1];
+		for(int i = 0; i < N; i++)
+			for(int v = 0;v <= D; v++)
+				tabu[i][v] = -1;
+		
 		this.tbl = tblen;
 		bestViolations = c.violations();
 		ArrayList<Move> cand = new ArrayList<>();
@@ -91,6 +99,7 @@ public class MyTabuSearch {
 		}
 		
 	}
+
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 
