@@ -3,8 +3,7 @@ package planningoptimization115657k62.daohoainam;
 import planningoptimization115657k62.daohoainam.GeneralData;
 import java.util.Scanner;
 
-import org.chocosolver.solver.variables.IntVar;
-
+import org.chocosolver.solver.Model;
 import localsearch.constraints.basic.Implicate;
 import localsearch.constraints.basic.IsEqual;
 import localsearch.constraints.basic.LessOrEqual;
@@ -30,8 +29,8 @@ import java.io.IOException;
 public class CourseProject_HillClimbingSearch {
 	
 	/* Declare global variable */ 
-	int M = 15; //  number of shelves
-	int N = 7; // number of products
+	int M = 3; //  number of shelves
+	int N = 3; // number of products
 	int[][] Q; // matrix Q[i][j] is number of product ith in shelf j
 	int [][] d; //d[i][j] distance from point i to j 
 	int q[];  // q[i] is number of product ith employee needs
@@ -50,6 +49,7 @@ public class CourseProject_HillClimbingSearch {
 		VarIntLS [][] matrix;
 		VarIntLS [][] P;
 		VarIntLS[] flatten;
+		VarIntLS OBJ;
 		
 		
 
@@ -202,7 +202,6 @@ public class CourseProject_HillClimbingSearch {
 		}
 
 		// make constraint units of product
-
 		P = new VarIntLS[N][rows];
 	    for(int k = 0; k < N; k++)
 	       for(int j = 0; j < rows; j++) {
@@ -212,7 +211,7 @@ public class CourseProject_HillClimbingSearch {
 	    
 	    for(int i = 0; i < N; i++) {
 	    	S.post(new LessOrEqual(q[i], new Sum(P[i])));
-	    	S.post(new LessOrEqual( new Sum(P[i]),  max_units[i]));
+	    	S.post(new LessOrEqual(new Sum(P[i]),  max_units[i]));
 	    }
 	    
 	    for(int i = 0; i < N; i++) {
@@ -235,28 +234,87 @@ public class CourseProject_HillClimbingSearch {
 
 		//make constraint to optimizer distance
 		
-		
-	
-		
+	    
+	    
+		   flatten = new VarIntLS[(rows+1) * columns];
+		   for(int i = 0; i < flatten.length; i++) {
+			  flatten[i] = new VarIntLS(mgr, 0, 999);
+		  }
+		   
+		   
+		   for(int j = 0; j < columns; j++) {
+			   S.post(new IsEqual(new FuncMult(matrix[0][j], d[0][j]), flatten[j]));
+		   }
+		   
+		   
+	    for(int i = 0; i < matrix.length ; i++) {
+			   for(int j = 0; j < columns; j++) {
+					   if(i == matrix.length - 1) {
+						  S.post( new IsEqual(new FuncMult(matrix[i][j], d[j][0] ), flatten[(i+1) * columns + j]));
+					   }
+					   
+					   else {
+						 
+						   VarIntLS b =  new VarIntLS(mgr, 1,2 );
+							S.post(new Implicate(new IsEqual( new Sum(matrix[i+1]), 0), new IsEqual(b, 1)));
+							S.post(new Implicate(new IsEqual( new Sum(matrix[i+1]), 1), new IsEqual(b, 2)));
+							  
+							  VarIntLS b_2 =  new VarIntLS(mgr, 1,2);
+							  S.post(new Implicate(new IsEqual(matrix[i][j], 0), new IsEqual(b_2, 1)));
+							  S.post(new Implicate(new IsEqual(matrix[i][j], 1), new IsEqual(b_2, 2)));
+							  
+							  VarIntLS c = new VarIntLS(mgr, 0,4);
+							  S.post( new IsEqual(new FuncPlus(b, b_2), c));
+							  
+							  VarIntLS d_ =  new VarIntLS(mgr, 5, 10);
+							  S.post(new IsEqual(new FuncMult(b, 5), d_));
+							  
+							  
+							  VarIntLS d2 = new VarIntLS(mgr, 1, 12);
+							  S.post( new IsEqual(new FuncPlus(d_, b_2), d2));
+							  
+						  
+						   for(int k = 0; k < columns; k++) {
+							 S.post( new Implicate(new IsEqual(c, 4) , 
+									 new IsEqual(new FuncMult(matrix[i+1][k], d[j][k] ), flatten[(i+1) * columns + k])));
+							   
+							   if(k < columns -1)
+									 S.post( new Implicate(new IsEqual(d2, 7), new IsEqual(flatten[(i+1) * columns + k], 0)));
+							   if(k == columns -1)
+								   S.post( new Implicate(new IsEqual(d2, 7), new IsEqual(flatten[(i+1) * columns + k], d[j][0])));
+						   }
+	 
+					   }
+				 
+			   }
+	    }
 		
 	}
 	
 	public void Solve() {
 		
-		
-		
+		OBJ = new VarIntLS(mgr, min_S, max_S);
+		S.post(new IsEqual(new Sum(flatten), OBJ));
 		mgr.close();
+		
 		HillClimbingSearch searcher = new HillClimbingSearch();
-		searcher.hillClimbing(S, 1000);
+		searcher.search(S, 1000);
 		
 		for(int i = 0; i < matrix.length; i++) {
 			System.out.println();
-			for(int j = 0; j < matrix.length; j++) {
+			for(int j = 0; j < M+1; j++) {
 				System.out.print(matrix[i][j].getValue() + " ");
 			}
-
-			
 		}
+		
+		
+		 
+		 for(int k = 0; k < N; k++) {
+			 System.out.println();
+		       for(int j = 0; j < rows; j++) {
+		    	   System.out.print(P[k][j].getValue() + " ");
+		       }
+		 }
 		
 		System.out.println();
 
@@ -272,6 +330,8 @@ public class CourseProject_HillClimbingSearch {
 //		}
 		CP_HCS.creat();
 		CP_HCS.getMaxUnits();
+		CP_HCS.findMinBound();
+		CP_HCS.findMaxBound();
 		CP_HCS.makeConstraint();
 		CP_HCS.Solve();
 		
