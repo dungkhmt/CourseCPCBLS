@@ -3,6 +3,8 @@ package planningoptimization115657k62.daohoainam;
 import planningoptimization115657k62.daohoainam.GeneralData;
 import java.util.Scanner;
 
+import org.chocosolver.solver.variables.IntVar;
+
 import localsearch.constraints.basic.Implicate;
 import localsearch.constraints.basic.IsEqual;
 import localsearch.constraints.basic.LessOrEqual;
@@ -44,8 +46,10 @@ public class CourseProject_HillClimbingSearch {
 	// declare model
 		LocalSearchManager mgr = new LocalSearchManager();
 		ConstraintSystem S = new ConstraintSystem(mgr);
-		VarIntLS []path;
+		VarIntLS [][] matrix;
 		VarIntLS [] P;
+		VarIntLS[] z;
+		VarIntLS[] flatten;
 		
 		
 
@@ -158,33 +162,56 @@ public class CourseProject_HillClimbingSearch {
 	
 	public void makeConstraint() {
 		// make constraint range of VarIntLS
-		
-		
-		
-		
-		// make constraint to ensure the start and end point always 0
-		
-
-		// make the constraint to ensure always at least one shelf be visited
-
-		
-
-		// make constraint to ensure the value difference 0 be visited at most one time
-
-		
-		// make constraint to ensure the  0 point at start and end  
-		//all shelve be visited 
-	
-		// make constraint units of product
-		P = new VarIntLS[N];
-		for(int i = 0; i < P.length; i++) {
-			P[i] = new VarIntLS(mgr, 0, max_units[i]);
+		matrix = new VarIntLS[M][columns];
+		for(int i = 0; i < matrix.length; i++) {
+			for(int j = 0 ; j < columns; j++)
+				matrix[i][j] = new VarIntLS(mgr, 0, 1);
 		}
 		
-		for(int i = 0; i < P.length; i++) {
-		S.post( new LessOrEqual(q[i], P[i]));
+		// make constraint to ensure the start and end point always 0 be visited after all shelve be visited
+		for(int i = 0; i < matrix.length; i++) {
+			S.post(new IsEqual(matrix[i][0], 0));
+		}
+		
+		
+		// make constraint at a time at most one shelf be visited
+		for(int i = 1; i < matrix.length; i++) {
+			S.post(new LessOrEqual(new Sum(matrix[i]), 1));
+		}
+		
+		// make constraint at least one shelf be visited
+		S.post(new IsEqual(new Sum(matrix[0]), 1));
+		
+		// make constraint a shelf at most be visited one time
+		for(int i = 0; i < columns; i++) {
+			for(int j = 0;  j < matrix.length; j ++) {
+				for(int k = 0;  k < matrix.length; k ++) {
+					if(j != k) {
+						S.post(new Implicate(new IsEqual(matrix[j][i], 1), 
+								new IsEqual(matrix[k][i], 0)));
+					}
+				}
+			}
+		}
+		
+		// make constraint to ensure shelves be visited from 0,1, ... go on
+		for(int i = matrix.length-1; i > 0; i--) {
+			S.post(new LessOrEqual(new Sum(matrix[i]),
+					new Sum(matrix[i-1])));
 			
 		}
+
+	
+		// make constraint units of product
+//		P = new VarIntLS[N];
+//		for(int i = 0; i < P.length; i++) {
+//			P[i] = new VarIntLS(mgr, 0, max_units[i]);
+//		}
+//		
+//		for(int i = 0; i < P.length; i++) {
+//		S.post( new LessOrEqual(q[i], P[i]));
+//			
+//		}
 
 		//make constraint to optimizer distance
 		
@@ -202,8 +229,14 @@ public class CourseProject_HillClimbingSearch {
 		HillClimbingSearch searcher = new HillClimbingSearch();
 		searcher.hillClimbing(S, 1000);
 		
-		for(int i = 0; i < path.length; i++)
-			System.out.print(path[i].getValue() + " ");
+		for(int i = 0; i < matrix.length; i++) {
+			System.out.println();
+			for(int j = 0; j < matrix.length; j++) {
+				System.out.print(matrix[i][j].getValue() + " ");
+			}
+
+			
+		}
 		
 		System.out.println();
 

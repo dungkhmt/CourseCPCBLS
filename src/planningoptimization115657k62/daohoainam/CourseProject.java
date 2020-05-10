@@ -133,8 +133,6 @@ public class CourseProject {
 		max_S = max_S * (M+1);
 	}
 	
-	
-	
 	public void findMinBound() {
 		for(int i = 0; i < d.length; i++) {
 			for(int j = 0; j < columns; j ++) {
