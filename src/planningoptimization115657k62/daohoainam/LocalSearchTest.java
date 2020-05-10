@@ -32,6 +32,7 @@ public class LocalSearchTest {
 			c[3] = new LessOrEqual(x[4], 3);
 			c[4] = new IsEqual(new FuncPlus(x[1], x[4]), 7);
 			c[5] = new Implicate(new IsEqual(x[2], 1), new NotEqual(x[4], 2));
+			
 			ConstraintSystem cs = new ConstraintSystem(mgr);
 			for (int i = 0; i < 6; i++) {
 				cs.post(c[i]);

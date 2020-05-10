@@ -9,6 +9,7 @@ import localsearch.constraints.basic.LessOrEqual;
 import localsearch.constraints.basic.NotEqual;
 import localsearch.functions.basic.FuncPlus;
 import localsearch.model.ConstraintSystem;
+import localsearch.model.IConstraint;
 import localsearch.model.IFunction;
 import localsearch.model.LocalSearchManager;
 import localsearch.model.VarIntLS;
@@ -37,12 +38,13 @@ public class CourseProject_HillClimbingSearch {
 	int max_S = - 1;
 	int min_S = 99999999;
 	
-	
+
 	// declare model
 		LocalSearchManager mgr = new LocalSearchManager();
 		ConstraintSystem S = new ConstraintSystem(mgr);
 		VarIntLS []path = new VarIntLS[M+2];
-		//IFunction [] P = new IFunction[N];
+		IFunction [] P = new IFunction[N];
+		
 		
 
 	/* load data from file */
@@ -154,25 +156,31 @@ public class CourseProject_HillClimbingSearch {
 	
 	public void makeConstraint() {
 		
+			
+			
+		
 		// make constraint range of VarIntLS
 		path = new VarIntLS[N];
 		for(int i = 0; i < path.length; i++) {
 			path[i] = new VarIntLS(mgr, 0, M);
 		}
 		
-		// make constraint to ensure the start and end point always
-		S.post(new IsEqual(path[0], 0));
-		S.post(new IsEqual(path[path.length-1], 0));
 		
+		
+		// make constraint to ensure the start and end point always 0
+		S.post(new IsEqual(path[0], 0) );
+		 S.post(new IsEqual(path[path.length-1], 0));
+
 		// make the constraint to ensure always at least one shelf be visited
-		S.post(new NotEqual(path[1], 0));
+		S.post(new NotEqual(path[1], 0) ) ;
 		
+
 		// make constraint to ensure the value difference 0 be visited at most one time
 		for(int i = 0; i < path.length; i++) {
 			for(int j = 0; j < path.length; j++) {
 				if(i != j) {
-				S.post(new Implicate(new NotEqual(path[i], 0),
-						new NotEqual(path[i], path[j])));
+				S.post((new Implicate(new NotEqual(path[i], 0),
+						new NotEqual(path[i], path[j]))) );
 				}
 			}
 		}
@@ -185,6 +193,7 @@ public class CourseProject_HillClimbingSearch {
 		}
 		
 		// make constraint units of product
+//		P = new IFunction[N];
 //		for(int k = 0; k < N; k++) {
 //			for(int i = 1; i < path.length; i++) {
 //				if(path[i].getValue() != 0) {
@@ -199,39 +208,33 @@ public class CourseProject_HillClimbingSearch {
 		
 		//make constraint to optimizer distance
 		
-		
+	
 		
 		
 	}
 	
 	public void Solve() {
+		
+		mgr.close();
 		HillClimbingSearch searcher = new HillClimbingSearch();
 		searcher.search(S,10000);
 		
 		for(int i = 0; i < path.length; i++)
 			System.out.print(path[i].getValue() + " ");
-		mgr.close();
+	
 	}
 	
 	public static void main(String[] args) throws Exception {
-		CourseProject_HillClimbingSearch CP_HCS = new CourseProject_HillClimbingSearch();
-		GeneralData generalData = new GeneralData();
-		try {
-			generalData.Gen();
-		} catch (IOException e1) {
-			e1.printStackTrace();
-		}
-		
-		
+	CourseProject_HillClimbingSearch CP_HCS = new CourseProject_HillClimbingSearch();
+//		GeneralData generalData = new GeneralData();
+//		try {
+//			generalData.Gen();
+//		} catch (IOException e1) {
+//			e1.printStackTrace();
+//		}
 		CP_HCS.creat();
+		CP_HCS.makeConstraint();
 		CP_HCS.Solve();
-		
-	
-		
-			
-	
-	
-		
 		
 		
 		}
