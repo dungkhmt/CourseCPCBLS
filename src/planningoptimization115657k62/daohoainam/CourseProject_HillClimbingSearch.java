@@ -9,6 +9,7 @@ import localsearch.constraints.basic.Implicate;
 import localsearch.constraints.basic.IsEqual;
 import localsearch.constraints.basic.LessOrEqual;
 import localsearch.constraints.basic.NotEqual;
+import localsearch.functions.basic.FuncMult;
 import localsearch.functions.basic.FuncPlus;
 import localsearch.functions.sum.Sum;
 import localsearch.model.ConstraintSystem;
@@ -47,8 +48,7 @@ public class CourseProject_HillClimbingSearch {
 		LocalSearchManager mgr = new LocalSearchManager();
 		ConstraintSystem S = new ConstraintSystem(mgr);
 		VarIntLS [][] matrix;
-		VarIntLS [] P;
-		VarIntLS[] z;
+		VarIntLS [][] P;
 		VarIntLS[] flatten;
 		
 		
@@ -201,17 +201,37 @@ public class CourseProject_HillClimbingSearch {
 			
 		}
 
-	
 		// make constraint units of product
-//		P = new VarIntLS[N];
-//		for(int i = 0; i < P.length; i++) {
-//			P[i] = new VarIntLS(mgr, 0, max_units[i]);
-//		}
-//		
-//		for(int i = 0; i < P.length; i++) {
-//		S.post( new LessOrEqual(q[i], P[i]));
-//			
-//		}
+
+		P = new VarIntLS[N][rows];
+	    for(int k = 0; k < N; k++)
+	       for(int j = 0; j < rows; j++) {
+	    	   P[k][j] = new VarIntLS(mgr, 0, max_units[k]);
+	       }
+	    
+	    
+	    for(int i = 0; i < N; i++) {
+	    	S.post(new LessOrEqual(q[i], new Sum(P[i])));
+	    	S.post(new LessOrEqual( new Sum(P[i]),  max_units[i]));
+	    }
+	    
+	    for(int i = 0; i < N; i++) {
+	        VarIntLS[][] P_sub = new VarIntLS[rows][columns];
+	        for(int o = 0; o < rows; o++)
+	            for(int r = 0; r < columns; r++)
+	            P_sub[o][r] = new VarIntLS(mgr, 0, 1000);
+	        
+	        for(int r = 0; r < rows; r++){
+	        		S.post(new IsEqual(new Sum(P_sub[r]), P[i][r]));
+	        }
+	        for(int k = 0; k < rows; k++) {
+	            for(int j = 1;  j < columns; j++)
+	            S.post(new IsEqual(new FuncMult(matrix[k][j], Q[i][j-1]), P_sub[k][j]));
+	           S.post(new IsEqual(P_sub[k][0], 0));
+	        
+	        }
+	    }
+	    
 
 		//make constraint to optimizer distance
 		
