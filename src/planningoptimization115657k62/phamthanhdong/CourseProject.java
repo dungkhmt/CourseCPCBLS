@@ -25,8 +25,8 @@ public class CourseProject {
     int min_result = 0;
     
 	/* Declare global variable */ 
-	int M = 3; //  number of shelves
-	int N = 3; // number of products
+	int M = 5; //  number of shelves
+	int N = 4; // number of products
 	int[][] Q; // matrix Q[i][j] is number of product ith in shelf j
 	int [][] d; //d[i][j] distance from point i to j 
 	int q[];  // q[i] is number of product ith employee needs
@@ -418,7 +418,7 @@ public class CourseProject {
 //		} catch (IOException e1) {
 //			e1.printStackTrace();
 //		}
-		
+//		
 		CourseProject  courseProject= new CourseProject();
 		try {
 			courseProject.creat();
