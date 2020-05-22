@@ -7,7 +7,7 @@ import localsearch.model.*;
 
 import localsearch.constraints.basic.Implicate;
 import localsearch.constraints.basic.LessOrEqual;
-import localsearch.functions.*;
+// import localsearch.functions.*;
 import localsearch.functions.basic.FuncMinus;
 import localsearch.functions.basic.FuncPlus;
 import localsearch.functions.conditionalsum.ConditionalSum;
