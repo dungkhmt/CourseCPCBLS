@@ -1,4 +1,4 @@
-package baitap;
+package CBLS;
 
 import localsearch.constraints.basic.AND;
 import localsearch.constraints.basic.LessOrEqual;
