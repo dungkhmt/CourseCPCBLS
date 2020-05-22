@@ -39,7 +39,7 @@ public class SportScheduling {
 								+ "," + t + "]");
 						Y[i][j][t] = solver.makeIntVar(0, 1, "Y[" + i + "," + j
 								+ "," + t + "]");
-					}
+					}x
 				}
 		}
 		for (int i = 0; i < N; i++) {
