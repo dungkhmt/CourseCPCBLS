@@ -2,11 +2,11 @@ package localsearch.applications.queen;
 
 import java.util.ArrayList;
 
-import localsearch.*;
+// import localsearch.*;
 import localsearch.model.*;
-import localsearch.constraints.*;
+// import localsearch.constraints.*;
 import localsearch.constraints.alldifferent.AllDifferent;
-import localsearch.functions.*;
+// import localsearch.functions.*;
 import localsearch.functions.basic.*;
 import localsearch.selectors.*;
 import java.util.*;

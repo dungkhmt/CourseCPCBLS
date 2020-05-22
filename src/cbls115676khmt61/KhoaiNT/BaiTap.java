@@ -1,4 +1,4 @@
-package planningoptimization115657k62.phamquangdung;
+package cbls115676khmt61.phamquangdung;
 
 import localsearch.constraints.basic.LessOrEqual;
 import localsearch.constraints.basic.NotEqual;
@@ -37,7 +37,7 @@ public class BaiTap {
 			sumV[i] = new ConditionalSum(X, v, i); 
 			S.post(new LessOrEqual(sumV[i], limitV[i])); // rang buoc ve the tich
       
-      // rang buoc cac dung dich khong duoc dong thoi xuat hien	
+     		// rang buoc cac dung dich khong duoc dong thoi xuat hien	 dung AND
 		}
 		
 		
