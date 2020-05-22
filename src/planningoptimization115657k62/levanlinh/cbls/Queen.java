@@ -9,7 +9,7 @@ public class Queen {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		int N = 200;
+		int N = 100;
 		LocalSearchManager mgr = new LocalSearchManager();
 		VarIntLS[] X = new VarIntLS[N];
 		for(int i = 0; i < N; i++)

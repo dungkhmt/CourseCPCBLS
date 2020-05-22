@@ -13,6 +13,10 @@ import localsearch.model.IFunction;
 import localsearch.model.VarIntLS;
 import localsearch.selectors.MinMaxSelector;
 import localsearch.model.LocalSearchManager;
+import cbls115676khmt61.ngocbh_20164797.search.HillClimbingSearch;
+import cbls115676khmt61.ngocbh_20164797.search.TabuSearch;
+import cbls115676khmt61.ngocbh_20164797.search.AssignMove;
+
 public class NQueens {
 	int NUM_ITER = 10000; 
 	int n = 1; // number of queens
@@ -65,9 +69,13 @@ public class NQueens {
 	}
 
 	public static void main(final String[] args) {
-		final NQueens prob = new NQueens(8);
+		final NQueens prob = new NQueens(500);
 		prob.stateModel();
-		prob.search();
+		// prob.search();
+		HillClimbingSearch searcher = new HillClimbingSearch(100, 10);
+		searcher.satisfy_constraint(prob.S);
+		// TabuSearch searcher = new TabuSearch(10,10,10,500);
+		// searcher.satisfy_constraint(prob.S, new AssignMove());
 		prob.printResults();
 	}
 } 
