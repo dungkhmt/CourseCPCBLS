@@ -1,5 +1,5 @@
 package localsearch.applications;
-import localsearch.constraints.*;
+// import localsearch.constraints.*;
 import localsearch.constraints.basic.*;
 import localsearch.search.*;
 import localsearch.model.*;
