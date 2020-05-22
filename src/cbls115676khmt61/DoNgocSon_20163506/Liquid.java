@@ -92,12 +92,13 @@ public class Liquid {
 		HillClimbingSearch searcher = new HillClimbingSearch();
 		searcher.search(S, 10000);
 		
-		for(int i = 0 ; i < 20 ; i ++)
+		for(int i = 0 ; i < 20 ; i ++){
 			for(int j = 0 ; j < 5 ; j ++){
 				if(X[i][j].getValue() > 0)
 					System.out.println("CL " + i + " dung trong thung " + j);
-				break;
 			}
+		}
+		
 	}
 	
 	public static void main(String[] args) {
