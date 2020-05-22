@@ -1,157 +1,135 @@
 package cbls115676khmt61.TranHuyHung_20164777;
 
-import localsearch.constraints.basic.AND;
-import localsearch.constraints.basic.Implicate;
-import localsearch.constraints.basic.IsEqual;
-import localsearch.constraints.basic.LessOrEqual;
 import localsearch.constraints.basic.OR;
-import localsearch.functions.basic.FuncPlus;
-import localsearch.model.ConstraintSystem;
+import localsearch.constraints.basic.AND;
 import localsearch.model.IConstraint;
-import localsearch.model.LocalSearchManager;
+import localsearch.constraints.basic.Implicate;
+import localsearch.model.IFunction;
+import localsearch.constraints.basic.LessOrEqual;
+import localsearch.functions.basic.FuncPlus;
+import localsearch.constraints.basic.IsEqual;
 import localsearch.model.VarIntLS;
+import localsearch.model.ConstraintSystem;
+import localsearch.model.LocalSearchManager;
 
-public class BinPacking2D {
-	int W = 4;
-	int H = 6;
-	int N = 3;
-	int[] w = {3,2,1};
-	int[] h = {2,4,6};
-	
-	LocalSearchManager mgr;
-	ConstraintSystem S;
-	VarIntLS[] x, y, o;
-	
-	private void stateModel() {
-		mgr = new LocalSearchManager();
-		x = new VarIntLS[N];
-		y = new VarIntLS[N];
-		o = new VarIntLS[N];
-		
-		for (int i=0; i<N; i++) {
-			x[i] = new VarIntLS(mgr, 0, W-1);
-			y[i] = new VarIntLS(mgr, 0, H-1);
-			o[i] = new VarIntLS(mgr, 0, 1);
-		}
-		
-		S = new ConstraintSystem(mgr);
-		for (int i=0; i<N; i++) {
-			S.post(new Implicate(new IsEqual(o[i], 0), new LessOrEqual(new FuncPlus(x[i], w[i]), W)));
-			S.post(new Implicate(new IsEqual(o[i], 0), new LessOrEqual(new FuncPlus(y[i], h[i]), H)));
-			
-			S.post(new Implicate(new IsEqual(o[i], 1), new LessOrEqual(new FuncPlus(x[i], h[i]), W)));
-			S.post(new Implicate(new IsEqual(o[i], 1), new LessOrEqual(new FuncPlus(y[i], w[i]), H))); 			
-		}
-		
-		for (int i=0; i<N-1; i++)
-			for (int j=i+1; j<N; j++) {
-				IConstraint[] c1 = new IConstraint[2];
-				c1[0] = new IsEqual(o[i], 0);
-				c1[1] = new IsEqual(o[j], 0);
-				IConstraint c2 = new AND(c1);
-				
-				IConstraint[] c3 = new IConstraint[4];
-				c3[0] = new LessOrEqual(new FuncPlus(x[i], w[i]), x[j]);
-				c3[1] = new LessOrEqual(new FuncPlus(x[j], w[j]), x[i]);
-				c3[2] = new LessOrEqual(new FuncPlus(y[i], h[i]), y[j]);
-				c3[3] = new LessOrEqual(new FuncPlus(y[j], h[j]), y[i]);
-				IConstraint c4 = new OR(c3);
-				
-				S.post(new Implicate(c2, c4));
-			}
-		
-		for (int i=0; i<N-1; i++)
-			for (int j=i+1; j<N; j++) {
-				IConstraint[] c1 = new IConstraint[2];
-				c1[0] = new IsEqual(o[i], 0);
-				c1[1] = new IsEqual(o[j], 1);
-				IConstraint c2 = new AND(c1);
-				
-				IConstraint[] c3 = new IConstraint[4];
-				c3[0] = new LessOrEqual(new FuncPlus(x[i], w[i]), x[j]);
-				c3[1] = new LessOrEqual(new FuncPlus(x[j], h[j]), x[i]);
-				c3[2] = new LessOrEqual(new FuncPlus(y[i], h[i]), y[j]);
-				c3[3] = new LessOrEqual(new FuncPlus(y[j], w[j]), y[i]);
-				IConstraint c4 = new OR(c3);
-				
-				S.post(new Implicate(c2, c4));
-			}
-		
-		for (int i=0; i<N-1; i++)
-			for (int j=i+1; j<N; j++) {
-				IConstraint[] c1 = new IConstraint[2];
-				c1[0] = new IsEqual(o[i], 1);
-				c1[1] = new IsEqual(o[j], 0);
-				IConstraint c2 = new AND(c1);
-				
-				IConstraint[] c3 = new IConstraint[4];
-				c3[0] = new LessOrEqual(new FuncPlus(x[i], h[i]), x[j]);
-				c3[1] = new LessOrEqual(new FuncPlus(x[j], w[j]), x[i]);
-				c3[2] = new LessOrEqual(new FuncPlus(y[i], w[i]), y[j]);
-				c3[3] = new LessOrEqual(new FuncPlus(y[j], h[j]), y[i]);
-				IConstraint c4 = new OR(c3);
-				
-				S.post(new Implicate(c2, c4));
-			}
-		
-		for (int i=0; i<N-1; i++)
-			for (int j=i+1; j<N; j++) {
-				IConstraint[] c1 = new IConstraint[2];
-				c1[0] = new IsEqual(o[i], 1);
-				c1[1] = new IsEqual(o[j], 1);
-				IConstraint c2 = new AND(c1);
-				
-				IConstraint[] c3 = new IConstraint[4];
-				c3[0] = new LessOrEqual(new FuncPlus(x[i], h[i]), x[j]);
-				c3[1] = new LessOrEqual(new FuncPlus(x[j], h[j]), x[i]);
-				c3[2] = new LessOrEqual(new FuncPlus(y[i], w[i]), y[j]);
-				c3[3] = new LessOrEqual(new FuncPlus(y[j], w[j]), y[i]);
-				IConstraint c4 = new OR(c3);
-				
-				S.post(new Implicate(c2, c4));
-			}
-		
-		mgr.close();
-	}
-	
-	private void search() {
-		HillClimbingSearch searcher = new HillClimbingSearch();
-		searcher.search(S, 10000);
-	}
-	
-	private void print() {
-		char[][] p = new char[W][H];
-		for (int i=0; i<W; i++)
-			for (int j=0; j<H; j++)
-				p[i][j] = '.';
-		for (int i=0; i<N; i++) {
-//			System.out.println(Integer.toString(x[i].getValue()) + ' '
-//					 + Integer.toString(y[i].getValue()) + ' '
-//					 + Integer.toString(o[i].getValue()));
-			if (o[i].getValue() == 0) {
-				for (int j=x[i].getValue(); j<x[i].getValue()+w[i]; j++)
-					for (int k=y[i].getValue(); k<y[i].getValue()+h[i]; k++)
-						p[j][k] = (char) (i + '0');
-			}
-			else {
-				for (int j=x[i].getValue(); j<x[i].getValue()+h[i]; j++)
-					for (int k=y[i].getValue(); k<y[i].getValue()+w[i]; k++)
-						p[j][k] = (char) (i + '0');
-			}
-		}
-		
-		for (int i=0; i<W; i++)
-			System.out.println(p[i]);
-	}
-	
-	public void solve() {
-		stateModel();
-		search();
-		print();
-	}
-	
-	public static void main(String[] args) {
-		BinPacking2D app = new BinPacking2D();
-		app.solve();
-	}
+public class BinPacking2D
+{
+    int W;
+    int H;
+    int N;
+    int[] w;
+    int[] h;
+    LocalSearchManager mgr;
+    ConstraintSystem S;
+    VarIntLS[] x;
+    VarIntLS[] y;
+    VarIntLS[] o;
+    
+    public BinPacking2D() {
+        this.W = 4;
+        this.H = 6;
+        this.N = 3;
+        this.w = new int[] { 3, 2, 1 };
+        this.h = new int[] { 2, 4, 6 };
+    }
+    
+    private void stateModel() {
+        this.mgr = new LocalSearchManager();
+        this.x = new VarIntLS[this.N];
+        this.y = new VarIntLS[this.N];
+        this.o = new VarIntLS[this.N];
+        for (int i = 0; i < this.N; ++i) {
+            this.x[i] = new VarIntLS(this.mgr, 0, this.W - 1);
+            this.y[i] = new VarIntLS(this.mgr, 0, this.H - 1);
+            this.o[i] = new VarIntLS(this.mgr, 0, 1);
+        }
+        this.S = new ConstraintSystem(this.mgr);
+        for (int i = 0; i < this.N; ++i) {
+            this.S.post((IConstraint)new Implicate((IConstraint)new IsEqual(this.o[i], 0), (IConstraint)new LessOrEqual((IFunction)new FuncPlus(this.x[i], this.w[i]), this.W)));
+            this.S.post((IConstraint)new Implicate((IConstraint)new IsEqual(this.o[i], 0), (IConstraint)new LessOrEqual((IFunction)new FuncPlus(this.y[i], this.h[i]), this.H)));
+            this.S.post((IConstraint)new Implicate((IConstraint)new IsEqual(this.o[i], 1), (IConstraint)new LessOrEqual((IFunction)new FuncPlus(this.x[i], this.h[i]), this.W)));
+            this.S.post((IConstraint)new Implicate((IConstraint)new IsEqual(this.o[i], 1), (IConstraint)new LessOrEqual((IFunction)new FuncPlus(this.y[i], this.w[i]), this.H)));
+        }
+        for (int i = 0; i < this.N - 1; ++i) {
+            for (int j = i + 1; j < this.N; ++j) {
+                final IConstraint[] c1 = { (IConstraint)new IsEqual(this.o[i], 0), (IConstraint)new IsEqual(this.o[j], 0) };
+                final IConstraint c2 = (IConstraint)new AND(c1);
+                final IConstraint[] c3 = { (IConstraint)new LessOrEqual((IFunction)new FuncPlus(this.x[i], this.w[i]), this.x[j]), (IConstraint)new LessOrEqual((IFunction)new FuncPlus(this.x[j], this.w[j]), this.x[i]), (IConstraint)new LessOrEqual((IFunction)new FuncPlus(this.y[i], this.h[i]), this.y[j]), (IConstraint)new LessOrEqual((IFunction)new FuncPlus(this.y[j], this.h[j]), this.y[i]) };
+                final IConstraint c4 = (IConstraint)new OR(c3);
+                this.S.post((IConstraint)new Implicate(c2, c4));
+            }
+        }
+        for (int i = 0; i < this.N - 1; ++i) {
+            for (int j = i + 1; j < this.N; ++j) {
+                final IConstraint[] c1 = { (IConstraint)new IsEqual(this.o[i], 0), (IConstraint)new IsEqual(this.o[j], 1) };
+                final IConstraint c2 = (IConstraint)new AND(c1);
+                final IConstraint[] c3 = { (IConstraint)new LessOrEqual((IFunction)new FuncPlus(this.x[i], this.w[i]), this.x[j]), (IConstraint)new LessOrEqual((IFunction)new FuncPlus(this.x[j], this.h[j]), this.x[i]), (IConstraint)new LessOrEqual((IFunction)new FuncPlus(this.y[i], this.h[i]), this.y[j]), (IConstraint)new LessOrEqual((IFunction)new FuncPlus(this.y[j], this.w[j]), this.y[i]) };
+                final IConstraint c4 = (IConstraint)new OR(c3);
+                this.S.post((IConstraint)new Implicate(c2, c4));
+            }
+        }
+        for (int i = 0; i < this.N - 1; ++i) {
+            for (int j = i + 1; j < this.N; ++j) {
+                final IConstraint[] c1 = { (IConstraint)new IsEqual(this.o[i], 1), (IConstraint)new IsEqual(this.o[j], 0) };
+                final IConstraint c2 = (IConstraint)new AND(c1);
+                final IConstraint[] c3 = { (IConstraint)new LessOrEqual((IFunction)new FuncPlus(this.x[i], this.h[i]), this.x[j]), (IConstraint)new LessOrEqual((IFunction)new FuncPlus(this.x[j], this.w[j]), this.x[i]), (IConstraint)new LessOrEqual((IFunction)new FuncPlus(this.y[i], this.w[i]), this.y[j]), (IConstraint)new LessOrEqual((IFunction)new FuncPlus(this.y[j], this.h[j]), this.y[i]) };
+                final IConstraint c4 = (IConstraint)new OR(c3);
+                this.S.post((IConstraint)new Implicate(c2, c4));
+            }
+        }
+        for (int i = 0; i < this.N - 1; ++i) {
+            for (int j = i + 1; j < this.N; ++j) {
+                final IConstraint[] c1 = { (IConstraint)new IsEqual(this.o[i], 1), (IConstraint)new IsEqual(this.o[j], 1) };
+                final IConstraint c2 = (IConstraint)new AND(c1);
+                final IConstraint[] c3 = { (IConstraint)new LessOrEqual((IFunction)new FuncPlus(this.x[i], this.h[i]), this.x[j]), (IConstraint)new LessOrEqual((IFunction)new FuncPlus(this.x[j], this.h[j]), this.x[i]), (IConstraint)new LessOrEqual((IFunction)new FuncPlus(this.y[i], this.w[i]), this.y[j]), (IConstraint)new LessOrEqual((IFunction)new FuncPlus(this.y[j], this.w[j]), this.y[i]) };
+                final IConstraint c4 = (IConstraint)new OR(c3);
+                this.S.post((IConstraint)new Implicate(c2, c4));
+            }
+        }
+        this.mgr.close();
+    }
+    
+    private void search() {
+        final HillClimbingSearch searcher = new HillClimbingSearch();
+        searcher.search((IConstraint)this.S, 10000);
+    }
+    
+    private void print() {
+        final char[][] p = new char[this.W][this.H];
+        for (int i = 0; i < this.W; ++i) {
+            for (int j = 0; j < this.H; ++j) {
+                p[i][j] = '.';
+            }
+        }
+        for (int i = 0; i < this.N; ++i) {
+            if (this.o[i].getValue() == 0) {
+                for (int j = this.x[i].getValue(); j < this.x[i].getValue() + this.w[i]; ++j) {
+                    for (int k = this.y[i].getValue(); k < this.y[i].getValue() + this.h[i]; ++k) {
+                        p[j][k] = (char)(i + 48);
+                    }
+                }
+            }
+            else {
+                for (int j = this.x[i].getValue(); j < this.x[i].getValue() + this.h[i]; ++j) {
+                    for (int k = this.y[i].getValue(); k < this.y[i].getValue() + this.w[i]; ++k) {
+                        p[j][k] = (char)(i + 48);
+                    }
+                }
+            }
+        }
+        for (int i = 0; i < this.W; ++i) {
+            System.out.println(p[i]);
+        }
+    }
+    
+    public void solve() {
+        this.stateModel();
+        this.search();
+        this.print();
+    }
+    
+    public static void main(final String[] args) {
+        final BinPacking2D app = new BinPacking2D();
+        app.solve();
+    }
 }

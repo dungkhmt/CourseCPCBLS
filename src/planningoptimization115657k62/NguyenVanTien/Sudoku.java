@@ -11,101 +11,111 @@ import localsearch.model.VarIntLS;
 public class Sudoku {
 
 	LocalSearchManager lsm;
-	VarIntLS[][] X;
-	ConstraintSystem S;
+	VarIntLS[][] x;
+	ConstraintSystem CS;
 
-	public void initModel(){
-		lsm= new LocalSearchManager();
-		X = new VarIntLS[9][9];
-		for(int i = 0; i < 9; i++){
-			for(int j = 0; j < 9; j++){
-				X[i][j] = new VarIntLS(lsm,1,9);
-				X[i][j].setValue(j+1);
+	public void buildModel() {
+		lsm = new LocalSearchManager();
+		x = new VarIntLS[9][9];
+		for (int i = 0; i < 9; i++) {
+			for (int j = 0; j < 9; j++) {
+				x[i][j] = new VarIntLS(lsm, 1, 9);
+				x[i][j].setValue(j + 1);
 			}
 		}
-		S = new ConstraintSystem(lsm);
-		// define rang buoc AllDifferent theo hang
-		for(int i = 0; i < 9; i++){
-			VarIntLS[] y = new VarIntLS[9];
-			for(int j = 0; j < 9; j++)
-				y[j] = X[i][j];
-			S.post(new AllDifferent(y));
-			}
-		// define rang buoc AllDifferent theo cot
+
+		CS = new ConstraintSystem(lsm);
+
 		for (int i = 0; i < 9; i++) {
 			VarIntLS[] y = new VarIntLS[9];
 			for (int j = 0; j < 9; j++) {
-				y[j] = X[j][i];
+				y[j] = x[i][j];
 			}
-			S.post(new AllDifferent(y));
+			CS.post(new AllDifferent(y));
 		}
-		for(int i = 0; i <= 2; i++){
-			for(int j = 0; j <= 2; j++){
+
+		for (int i = 0; i < 9; i++) {
+			VarIntLS[] y = new VarIntLS[9];
+			for (int j = 0; j < 9; j++) {
+				y[j] = x[j][i];
+			}
+			CS.post(new AllDifferent(y));
+		}
+
+		for (int I = 0; I < 3; I++) {
+			for (int J = 0; J < 3; J++) {
 				VarIntLS[] y = new VarIntLS[9];
-				int idx= -1;
-				for(int im = 0; im <= 2; im++)
-					for(int jm = 0; jm <= 2; jm++){
+				int idx = -1;
+				for (int i = 0; i < 3; i++) {
+					for (int j = 0; j < 3; j++) {
 						idx++;
-						y[idx] = X[3*i+im][3*j+jm];
+						y[idx] = x[3 * I + i][3 * J + j];
 					}
-				S.post(new AllDifferent(y));
+				}
+				CS.post(new AllDifferent(y));
 			}
 		}
+
 		lsm.close();
 	}
 
-	public void search() {
-		class Move {
-			int i;
-			int j1;
-			int j2;
+	class Move {
+		int i;
+		int j1;
+		int j2;
 
-			public Move(int i, int j1, int j2) {
-				this.i = i;
-				this.j2 = j2;
-				this.j1 = j1;
-			}
+		public Move(int i, int j1, int j2) {
+			this.i = i;
+			this.j1 = j1;
+			this.j2 = j2;
 		}
 
-		Random R = new Random();
-		ArrayList<Move> candidates = new ArrayList<Move>();
-		int it = 0;
+	}
 
-		while (it <= 100000 && S.violations() > 0) {
-			candidates.clear();
+	public void search(int maxIter) {
+		buildModel();
+		int it = 0;
+		ArrayList<Move> cand = new ArrayList<Move>();
+		Random ran = new Random();
+
+		while (it < maxIter && CS.violations() > 0) {
 			int minDelta = Integer.MAX_VALUE;
+			cand.clear();
 			for (int i = 0; i < 9; i++) {
 				for (int j1 = 0; j1 < 8; j1++) {
 					for (int j2 = j1 + 1; j2 < 9; j2++) {
-						int delta = S.getSwapDelta(X[i][j1], X[i][j2]);
+						int delta = CS.getSwapDelta(x[i][j1], x[i][j2]);
 						if (delta < minDelta) {
-							candidates.clear();
-							candidates.add(new Move(i, j1, j2));
+							cand.clear();
+							cand.add(new Move(i, j1, j2));
 							minDelta = delta;
-						} else if (delta == minDelta)
-							candidates.add(new Move(i, j1, j2));
+						} else if(delta == minDelta){
+							cand.add(new Move(i, j1, j2));
+						}
 					}
 				}
 			}
-			int idx = R.nextInt(candidates.size());
-			Move m = candidates.get(idx);
-			int i = m.i;
-			int j1 = m.j1;
-			int j2 = m.j2;
-			X[i][j1].swapValuePropagate(X[i][j2]);
+
+			int idx = ran.nextInt(cand.size());
+			Move m = cand.get(idx);
+			int i = m.i, j1 = m.j1, j2 = m.j2;
+			x[i][j1].swapValuePropagate(x[i][j2]);
+
+			System.out.println("Step " + it + " violations= " + CS.violations());
 			it++;
 		}
+
 		for (int i = 0; i < 9; i++) {
 			for (int j = 0; j < 9; j++)
-				System.out.print(X[i][j].getValue() + " ");
+				System.out.print(x[i][j].getValue() + " ");
 			System.out.println();
 		}
+
 	}
 
 
 	public static void main(String[] args) {
 		Sudoku app = new Sudoku();
-		app.initModel();
-		app.search();
+		app.search(100000);
 	}
 }
