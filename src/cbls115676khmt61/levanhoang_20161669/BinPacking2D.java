@@ -1,4 +1,4 @@
-package cbls115676khmt61.levanhoang_20161669;
+
 
 import localsearch.model.ConstraintSystem;
 import localsearch.model.LocalSearchManager;
@@ -36,7 +36,7 @@ public class BinPacking2D {
 			S.post(new Implicate(new IsEqual(o[i], 1), new LessOrEqual(new FuncPlus(y[i], w[i]), H))); 			
 		}
 		
-		for (int i=0; i<N-1; i++)
+		for (int i=0; i<N-1; i++) {
 			for (int j=i+1; j<N; j++) {
 				IConstraint[] c1 = new IConstraint[2];
 				c1[0] = new IsEqual(o[i], 0);
@@ -51,10 +51,7 @@ public class BinPacking2D {
 				IConstraint c4 = new OR(c3);
 				
 				S.post(new Implicate(c2, c4));
-			}
-		
-		for (int i=0; i<N-1; i++)
-			for (int j=i+1; j<N; j++) {
+				
 				IConstraint[] c1 = new IConstraint[2];
 				c1[0] = new IsEqual(o[i], 0);
 				c1[1] = new IsEqual(o[j], 1);
@@ -68,10 +65,7 @@ public class BinPacking2D {
 				IConstraint c4 = new OR(c3);
 				
 				S.post(new Implicate(c2, c4));
-			}
-		
-		for (int i=0; i<N-1; i++)
-			for (int j=i+1; j<N; j++) {
+				
 				IConstraint[] c1 = new IConstraint[2];
 				c1[0] = new IsEqual(o[i], 1);
 				c1[1] = new IsEqual(o[j], 0);
@@ -85,10 +79,7 @@ public class BinPacking2D {
 				IConstraint c4 = new OR(c3);
 				
 				S.post(new Implicate(c2, c4));
-			}
-		
-		for (int i=0; i<N-1; i++)
-			for (int j=i+1; j<N; j++) {
+				
 				IConstraint[] c1 = new IConstraint[2];
 				c1[0] = new IsEqual(o[i], 1);
 				c1[1] = new IsEqual(o[j], 1);
@@ -103,6 +94,11 @@ public class BinPacking2D {
 				
 				S.post(new Implicate(c2, c4));
 			}
+		}
+		
+		
+		
+		
 		
 		mgr.close();
 	}

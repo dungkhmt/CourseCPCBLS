@@ -1,3 +1,5 @@
+package cbls115676khmt61.HieuNT_20164813;
+
 import java.util.ArrayList;
 
 import cbls115676khmt61.HieuNT_20164813.search.AssignMove;
@@ -114,14 +116,10 @@ public class LiquidStoring {
     int tabu_size = 100;
     int max_stable = 10;
     app.stateModel();
-    
 
-    // HillClimbingSearch searcher1 = new HillClimbingSearch(max_iter, seed);
-    // searcher1.satisfy_constraint(prob.S);
     
     TabuSearch searcher2 = new TabuSearch(tabu_size, max_stable, max_iter, seed);
     searcher2.satisfy_constraint(app.CS, new AssignMove());
-    // prob.verify();
 
     app.printResults();
 	}
