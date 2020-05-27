@@ -3,7 +3,7 @@
 * Description: 
 * Created by ngocjr7 on [2020-04-01 12:51:03]
 */
-package cbls115676khmt61.ngocbh_20164797;
+    package cbls115676khmt61.ngocbh_20164797;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -167,8 +167,8 @@ public class GraphPartitioning {
         TabuSearch searcher2 = new TabuSearch(tabu_size, max_stable, max_iter, seed);
         // searcher2.satisfy_constraint(prob.S, new AssignMove());
         // searcher2.search_two_phase(prob.S, new AssignMove(), prob.obj, new SwapMove());
-        // searcher2.minimize_objective_with_constraint(prob.obj,prob.S, new AssignMove());
-        prob.search_alpha_beta(searcher2);
+        searcher2.minimize_objective_with_constraint(prob.obj,prob.S, new AssignMove());
+        // prob.search_alpha_beta(searcher2);
         prob.printResults();
     }
 }

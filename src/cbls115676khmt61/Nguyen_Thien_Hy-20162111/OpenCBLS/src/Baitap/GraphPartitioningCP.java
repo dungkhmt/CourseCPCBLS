@@ -39,6 +39,8 @@ public class GraphPartitioningCP {
         for (int k = 0; k < E.length; k++) {
             model.ifThen(model.arithm(z[k], "=", 1), model.arithm(x[E[k][0]], "+", x[E[k][1]], "=", 1));
             model.ifThen(model.arithm(x[E[k][0]], "+", x[E[k][1]], "=", 1), model.arithm(z[k], "=", 1));
+            //model.arithm(z[k] , ">=" , x[E[k][0]], "-", x[E[k][1]]);
+            //model.arithm(z[k] , ">=" , x[E[k][1]], "-", x[E[k][0]]);
         }
         int[] one = new int[N];
         for (int i = 0; i < N; i++) {
@@ -48,7 +50,7 @@ public class GraphPartitioningCP {
 
         model.scalar(z, c, "=", obj).post();
 
-        model.setObjective(model.MAXIMIZE, obj);
+        model.setObjective(model.MINIMIZE, obj);
         model.getSolver().solve();
         model.getSolver().printStatistics();
 

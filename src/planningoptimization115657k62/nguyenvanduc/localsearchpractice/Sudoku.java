@@ -17,12 +17,12 @@ public class Sudoku {
         app.solve();
     }
     public void solve() {
-        buil_model();
+        build_model();
         search(10000);
         print_solution();
     }
 
-    private void buil_model() {
+    private void build_model() {
         mgr = new LocalSearchManager();
         for (int i = 0; i < 9; i++){
             for (int j = 0; j < 9; j++) {

@@ -9,8 +9,8 @@ import java.util.Random;
 public class Init {
 	Random generator = new Random();
 	
-	int S = 3;
-	int need = 3;//N
+	int S = 5;
+	int need = 4;//N
 	
 	int rows = S;
 	int columns = S;

@@ -29,8 +29,8 @@ import java.io.IOException;
 public class CourseProject_HillClimbingSearch {
 	
 	/* Declare global variable */ 
-	int M = 3; //  number of shelves
-	int N = 3; // number of products
+	int M = 2; //  number of shelves
+	int N = 1; // number of products
 	int[][] Q; // matrix Q[i][j] is number of product ith in shelf j
 	int [][] d; //d[i][j] distance from point i to j 
 	int q[];  // q[i] is number of product ith employee needs
@@ -296,9 +296,9 @@ public class CourseProject_HillClimbingSearch {
 		OBJ = new VarIntLS(mgr, min_S, max_S);
 		S.post(new IsEqual(new Sum(flatten), OBJ));
 		mgr.close();
-		
+
 		HillClimbingSearch searcher = new HillClimbingSearch();
-		searcher.search(S, 1000);
+		searcher.hillClimbing(S, 1000);
 		
 		for(int i = 0; i < matrix.length; i++) {
 			System.out.println();
@@ -322,12 +322,13 @@ public class CourseProject_HillClimbingSearch {
 	
 	public static void main(String[] args) throws Exception {
 	CourseProject_HillClimbingSearch CP_HCS = new CourseProject_HillClimbingSearch();
-//		GeneralData generalData = new GeneralData();
-//		try {
-//			generalData.Gen();
-//		} catch (IOException e1) {
-//			e1.printStackTrace();
-//		}
+		GeneralData generalData = new GeneralData();
+		try {
+			generalData.Gen();
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
+		
 		CP_HCS.creat();
 		CP_HCS.getMaxUnits();
 		CP_HCS.findMinBound();

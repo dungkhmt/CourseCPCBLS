@@ -172,7 +172,7 @@ public class GraphPartitioningCBLS {
     public void search1(int maxIter) {
         generateInitSolutionBalance();
         printGraph();
-        System.out.println("init obj = " + obj());
+        //System.out.println("init obj = " + obj());
         printCrossEdges();
         ArrayList<SwapMove> cand = new ArrayList<>();
         int it = 0;
@@ -183,8 +183,9 @@ public class GraphPartitioningCBLS {
             for (int i = 0; i < N; i++) {
                 for (int j = i + 1; j < N; j++) {
                     if (x[i].getValue() != x[j].getValue()) {
-                        System.out.println(x[i].getValue() + " " + x[j].getValue());
+                        //System.out.println(x[i].getValue() + " " + x[j].getValue());
                         int d = f.getSwapDelta(x[i], x[j]);
+                        System.out.println("x["+i+"]" + "<->" + "x["+j+"]" + " : " + d);
                         if (d < 0) {
                             if (d < minDeltaF) {
                                 minDeltaF = d;
@@ -206,13 +207,16 @@ public class GraphPartitioningCBLS {
             SwapMove m = cand.get(R.nextInt(cand.size()));
             x[m.i].swapValuePropagate(x[m.j]);
             
+            System.out.println("cur = " + cur + ", delta = " + minDeltaF + ", f = "
+                        + f.getValue() + ", x[" + m.i + "] <-> x[" + m.j + "]");
+            
             if (minDeltaF + cur != f.getValue()) {
                 System.out.println("BUG???, cur = " + cur + ", delta = " + minDeltaF + ", f = "
                         + f.getValue() + ", x[" + m.i + "] <-> x[" + m.j + "]");
                 break;
             }
             cur = f.getValue();
-            System.out.println("Step " + it + ", obj = " + obj());
+            //System.out.println("Step " + it + ", obj = " + obj());
             it++;
         }
     }
@@ -260,7 +264,7 @@ public class GraphPartitioningCBLS {
 
             x[m.i].setValuePropagate(m.v);
 
-            System.out.println("Step " + it + ", obj = " + obj());
+            //System.out.println("Step " + it + ", obj = " + obj());
             it++;
         }
     }
