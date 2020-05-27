@@ -1,4 +1,4 @@
-package bt;
+
 
 import org.chocosolver.solver.Model;
 
@@ -8,7 +8,7 @@ import org.chocosolver.solver.variables.IntVar;
 
 
 
-public class liquid {
+public class liqid {
  
 	int N = 5;
 	int M = 20;
@@ -27,6 +27,7 @@ public void solve() {
 	for(int i=0;i<N;i++) {
 		for(int j=0;j<M;j++) {
 			x[i][j]=model.intVar("x[" + i + "]["+j+"]" ,0,1);
+			// x[i][j]=1 chat long j thuoc thung i
 		}
 	}
 	
@@ -118,7 +119,7 @@ public void solve() {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-       liquid app = new liquid();
+       liqid app = new liqid();
        app.solve();
 	}
 
