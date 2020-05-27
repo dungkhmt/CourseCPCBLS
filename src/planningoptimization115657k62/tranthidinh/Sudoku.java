@@ -130,7 +130,7 @@ public class Sudoku {
 //        HillClimbingSearch search = new HillClimbingSearch();
 //        search.search(S, 10000);
 //    }
-    public static void main(String args){
+    public static void main(String[] args){
         Sudoku app = new Sudoku();
         app.buildModel();
         app.search();

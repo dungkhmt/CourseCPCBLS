@@ -3,7 +3,7 @@
 * Description: 
 * Created by ngocjr7 on [2020-04-01 12:51:03]
 */
-package cbls115676khmt61.ngocbh_20164797;
+    package cbls115676khmt61.ngocbh_20164797;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -25,6 +25,8 @@ import localsearch.model.VarIntLS;
 import cbls115676khmt61.ngocbh_20164797.search.AssignMove;
 import cbls115676khmt61.ngocbh_20164797.search.HillClimbingSearch;
 import cbls115676khmt61.ngocbh_20164797.search.SwapMove;
+import cbls115676khmt61.ngocbh_20164797.search.TabuSearch;
+import cbls115676khmt61.ngocbh_20164797.search.LocalSearch;
 
 public class GraphPartitioning {
     int n;
@@ -98,9 +100,9 @@ public class GraphPartitioning {
         }
     }
 
-    void search_alpha_beta(HillClimbingSearch searcher)
+    void search_alpha_beta(LocalSearch searcher)
     {
-        int alpha = 100;
+        int alpha = 1000;
         int beta = 1;
         IFunction fc = new FuncPlus(new FuncMult(new ConstraintViolations(this.S), alpha), new FuncMult(this.obj, beta));
         VarIntLS[] y = fc.getVariables();
@@ -111,16 +113,22 @@ public class GraphPartitioning {
         searcher.minimize_objective(fc, new AssignMove());
     }
 
-    public void read_from_file(String filename)  throws FileNotFoundException {
-        int n = 10;  
-        int[][] edges;
-        Scanner in = new Scanner(new File(filename)); 
-        n = in.nextInt();
-        edges = new int[n][n];
-        for (int i = 0; i < n; i++)
-            for (int j = 0; j < n; j++) 
-                edges[i][j] = in.nextInt();
-        in.close();
+    public void read_from_file(String filename) {
+        try {
+            int n = 10;  
+            int[][] edges;
+            Scanner in = new Scanner(new File(filename)); 
+            n = in.nextInt();
+            edges = new int[n][n];
+            for (int i = 0; i < n; i++)
+                for (int j = 0; j < n; j++) 
+                    edges[i][j] = in.nextInt();
+            in.close();
+            this.n = n;
+            this.edges = edges;
+        } catch(Exception e) {
+            System.out.print("Something went wrong");
+        }
     }
 
     public void read_default_input()
@@ -142,14 +150,25 @@ public class GraphPartitioning {
     public static void main(String[] args) {
         
         GraphPartitioning prob = new GraphPartitioning();
-        // prob.read_from_file("data/GraphPartitioning/gp-100.txt");
-        prob.read_default_input();
+        prob.read_from_file("data/GraphPartitioning/gp-10.txt");
+        // prob.read_default_input();
         int seed = 1;
+        int max_iter = 100;
+        int tabu_size = 10;
+        int max_stable = 10;
+
         prob.stateModel();
-        HillClimbingSearch searcher = new HillClimbingSearch(seed);
-        searcher.search_two_phase(prob.S, new AssignMove(), prob.obj, new SwapMove());
-        // searcher.minimize_objective_with_constraint(prob.obj,prob.S);
-        // prob.search_alpha_beta(searcher);
+
+        HillClimbingSearch searcher1 = new HillClimbingSearch(max_iter, seed);
+        // searcher1.search_two_phase(prob.S, new AssignMove(), prob.obj, new SwapMove());
+        // searcher1.minimize_objective_with_constraint(prob.obj,prob.S);
+        // prob.search_alpha_beta(searcher1);
+        
+        TabuSearch searcher2 = new TabuSearch(tabu_size, max_stable, max_iter, seed);
+        // searcher2.satisfy_constraint(prob.S, new AssignMove());
+        // searcher2.search_two_phase(prob.S, new AssignMove(), prob.obj, new SwapMove());
+        searcher2.minimize_objective_with_constraint(prob.obj,prob.S, new AssignMove());
+        // prob.search_alpha_beta(searcher2);
         prob.printResults();
     }
 }

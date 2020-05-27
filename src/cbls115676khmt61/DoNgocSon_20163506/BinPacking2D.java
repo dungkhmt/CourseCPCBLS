@@ -1,4 +1,4 @@
-
+package cbls115676khmt61.DoNgocSon_20163506;
 
 import localsearch.constraints.basic.AND;
 import localsearch.constraints.basic.Implicate;

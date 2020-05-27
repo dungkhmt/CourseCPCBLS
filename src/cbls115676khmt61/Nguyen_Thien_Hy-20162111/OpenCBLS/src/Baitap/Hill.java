@@ -2,12 +2,11 @@ package Baitap;
 
 import java.util.ArrayList;
 import java.util.Random;
-
 import localsearch.model.IConstraint;
 import localsearch.model.VarIntLS;
 
-public class Hill {
 
+public class Hill {
     class AssignMove {
 
         int i;

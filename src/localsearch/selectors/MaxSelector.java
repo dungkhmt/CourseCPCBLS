@@ -1,5 +1,5 @@
 package localsearch.selectors;
-import localsearch.functions.*;
+// import localsearch.functions.*;
 import localsearch.model.*;
 import localsearch.invariants.*;
 import java.util.*;

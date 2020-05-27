@@ -88,7 +88,7 @@ public class BinPacking2D {
     private void search(){
         //Hill hillSearch = new Hill();
         //hillSearch.LocalSearch(S , 1000);
-        TabuSearch tabu = new TabuSearch(S);
+        Tabu tabu = new Tabu(S);
         tabu.search(100000, 60, 100);
     }
     
