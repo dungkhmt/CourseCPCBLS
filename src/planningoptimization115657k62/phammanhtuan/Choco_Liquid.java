@@ -1,4 +1,4 @@
-package planningoptimization115657k62phammanhtuan;
+package planningoptimization115657k62.phammanhtuan;
 
 
 import org.chocosolver.solver.Model;
