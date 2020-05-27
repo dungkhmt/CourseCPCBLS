@@ -2,11 +2,6 @@ package localsearch.model;
 
 import java.util.*;
 
-<<<<<<< HEAD
-=======
-// import org.mockito.internal.matchers.LessOrEqual;
-
->>>>>>> 098fed2676af542a91c79255eff2ef3908fa628c
 public class ConstraintSystem extends AbstractInvariant implements IConstraint {
 	LocalSearchManager _mgr = null;
 	private ArrayList<IConstraint> _constraints = new ArrayList<IConstraint>() ;
@@ -20,11 +15,7 @@ public class ConstraintSystem extends AbstractInvariant implements IConstraint {
 	private HashMap<IConstraint, Integer> mapC;
 	
 	public void post(IConstraint c){
-<<<<<<< HEAD
 		_constraints.add(c);		
-=======
-		_constraints.add(c);
->>>>>>> 098fed2676af542a91c79255eff2ef3908fa628c
 	}
 	
 	public String name(){ return "ConstraintSystem";}

@@ -23,7 +23,6 @@ import localsearch.constraints.basic.LessOrEqual;
 import localsearch.functions.max_min.Max;
 import localsearch.functions.sum.Sum;
 import localsearch.model.ConstraintSystem;
-import localsearch.model.IFunction;
 import localsearch.model.LocalSearchManager;
 import localsearch.model.VarIntLS;
 import cbls115676khmt61.ngocbh_20164797.search.AssignMove;
@@ -148,7 +147,7 @@ public class Container {
 
             }
         
-
+            
         mgr.close();
     }
 
@@ -180,7 +179,7 @@ public class Container {
                     System.out.print(".");
             System.out.println();
         }
-        
+
     }
 
     public static void main(String[] args) {
