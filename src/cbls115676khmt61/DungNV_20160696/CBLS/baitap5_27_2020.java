@@ -82,20 +82,20 @@ public class baitap5_27_2020 {
 		for (int i = 0; i < N-1; i++) {
 			for(int j = i + 1; j < N; j++) {
 				//o[i] = 0 and o[j] = 0
-				S.post(new Implicate(
-						new OR(new LessOrEqual(x[j], new FuncPlus(x[i], w[i])), new LessOrEqual(new FuncPlus(x[j],w[j]), x[i]))
+				S.post(new Implicate(new AND(new AND(new IsEqual(o[i], 0), new IsEqual(o[j], 0)),
+						new OR(new LessOrEqual(x[j], new FuncPlus(x[i], w[i])), new LessOrEqual(new FuncPlus(x[j],w[j]), x[i])))
 						,new LessOrEqual(new FuncPlus(y[i], l[i]), y[j])));
 				//o[i] = 1 and o[j] = 0
-				S.post(new Implicate(
-						new OR(new LessOrEqual(x[j], new FuncPlus(x[i], l[i])), new LessOrEqual(new FuncPlus(x[j],w[j]), x[i]))
+				S.post(new Implicate(new AND(new AND(new IsEqual(o[i], 1), new IsEqual(o[j], 0)),
+						new OR(new LessOrEqual(x[j], new FuncPlus(x[i], l[i])), new LessOrEqual(new FuncPlus(x[j],w[j]), x[i])))
 						,new LessOrEqual(new FuncPlus(y[i], l[i]), y[j])));
 				//o[i] = 0 and o[j] = 1
-				S.post(new Implicate(
-						new OR(new LessOrEqual(x[j], new FuncPlus(x[i], w[i])), new LessOrEqual(new FuncPlus(x[j],l[j]), x[i]))
+				S.post(new Implicate(new AND(new AND(new IsEqual(o[i], 0), new IsEqual(o[j], 1)),
+						new OR(new LessOrEqual(x[j], new FuncPlus(x[i], w[i])), new LessOrEqual(new FuncPlus(x[j],l[j]), x[i])))
 						,new LessOrEqual(new FuncPlus(y[i], w[i]), y[j])));
 				//o[i] = 1 and o[j] = 1
-				S.post(new Implicate(
-						new OR(new LessOrEqual(x[j], new FuncPlus(x[i], l[i])), new LessOrEqual(new FuncPlus(x[j],l[j]), x[i]))
+				S.post(new Implicate(new AND(new AND(new IsEqual(o[i], 1), new IsEqual(o[j], 1)),
+						new OR(new LessOrEqual(x[j], new FuncPlus(x[i], l[i])), new LessOrEqual(new FuncPlus(x[j],l[j]), x[i])))
 						, new LessOrEqual(new FuncPlus(y[i], w[i]), y[j])));
 			}
 		}
