@@ -1,0 +1,102 @@
+import org.chocosolver.solver.Model;
+
+import java.util.Scanner;
+
+import org.chocosolver.memory.Except_0;
+import org.chocosolver.memory.ICondition;
+import org.chocosolver.solver.constraints.ISatFactory;
+import org.chocosolver.solver.constraints.nary.automata.FA.ICostAutomaton;
+import org.chocosolver.solver.search.strategy.Search;
+import org.chocosolver.solver.search.strategy.strategy.AbstractStrategy;
+import org.chocosolver.solver.variables.IntVar;
+import org.chocosolver.util.ESat;
+
+
+public class Liquichoco {		
+	
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		Model model = new Model("Example");
+		int N = 5 ; // 5 thung chua 
+		int M = 20 ;// 20 chat long	
+		// sao cho khong co 2 thung cung chat long 
+    // neu thung chat long bang 1 la chat long i vs j khong thoa man cung 1 thung
+    // i = j thi gia tri bang 1
+		int [][] d =  { { 1, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0 , 0, 0, 0, 0, 0, 0 },
+                    { 1, 1, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0 , 0, 0, 0, 0, 0, 0 },
+                    { 0, 1, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0 , 0, 0, 0, 0, 0, 0 },
+                    { 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0 , 0, 0, 0, 0, 0, 0 },
+                    { 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0 , 0, 0, 0, 0, 0, 0 },
+                    { 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0 , 0, 0, 0, 0, 0, 0 },
+                    { 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0 , 0, 0, 0, 0, 0, 0 },
+                    { 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0 , 0, 0, 0, 0, 0, 0 },
+                    { 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0 , 0, 0, 0, 0, 0, 0 },
+                    { 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0 , 0, 0, 0, 0, 0, 1 },
+                    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0 , 0, 0, 0, 0, 0, 0 },
+                    { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0 , 0, 0, 0, 0, 0, 0 },
+                    { 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 1 , 0, 0, 0, 0, 0, 0 },
+                    { 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0 , 1, 0, 0, 0, 0, 0 },
+                    { 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0 , 0, 1, 0, 0, 0, 0 },
+                    { 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0 , 0, 0, 1, 0, 0, 0 },
+                    { 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0 , 0, 0, 0, 1, 0, 0 },
+                    { 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0 , 0, 0, 0, 0, 1, 0 },
+                    { 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0 , 0, 0, 0, 0, 0, 1 }}
+                  
+		// dieu kien rang buoc cac thung
+		int[] V = {20,15,10,20,20,25,30,15,10,10,20,25,20,10,30,40,25,35,10,10};
+		int[] T = {60,70,90,80,100};
+		IntVar[][] X = new IntVar[M][N];
+		
+		
+		for(int i =0 ;i < M ; i ++) {
+			for(int j=0; j < N; j++) {
+				X[i][j] =  model.intVar("X["+i+"]["+j+"]",0,1);
+			}
+		}
+		// dieu kien de xep vao vung 1 thung
+		for (int i = 0; i < M; i++)
+			for (int j = 0; j < M; j++)
+			 if (d[i][j] == 1) {
+			    for (int k = 0; k < N; k++) {
+			      model.ifThen(model.arithm(X[i][k],"=", 1), model.arithm(X[j][k], "=", 0));	
+			     }
+			}
+		// rang buoc phai thoa man chat do chi dc do vao 1 thung
+		int[] ones2 = new int[M];
+		for(int i=0;i < M;i++) {
+			ones2[i] = 1;
+		}
+		for (int i = 0; i < M; i++) {
+			IntVar[] y = new IntVar[M];
+			for (int j = 0; j < N; j++) {
+				y[i] = X[i][j];
+			}
+			model.scalar(y, ones2, "=", 1).post();  
+		}
+		// rang buoc sao cho the tich cua 1 thung thoa man dk
+		int[] ones = new int[N];
+		for(int i=0;i < N;i++) {
+			ones[i] =V[i];
+		}
+		
+		for(int i=0;i < N;i++) {
+			IntVar[] z = new IntVar[N];
+			for(int j =0;j < M ;j++)
+				z[i] = X[j][i];
+			
+			model.scalar(z, ones,"<= ",T[i]).post();
+			    
+		}
+		
+	
+		for(int i=0;i < N;i++) {
+			System.out.println("Thung thu : "+i+":");
+			for(int j=0;j < M;j++) {
+				if(X[i][j].getValue() == 1)
+					System.out.print(j+" ");
+				System.out.println();
+			}
+		}
+	}
+	
+}
