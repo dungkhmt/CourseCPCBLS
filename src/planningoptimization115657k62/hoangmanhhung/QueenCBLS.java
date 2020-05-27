@@ -1,4 +1,5 @@
 ﻿
+import cbls115676khmt61.NamThangNguyen_20163848.QueenOpenCBLS;
 import localsearch.constraints.alldifferent.AllDifferent;
 import localsearch.functions.basic.FuncPlus;
 import localsearch.model.ConstraintSystem;
@@ -59,7 +60,7 @@ public class QueenCBLS {
 	}
 	
 	public static void main(String[] args) {
-		QueenCBLS queen = new QueenCBLS(1000);
+		QueenOpenCBLS queen = new QueenOpenCBLS(1000);
 		queen.search();
 	}
 

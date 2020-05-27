@@ -1,4 +1,5 @@
-package localsearch.applications.inclass;
+package cbls115676khmt61.ngodoannghia_20162905;
+
 
 import localsearch.constraints.basic.AND;
 import localsearch.constraints.basic.Implicate;
@@ -69,6 +70,7 @@ public class thungchua {
 		
 		mgr.close();
 	}
+	
 	
 	
 	public static void main(String[] args) {
