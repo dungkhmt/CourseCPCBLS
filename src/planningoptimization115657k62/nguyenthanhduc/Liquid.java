@@ -63,6 +63,8 @@ public class Liquid {
 		/// tong V khong qua V cua thung
 		for(int i=0;i<n;i++)
 			cs.post(new LessOrEqual(new ConditionalSum(X[i], V, 1), maxV[i]));
+		
+		/// kiem tra cac chat khong duoc cung 1 thung
 		for(int k=0;k<6;k++){
 			for(int i=0;i<n;i++){
 				int oke[] = new int [20];
@@ -79,10 +81,10 @@ public class Liquid {
 		init();
 		buildModel();
 		System.out.println("Searching\n");
-//		HillClimbingSearch searcher = new HillClimbingSearch();
-//		searcher.search(cs,  100000);
-		TabuSearch searcher = new TabuSearch();
-		searcher.search(cs, 50, 20, 20000, 500);
+		HillClimbingSearch searcher = new HillClimbingSearch();
+		searcher.search(cs,  10000);
+//		TabuSearch searcher = new TabuSearch();
+//		searcher.search(cs, 50, 20, 20000, 500);
 		for(int i=0;i<n;i++){
 			System.out.print("Cac chat trong thung " + i + ": ");
 			int total_V=0;
