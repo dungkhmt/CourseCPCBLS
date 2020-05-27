@@ -79,7 +79,7 @@ public class Container {
 	  }
 	  
 	  for (int i = 0; i < N; i++) {
-		  for (int j = 0; j < N; j++) {
+		  for (int j = i+ 1; j < N; j++) {
 			  if (prequisites[i][j] == 1) {
 				  Constraint c1 = model.and(model.arithm(o[i], "=", 0), model.arithm(o[j], "=", 0));
 				  Constraint c2 = model.arithm(model.intOffsetView(x[i], w[i]), "<=", x[j]);
@@ -87,7 +87,7 @@ public class Container {
 				  Constraint c4 = model.arithm(model.intOffsetView(y[i], h[i]), ">", y[j]);
 				  Constraint c5 = model.and(c3, c4);
 				  Constraint c6 = model.and(c2, c4);
-				  model.ifThen(c1, model.or(c5, c6));
+				  model.ifThen(c1, model.or(c5, c6, c4));
 				  
 				  c1 = model.and(model.arithm(o[i], "=", 1), model.arithm(o[j], "=", 0));
 				  c2 = model.arithm(model.intOffsetView(x[i], h[i]), "<=", x[j]);
@@ -95,7 +95,7 @@ public class Container {
 				  c4 = model.arithm(model.intOffsetView(y[i], w[i]), ">", y[j]);
 				  c5 = model.and(c3, c4);
 				  c6 = model.and(c2, c4);
-				  model.ifThen(c1, model.or(c5, c6));
+				  model.ifThen(c1, model.or(c5, c6, c4));
 				  
 				  c1 = model.and(model.arithm(o[i], "=", 0), model.arithm(o[j], "=", 1));
 				  c2 = model.arithm(model.intOffsetView(x[i], w[i]), "<=", x[j]);
@@ -103,7 +103,7 @@ public class Container {
 				  c4 = model.arithm(model.intOffsetView(y[i], h[i]), ">", y[j]);
 				  c5 = model.and(c3, c4);
 				  c6 = model.and(c2, c4);
-				  model.ifThen(c1, model.or(c5, c6));
+				  model.ifThen(c1, model.or(c5, c6, c4));
 				  
 				  c1 = model.and(model.arithm(o[i], "=", 1), model.arithm(o[j], "=", 1));
 				  c2 = model.arithm(model.intOffsetView(x[i], h[i]), "<=", x[j]);
@@ -111,7 +111,7 @@ public class Container {
 				  c4 = model.arithm(model.intOffsetView(y[i], w[i]), ">", y[j]);
 				  c5 = model.and(c3, c4);
 				  c6 = model.and(c2, c4);
-				  model.ifThen(c1, model.or(c5, c6));
+				  model.ifThen(c1, model.or(c5, c6, c4));
 				  
 			  }
 		  }
@@ -120,16 +120,11 @@ public class Container {
   }
   
   public void search() {
-	  Solver s = model.getSolver();
-	 System.out.println("-----------");
-	 
-	 while(s.solve()) {
-		 for(int i = 0; i < N; i++) {
-			 System.out.println(x[i].getValue() + " " + y[i].getValue() + " " + o[i].getValue());
+	model.getSolver().solve();
+	for (int i = 0; i < N; i++)
+		System.out.println(x[i].getValue() + " " + y[i].getValue() + " " + o[i].getValue());
 			 
-		 }
-		 System.out.println("--------");
-	 }
+	
 
   }
   
