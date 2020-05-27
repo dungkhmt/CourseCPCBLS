@@ -4,7 +4,7 @@
 * Created by ngocjr7 on [2020-03-28 21:16:09]
 */
 
-package cbls115676khmt61.ngocbh_20164797.search;
+package cbls115676khmt61.NgocBH_20164797.search;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -14,7 +14,6 @@ import java.util.Set;
 
 import localsearch.model.IConstraint;
 import localsearch.model.IFunction;
-import localsearch.model.Invariant;
 import localsearch.model.VarIntLS;
 
 public class HillClimbingSearch implements LocalSearch{
@@ -68,18 +67,21 @@ public class HillClimbingSearch implements LocalSearch{
         ArrayList<Move> candidates = new ArrayList<Move>();
         candidates.add(new AssignMove(0,0,false));
         int minDelta = Integer.MAX_VALUE;
+
         for (int i = 0; i < y.length; i++) {
-            for (int v = y[i].getMinValue(); v <= y[i].getMaxValue(); v++) {
-                int d = c.getAssignDelta(y[i], v);
-                if ( d < minDelta ) {
-                    candidates.clear();
-                    candidates.add(new AssignMove(i, v));
-                    minDelta = d;
-                } else if ( d == minDelta ) {
-                    candidates.add(new AssignMove(i,v));
+            for (int v = y[i].getMinValue(); v <= y[i].getMaxValue(); v++) 
+                if ( v != y[i].getValue() ) {
+                    int d = c.getAssignDelta(y[i], v);
+                    if ( d < minDelta ) {
+                        candidates.clear();
+                        candidates.add(new AssignMove(i, v));
+                        minDelta = d;
+                    } else if ( d == minDelta ) {
+                        candidates.add(new AssignMove(i,v));
+                    }
                 }
-            }
         }
+
         Move sel_m = candidates.get(rand.nextInt(candidates.size()));
         return sel_m;
     }
@@ -112,16 +114,17 @@ public class HillClimbingSearch implements LocalSearch{
         candidates.add(new AssignMove(0,0,false));
         int minDelta = Integer.MAX_VALUE;
         for (int i = 0; i < y.length; i++) {
-            for (int v = y[i].getMinValue(); v <= y[i].getMaxValue(); v++) {
-                int d = f.getAssignDelta(y[i], v);
-                if ( d < minDelta ) {
-                    candidates.clear();
-                    candidates.add(new AssignMove(i, v));
-                    minDelta = d;
-                } else if ( d == minDelta ) {
-                    candidates.add(new AssignMove(i,v));
+            for (int v = y[i].getMinValue(); v <= y[i].getMaxValue(); v++) 
+                if ( v != y[i].getValue() ) {
+                    int d = f.getAssignDelta(y[i], v);
+                    if ( d < minDelta ) {
+                        candidates.clear();
+                        candidates.add(new AssignMove(i, v));
+                        minDelta = d;
+                    } else if ( d == minDelta ) {
+                        candidates.add(new AssignMove(i,v));
+                    }
                 }
-            }
         }
         Move sel_m = candidates.get(rand.nextInt(candidates.size()));
         return sel_m;
@@ -156,7 +159,8 @@ public class HillClimbingSearch implements LocalSearch{
         int best_df = Integer.MAX_VALUE;
 
         for (int i = 0; i < y.length; i++) {
-            for (int v = y[i].getMinValue(); v <= y[i].getMaxValue(); v++) {
+            for (int v = y[i].getMinValue(); v <= y[i].getMaxValue(); v++) 
+                if ( v != y[i].getValue() ) {
                     int dc = c.getAssignDelta(y[i], v);
                     int df = f.getAssignDelta(y[i], v);
                     if ( dc < 0 || ( dc == 0 && df < 0) ) {

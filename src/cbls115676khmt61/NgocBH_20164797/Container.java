@@ -3,33 +3,22 @@
 // Description:
 // Created by ngocjr7 on [27-05-2020 13:03:13]
 */
-package cbls115676khmt61.ngocbh_20164797;
+package cbls115676khmt61.NgocBH_20164797;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.util.Scanner;
-
+import cbls115676khmt61.NgocBH_20164797.search.AssignMove;
+import cbls115676khmt61.NgocBH_20164797.search.HillClimbingSearch;
+import cbls115676khmt61.NgocBH_20164797.search.HillClimbingSearchS;
+import cbls115676khmt61.NgocBH_20164797.search.TabuSearch;
 import localsearch.constraints.basic.AND;
-import localsearch.constraints.basic.OR;
 import localsearch.constraints.basic.Implicate;
 import localsearch.constraints.basic.IsEqual;
-import localsearch.model.IConstraint;
-import localsearch.functions.basic.ConstraintViolations;
-import localsearch.functions.basic.FuncMinus;
-import localsearch.functions.basic.FuncMult;
-import localsearch.functions.basic.FuncPlus;
-import localsearch.model.IFunction;
 import localsearch.constraints.basic.LessOrEqual;
-import localsearch.functions.max_min.Max;
-import localsearch.functions.sum.Sum;
+import localsearch.constraints.basic.OR;
+import localsearch.functions.basic.FuncPlus;
 import localsearch.model.ConstraintSystem;
+import localsearch.model.IConstraint;
 import localsearch.model.LocalSearchManager;
 import localsearch.model.VarIntLS;
-import cbls115676khmt61.ngocbh_20164797.search.AssignMove;
-import cbls115676khmt61.ngocbh_20164797.search.HillClimbingSearch;
-import cbls115676khmt61.ngocbh_20164797.search.SwapMove;
-import cbls115676khmt61.ngocbh_20164797.search.TabuSearch;
-import cbls115676khmt61.ngocbh_20164797.search.LocalSearch;
 
 public class Container {
     int n;
@@ -75,7 +64,7 @@ public class Container {
             S.post(new Implicate( new IsEqual(t[i], 1),     
                 new LessOrEqual(new FuncPlus(y[i], w[i]) , L)));
         }
-
+        
         // S.post(new IsEqual(x[0], 0));
         // S.post(new IsEqual(y[0], 0));
         // S.post(new IsEqual(t[0], 1));
@@ -147,7 +136,7 @@ public class Container {
 
             }
         
-            
+
         mgr.close();
     }
 
@@ -183,20 +172,24 @@ public class Container {
     }
 
     public static void main(String[] args) {
-        int seed = 253;
-        int max_iter = 100;
-        int tabu_size = 1000;
-        int max_stable = 10;
+        int seed = 2;
+        int max_iter = 10000;
+        int tabu_size = 0;
+        int max_stable = 50;
 
         Container prob = new Container();
-
         prob.state_model();
-        System.out.printf("%d\n", seed);
-        HillClimbingSearch searcher1 = new HillClimbingSearch(max_iter, seed);
-        searcher1.satisfy_constraint(prob.S);
+        // for (int seed = 0; seed < 100; seed++) {
+        //     HillClimbingSearch searcher1 = new HillClimbingSearch(max_iter, seed);
+        //     searcher1.satisfy_constraint(prob.S);
+        //     System.out.printf("Ngoc: %d: %d\n", seed, prob.S.violations());
+        //     if (prob.S.violations() == 0 ) {
+        //         break;
+        //     }
+        // }
 
-        // TabuSearch searcher2 = new TabuSearch(tabu_size, max_stable, max_iter);
-        // searcher2.satisfy_constraint(prob.S, new AssignMove());
+        TabuSearch searcher2 = new TabuSearch(tabu_size, max_stable, max_iter, seed);
+        searcher2.satisfy_constraint(prob.S, new AssignMove());
 
         prob.print_results();
         prob.verify();

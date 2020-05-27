@@ -3,8 +3,6 @@ package localsearch.model;
 import java.util.*;
 
 
- import org.mockito.internal.matchers.LessOrEqual;
-
 public class ConstraintSystem extends AbstractInvariant implements IConstraint {
 	LocalSearchManager _mgr = null;
 	private ArrayList<IConstraint> _constraints = new ArrayList<IConstraint>() ;
