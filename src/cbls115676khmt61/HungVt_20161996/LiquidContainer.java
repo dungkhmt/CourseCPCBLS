@@ -1,8 +1,7 @@
-package cbls115676khmt61.TranHuyHung_20164777;
+package com.hung_vt;
 
 import java.util.*;
 
-import cbls115676khmt61.TranHuyHung_20164777.old.MyTabuSearch;
 import localsearch.constraints.basic.LessOrEqual;
 import localsearch.constraints.basic.NotEqual;
 import localsearch.functions.basic.FuncMinus;
