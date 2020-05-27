@@ -1,4 +1,5 @@
-package localsearch.applications.inclass;
+package cbls115676khmt61.ngodoannghia_20162905;
+
 
 import localsearch.functions.conditionalsum.ConditionalSum;
 import localsearch.model.IFunction;
