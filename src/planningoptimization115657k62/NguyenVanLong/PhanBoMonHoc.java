@@ -1,4 +1,4 @@
-package chocoSolver;
+package planningoptimization115657k62.NguyenVanLong;
 
 import org.chocosolver.solver.Model;
 import org.chocosolver.solver.variables.IntVar;

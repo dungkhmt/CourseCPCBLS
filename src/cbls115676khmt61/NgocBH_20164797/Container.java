@@ -23,7 +23,6 @@ import localsearch.constraints.basic.LessOrEqual;
 import localsearch.functions.max_min.Max;
 import localsearch.functions.sum.Sum;
 import localsearch.model.ConstraintSystem;
-import localsearch.model.IFunction;
 import localsearch.model.LocalSearchManager;
 import localsearch.model.VarIntLS;
 import cbls115676khmt61.ngocbh_20164797.search.AssignMove;
@@ -36,15 +35,14 @@ public class Container {
     int n;
     int L, W;
     int[] l, w, p;
-    VarIntLS[] x, y, o;
-    VarIntLS[][] c;
+    VarIntLS[] x, y, t;
     LocalSearchManager mgr;
     ConstraintSystem S;
 
     public Container() {
         init_default_data();
     }
-
+    
     public void init_default_data() {
         L = 6; W = 4;
         n = 6;
@@ -59,88 +57,148 @@ public class Container {
 
         x = new VarIntLS[n];
         y = new VarIntLS[n];
-        o = new VarIntLS[n];
+        t = new VarIntLS[n];
         for (int i = 0; i < n; i++) {
-            x[i] = new VarIntLS(mgr, 0, L-1);
-            y[i] = new VarIntLS(mgr, 0, W-1);
-            o[i] = new VarIntLS(mgr, 0, 1);
+            x[i] = new VarIntLS(mgr, 0, W-1);
+            y[i] = new VarIntLS(mgr, 0, L-1);
+            t[i] = new VarIntLS(mgr, 0, 1);
         }
-
-        c = new VarIntLS[L][W];
-        for (int i = 0; i < L; i++) 
-            for (int j = 0; j < W; j++) 
-                c[i][j] = new VarIntLS(mgr, 0, n);
         
         // constraints
         for (int i = 0; i < n; i++) {
-            S.post(new Implicate( new IsEqual(o[i], 0), 
-                new AND( new LessOrEqual(new FuncPlus(x[i], l[i]) , L), 
-                    new LessOrEqual(new FuncPlus(y[i], w[i]) , W))));
+            S.post(new Implicate( new IsEqual(t[i], 0), 
+                new LessOrEqual(new FuncPlus(x[i], w[i]) , W))); 
+            S.post(new Implicate( new IsEqual(t[i], 0), 
+                new LessOrEqual(new FuncPlus(y[i], l[i]) , L)));
+            S.post(new Implicate( new IsEqual(t[i], 1), 
+                new LessOrEqual(new FuncPlus(x[i], l[i]) , W)));
+            S.post(new Implicate( new IsEqual(t[i], 1),     
+                new LessOrEqual(new FuncPlus(y[i], w[i]) , L)));
         }
 
-        for (int i = 0; i < n - 1; ++i) {
-            for (int j = i + 1; j < n; ++j) {
-                IConstraint[] c1 = { new IsEqual(o[i], 0), new IsEqual(o[j], 0) };
-                IConstraint c2 = new AND(c1);
-                IConstraint[] c3 = { new LessOrEqual(new FuncPlus(x[j], w[j]), x[i]), new LessOrEqual(new FuncPlus(y[i], l[i]), y[j]), new LessOrEqual(new FuncPlus(y[j], l[j]), y[i]) };
-                IConstraint c4 = new OR(c3);
-                S.post(new Implicate(c2, c4));
-            }
-        }
-        for (int i = 0; i < n - 1; ++i) {
-            for (int j = i + 1; j < n; ++j) {
-                IConstraint[] c1 = { new IsEqual(o[i], 0), new IsEqual(o[j], 1) };
-                IConstraint c2 = new AND(c1);
-                IConstraint[] c3 = { new LessOrEqual(new FuncPlus(x[j], l[j]), x[i]), new LessOrEqual(new FuncPlus(y[i], l[i]), y[j]), new LessOrEqual(new FuncPlus(y[j], w[j]), y[i]) };
-                IConstraint c4 = new OR(c3);
-                S.post(new Implicate(c2, c4));
-            }
-        }
-        for (int i = 0; i < n - 1; ++i) {
-            for (int j = i + 1; j < n; ++j) {
-                IConstraint[] c1 = { new IsEqual(o[i], 1), new IsEqual(o[j], 0) };
-                IConstraint c2 = new AND(c1);
-                IConstraint[] c3 = { new LessOrEqual(new FuncPlus(x[j], w[j]), x[i]), new LessOrEqual(new FuncPlus(y[i], w[i]), y[j]), new LessOrEqual(new FuncPlus(y[j], l[j]), y[i]) };
-                IConstraint c4 = new OR(c3);
-                S.post(new Implicate(c2, c4));
-            }
-        }
-        for (int i = 0; i < n - 1; ++i) {
-            for (int j = i + 1; j < n; ++j) {
-                IConstraint[] c1 = { new IsEqual(o[i], 1), new IsEqual(o[j], 1) };
-                IConstraint c2 = new AND(c1);
-                IConstraint[] c3 = { new LessOrEqual(new FuncPlus(x[j], l[j]), x[i]), new LessOrEqual(new FuncPlus(y[i], w[i]), y[j]), new LessOrEqual(new FuncPlus(y[j], w[j]), y[i]) };
-                IConstraint c4 = new OR(c3);
-                S.post(new Implicate(c2, c4));
-            }
-        }
+        // S.post(new IsEqual(x[0], 0));
+        // S.post(new IsEqual(y[0], 0));
+        // S.post(new IsEqual(t[0], 1));
 
+        // S.post(new IsEqual(x[1], 0));
+        // S.post(new IsEqual(y[1], 1));
+        // S.post(new IsEqual(t[1], 0));
+
+        // S.post(new IsEqual(x[2], 1));
+        // S.post(new IsEqual(y[2], 2));
+        // S.post(new IsEqual(t[2], 0));
+
+        // S.post(new IsEqual(x[3], 3));
+        // S.post(new IsEqual(y[3], 1));
+        // S.post(new IsEqual(t[3], 1));
+
+
+
+        for (int i = 0; i < n - 1; ++i) 
+            for (int j = i + 1; j < n; ++j) {
+                // items i and j cannot overlap
+                IConstraint[] c1 = new IConstraint[2];
+                c1[0] = new IsEqual(t[i], 0);
+                c1[1] = new IsEqual(t[j], 0);
+                IConstraint c2 = new AND(c1);
+                IConstraint[] c3 = new IConstraint[3];
+                c3[0] = new LessOrEqual(new FuncPlus(x[i], w[i]),x[j]);
+                c3[1] = new LessOrEqual(new FuncPlus(x[j], w[j]),x[i]);
+                c3[2] = new LessOrEqual(new FuncPlus(y[i], l[i]),y[j]);
+                // c3[3] = new LessOrEqual(new FuncPlus(y[j], l[j]),y[i]);
+                IConstraint c4 = new OR(c3);
+                S.post(new Implicate(c2, c4));
+
+                c1 = new IConstraint[2];
+                c1[0] = new IsEqual(t[i], 0);
+                c1[1] = new IsEqual(t[j], 1);
+                c2 = new AND(c1);
+                c3 = new IConstraint[3];
+                c3[0] = new LessOrEqual(new FuncPlus(x[i], w[i]),x[j]);
+                c3[1] = new LessOrEqual(new FuncPlus(x[j], l[j]),x[i]);
+                c3[2] = new LessOrEqual(new FuncPlus(y[i], l[i]),y[j]);
+                // c3[2] = new LessOrEqual(new FuncPlus(y[j], w[j]),y[i]);
+                c4 = new OR(c3);
+                S.post(new Implicate(c2, c4));
+
+                c1 = new IConstraint[2];
+                c1[0] = new IsEqual(t[i], 1);
+                c1[1] = new IsEqual(t[j], 0);
+                c2 = new AND(c1);
+                c3 = new IConstraint[3];
+                c3[0] = new LessOrEqual(new FuncPlus(x[i], l[i]),x[j]);
+                c3[1] = new LessOrEqual(new FuncPlus(x[j], w[j]),x[i]);
+                c3[2] = new LessOrEqual(new FuncPlus(y[i], w[i]),y[j]);
+                // c3[3] = new LessOrEqual(new FuncPlus(y[j], l[j]),y[i]);
+                c4 = new OR(c3);
+                S.post(new Implicate(c2, c4));
+
+                c1 = new IConstraint[2];
+                c1[0] = new IsEqual(t[i], 1);
+                c1[1] = new IsEqual(t[j], 1);
+                c2 = new AND(c1);
+                c3 = new IConstraint[3];
+                c3[0] = new LessOrEqual(new FuncPlus(x[i], l[i]),x[j]);
+                c3[1] = new LessOrEqual(new FuncPlus(x[j], l[j]),x[i]);
+                c3[2] = new LessOrEqual(new FuncPlus(y[i], w[i]),y[j]);
+                // c3[3] = new LessOrEqual(new FuncPlus(y[j], w[j]),y[i]);
+                c4 = new OR(c3);
+                S.post(new Implicate(c2, c4));
+
+            }
+        
+            
         mgr.close();
     }
 
     public void print_results() {
         for (int i = 0; i < n; i++) {
-            System.out.printf("(%d,%d,%d)", x[i].getValue(), y[i].getValue(), o[i].getValue());
+            System.out.printf("(%d,%d,%d)", x[i].getValue(), y[i].getValue(), t[i].getValue());
         }
+        System.out.println();
+    }
+
+    public void verify() {
+        int[][] c = new int[L][W];
+        for (int i = 0; i < n; i++) {
+            if (t[i].getValue() == 0) {
+                for (int ii = y[i].getValue(); ii < Math.min(y[i].getValue() + l[i], L); ii++)
+                    for (int jj = x[i].getValue(); jj < Math.min(x[i].getValue() + w[i], W); jj++)
+                        c[ii][jj] = i+1;
+            } else {
+                for (int ii = y[i].getValue(); ii < Math.min(y[i].getValue() + w[i], L); ii++)
+                    for (int jj = x[i].getValue(); jj < Math.min(x[i].getValue() + l[i], W); jj++)
+                        c[ii][jj] = i+1;
+            }
+        }
+        for (int i = 0; i < L; i++) {
+            for (int j = 0; j < W; j++)
+                if (c[i][j] > 0)
+                    System.out.printf("%d", c[i][j]-1);  
+                else
+                    System.out.print(".");
+            System.out.println();
+        }
+
     }
 
     public static void main(String[] args) {
-        int seed = 8;
-        int max_iter = 1000;
-        int tabu_size = 100;
+        int seed = 253;
+        int max_iter = 100;
+        int tabu_size = 1000;
         int max_stable = 10;
 
         Container prob = new Container();
 
         prob.state_model();
-    
-        // HillClimbingSearch searcher1 = new HillClimbingSearch(max_iter, seed);
-        // searcher1.satisfy_constraint(prob.S);
-        
-        TabuSearch searcher2 = new TabuSearch(tabu_size, max_stable, max_iter);
-        searcher2.satisfy_constraint(prob.S, new AssignMove());
-        // prob.verify();
+        System.out.printf("%d\n", seed);
+        HillClimbingSearch searcher1 = new HillClimbingSearch(max_iter, seed);
+        searcher1.satisfy_constraint(prob.S);
+
+        // TabuSearch searcher2 = new TabuSearch(tabu_size, max_stable, max_iter);
+        // searcher2.satisfy_constraint(prob.S, new AssignMove());
 
         prob.print_results();
+        prob.verify();
     }
 }

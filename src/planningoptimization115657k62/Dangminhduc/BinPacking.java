@@ -1,4 +1,4 @@
-package chocoSolver;
+package planningoptimization115657k62.Dangminhduc;
 
 import org.chocosolver.solver.Model;
 import org.chocosolver.solver.constraints.Constraint;
@@ -8,9 +8,9 @@ public class BinPacking {
 
 	public static void binPacking(int W, int H, int[] h, int[] w, int N) {
 		Model model = new Model("BinPacking");
-		IntVar[] x = new IntVar[3];
-		IntVar[] y = new IntVar[3];
-		IntVar[] o = new IntVar[3];
+		IntVar[] x = new IntVar[N];
+		IntVar[] y = new IntVar[N];
+		IntVar[] o = new IntVar[N];
 		
 		for(int i = 0; i<N; i++) {
 			x[i] = model.intVar("x[" + i + "]", 0, W);
@@ -62,6 +62,31 @@ public class BinPacking {
 				model.ifThen(c1, model.or(c2,c3,c4,c5));
 			}
 		
+		/*for (int i = 0; i < N-1; i++) {
+			model.arithm(y[i], "<=", y[i+1]).post();
+		}*/
+		for (int i1 = 0; i1 < N - 1; i1++) {
+            for (int i2 = i1 + 1; i2 < N; i2++) {
+                
+                Constraint c1 = model.arithm(y[i1], ">=", y[i2]);
+
+                Constraint c2 = model.scalar(
+                        new IntVar[] {x[i1], o[i2], x[i2]},
+                        new int[] {1, w[i2]-h[i2], -1},
+                        ">=", w[i2]
+                );
+
+                Constraint c3 = model.scalar(
+                        new IntVar[] {x[i1], o[i1], x[i2]},
+                        new int[] {-1, w[i1]-h[i1], 1},
+                        ">=", w[i1]
+                );
+
+
+                model.or(c1, c2, c3).post();
+            }
+		}
+		
 		model.getSolver().solve();
 		
 		System.out.println("toa do cua cac thung hang x - y - o la: ");
@@ -72,9 +97,9 @@ public class BinPacking {
 	
 	public static void main(String[] args) {
 		int W = 4,H = 6;
-		int h[] = {2,4,6};
-		int w[] = {3,3,1};
-		int N = 3;
+		int h[] = {4,1,2,1,4,3};
+		int w[] = {1,3,2,3,1,2};
+		int N = 6;
 		BinPacking.binPacking(W, H, h, w, N);
 	}
 }

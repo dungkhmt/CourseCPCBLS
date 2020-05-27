@@ -205,11 +205,19 @@ public class HillClimbingSearch implements LocalSearch{
         Move sel_m = candidates.get(sel_idx);
         return sel_m;
     }
+
+    void init_solution(VarIntLS[] x) {
+        for (int i = 0; i < x.length; ++i) {
+            final int v = this.rand.nextInt(x[i].getMaxValue() - x[i].getMinValue() + 1) + x[i].getMinValue();
+            x[i].setValuePropagate(v);
+        }
+    }
     
     public void satisfy_constraint(IConstraint c, Move move_temp) {
         int it = 0;
         VarIntLS[] y = c.getVariables();
-
+        init_solution(y);
+        
         while ( it < max_iter && c.violations() > 0 ) {
             if (verbose) 
                 System.out.printf("iteration %d: violations = %d\n",it, c.violations());
@@ -238,6 +246,7 @@ public class HillClimbingSearch implements LocalSearch{
         varset.addAll(Arrays.asList(c.getVariables()));
         VarIntLS[] y = new VarIntLS[varset.size()];
         varset.toArray(y);
+        init_solution(y);
 
         while ( it < max_iter ) {
             if (verbose) 
@@ -267,6 +276,7 @@ public class HillClimbingSearch implements LocalSearch{
     public void satisfy_constraint(IConstraint c) {
         int it = 0;
         VarIntLS[] y = c.getVariables();
+        init_solution(y);
 
         while ( it < max_iter && c.violations() > 0 ) {
             if (verbose) 
@@ -296,11 +306,12 @@ public class HillClimbingSearch implements LocalSearch{
         varset.addAll(Arrays.asList(c.getVariables()));
         VarIntLS[] y = new VarIntLS[varset.size()];
         varset.toArray(y);
+        init_solution(y);
 
         while ( it < max_iter ) {
             if (verbose) 
                 System.out.printf("iteration %d: objective = %d and violations = %d\n",it, f.getValue(), c.violations());
-            
+
             Move sel_m = jump_by_value(c, f, y);
             if (sel_m instanceof AssignMove) {
                 AssignMove sel_am = (AssignMove)sel_m;
@@ -329,6 +340,7 @@ public class HillClimbingSearch implements LocalSearch{
     public void minimize_objective(IFunction f, Move move_temp) {
         int it = 0;
         VarIntLS[] y = f.getVariables();
+        init_solution(y);
 
         while ( it < max_iter ) {
             if (verbose) 
