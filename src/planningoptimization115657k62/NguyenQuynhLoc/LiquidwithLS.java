@@ -75,6 +75,7 @@ public class LiquidwithLS {
 				S.post(new LessOrEqual(new Sum(y), 1));
 			}
 		}
+		mgr.close();
 		int k=0;
 		ArrayList<Move> cand = new ArrayList<Move>();
 		VarIntLS [] y = S.getVariables();
