@@ -42,12 +42,12 @@ public class Bai1 {
 	public void Display() {
 		System.out.println("Dung tich các thùng:");
 		for (int i = 0; i < N; i++)
-			System.out.print("Thùng " + (i + 1) + ": " + V[i] + "; ");
+			System.out.print("Thùng " + (i) + ": " + V[i] + "; ");
 		System.out.println("\n");
 
 		System.out.println("Hoá chất:");
 		for (int i = 0; i < M; i++)
-			System.out.println("Chất " + (i + 1) + ": " + P[i] + "; ");
+			System.out.println("Chất " + (i) + ": " + P[i] + "; ");
 		System.out.println("\n");
 	}
 
@@ -99,10 +99,10 @@ public class Bai1 {
 		//điều kiện 3 chat ko trùng nhau
 		m.getSolver().solve();
 
-		for (int i = 1; i <= N; i++) {
+		for (int i = 0; i < N; i++) {
 			System.out.print("Thùng " + i + ": ");
-			for (int j = 1; j <= M; j++) {
-				if (X[i - 1][j - 1].getValue() == 1)
+			for (int j = 0; j < M; j++) {
+				if (X[i][j].getValue() == 1)
 					System.out.print("hoá chất " + j + " / ");
 			}
 			System.out.println("");

@@ -258,10 +258,18 @@ public class TabuSearch implements LocalSearch {
         return sel_m;
     }
 
+    void init_solution(VarIntLS[] x) {
+        for (int i = 0; i < x.length; ++i) {
+            final int v = this.rand.nextInt(x[i].getMaxValue() - x[i].getMinValue() + 1) + x[i].getMinValue();
+            x[i].setValuePropagate(v);
+        }
+    }
+
     public void satisfy_constraint(IConstraint c, Move move_temp) {
         int it = 0;
         int nic = 0;
         VarIntLS[] y = c.getVariables();
+        init_solution(y);
         int[] bval = new int[y.length];
         assign_int(bval, y);
 
@@ -296,7 +304,9 @@ public class TabuSearch implements LocalSearch {
             } else {
                 nic++;
                 if ( nic >= max_stable ) {
+                    nic = 0;
                     restart(y);
+                    System.out.println("restarting");
                     if ( c.violations() < best ) {
                         best = c.violations();
                         assign_int(bval, y);
@@ -321,6 +331,7 @@ public class TabuSearch implements LocalSearch {
         varset.addAll(Arrays.asList(c.getVariables()));
         VarIntLS[] y = new VarIntLS[varset.size()];
         varset.toArray(y);
+        init_solution(y);
         int[] bval = new int[y.length];
         assign_int(bval, y);
 
@@ -388,6 +399,7 @@ public class TabuSearch implements LocalSearch {
         int nic = 0;
         VarIntLS[] y = f.getVariables();
         int[] bval = new int[y.length];
+        init_solution(y);
         assign_int(bval, y);
 
         int best = f.getValue();
