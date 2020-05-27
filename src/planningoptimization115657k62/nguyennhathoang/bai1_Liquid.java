@@ -1,4 +1,4 @@
-package _assigment;
+package planningoptimization115657k62.nguyennhathoang;
 
 import localsearch.baitap.MySum;
 import localsearch.constraints.basic.AND;
@@ -101,6 +101,14 @@ public class bai1_Liquid {
 		App.search();
 		App.InKetQua();
 		
+
+		
 	}
 
 }
+/*ket qua: 
+		Thung: 0: 1, 8, 11, 19, The tich  = 60
+                Thung: 1: 0, 2, 6, 13, The tich  = 70
+		Thung: 2: 3, 7, 9, 16, 18, The tich  = 80
+		Thung: 3: 4, 10, 12, 14, The tich  = 90
+		Thung: 4: 5, 15, 17, The tich  = 100 */
