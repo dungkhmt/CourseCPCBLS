@@ -41,7 +41,7 @@ public class Container {
 		for (int i = 0; i < N; i++) {
 		    O[i] = new VarIntLS(mgr, 0, 1);
 		}
-		
+		// rang buoc nam chong len nhau
 		for (int i = 0; i < N-1; i++) {
 			for (int j = i+1; j < N; j++) {
 				IConstraint[] or1 = new IConstraint[4];
@@ -75,12 +75,14 @@ public class Container {
 				S.post(new Implicate(new AND(new IsEqual(O[i], 1), new IsEqual(O[j], 1)), new OR(or4)));
 			}                                                                                        
 		}
+		// rang buoc cac phan tu phai nam trong thung
 		for (int i = 0; i < N; i++) {
 			S.post(new Implicate(new IsEqual(O[i], 0), new AND(new LessOrEqual(new FuncPlus(X[i], w[i]), W), new LessOrEqual(new FuncPlus(X[i], w[i]), W))));
 			S.post(new Implicate(new IsEqual(O[i], 0), new AND(new LessOrEqual(new FuncPlus(Y[i], h[i]), L), new LessOrEqual(new FuncPlus(Y[i], h[i]), L))));
 			S.post(new Implicate(new IsEqual(O[i], 1), new AND(new LessOrEqual(new FuncPlus(X[i], h[i]), W), new LessOrEqual(new FuncPlus(X[i], h[i]), W))));
 			S.post(new Implicate(new IsEqual(O[i], 1), new AND(new LessOrEqual(new FuncPlus(Y[i], w[i]), L), new LessOrEqual(new FuncPlus(Y[i], w[i]), L))));
 		}
+		//rang buoc lay truoc lay sau
 		for (int i = 0; i < N-1; i++) {
 			for (int j = i+1; j < N; j++) {
 				// neu kien i duoc lay truoc kien j thi kien i co khoang cach den cua gan hon kien j
