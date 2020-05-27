@@ -112,6 +112,7 @@ public class BaiTap2_Inclass {
 		for(int i = 0; i < N; i++) {
 			IConstraint[] c;
 			c = new LessOrEqual(y[i], y[i+1]);
+			S.post(c)
 			
 		}
 		
