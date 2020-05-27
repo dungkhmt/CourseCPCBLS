@@ -1,4 +1,4 @@
-package choco;
+package planningoptimization115657k62.nguyenthiduyen;
 
 import org.chocosolver.solver.Model;
 import org.chocosolver.solver.constraints.Constraint;

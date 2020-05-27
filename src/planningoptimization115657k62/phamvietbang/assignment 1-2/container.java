@@ -49,7 +49,8 @@ public class container {
 				Constraint c15=model.arithm(model.intOffsetView(y[i], w[i]),"<=",y[j]);
 				Constraint c16=model.arithm(model.intOffsetView(y[j], w[j]), "<=", y[i]);
 				model.ifThen(model.and(model.arithm(check[i], "=", 1),model.arithm(check[i], "=", 1)),model.or(c13,c14,c15,c16));
-				
+				model.arithm(x[i], "<=", x[j]).post();
+				model.arithm(y[i], "<=", y[j]).post();
 			}
 		Solver s=model.getSolver();
 		System.out.print("Sap xep: \n");
