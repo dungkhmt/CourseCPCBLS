@@ -1,40 +1,53 @@
-package cbls115676khmt61.TranHuyHung_20164777;
+// 
+// Decompiled by Procyon v0.5.36
+// 
+
+package cbls115676khmt61.TranHuyHung_20164777.old;
 
 import localsearch.selectors.MinMaxSelector;
-import localsearch.constraints.basic.Implicate;
-import localsearch.constraints.basic.IsEqual;
-import localsearch.constraints.basic.LessOrEqual;
 import localsearch.model.IConstraint;
-import localsearch.model.IFunction;
-import localsearch.constraints.basic.NotEqual;
 import localsearch.functions.basic.FuncPlus;
+import localsearch.model.IFunction;
+import localsearch.constraints.alldifferent.AllDifferent;
 import localsearch.model.ConstraintSystem;
 import localsearch.model.VarIntLS;
 import localsearch.model.LocalSearchManager;
 
-public class HillClimbing
+public class QueenCBLS
 {
+    int N;
     LocalSearchManager mgr;
     VarIntLS[] X;
     ConstraintSystem S;
     
+    private QueenCBLS(final int N) {
+        this.N = N;
+    }
+    
     private void stateModel() {
         this.mgr = new LocalSearchManager();
-        this.X = new VarIntLS[5];
-        for (int i = 0; i < 5; ++i) {
-            this.X[i] = new VarIntLS(this.mgr, 1, 5);
+        this.X = new VarIntLS[this.N];
+        for (int i = 0; i < this.N; ++i) {
+            this.X[i] = new VarIntLS(this.mgr, 1, this.N);
         }
-        (this.S = new ConstraintSystem(this.mgr)).post((IConstraint)new NotEqual((IFunction)new FuncPlus(this.X[2], 3), this.X[1]));
-        this.S.post((IConstraint)new LessOrEqual(this.X[3], this.X[4]));
-        this.S.post((IConstraint)new IsEqual((IFunction)new FuncPlus(this.X[2], this.X[3]), (IFunction)new FuncPlus(this.X[0], 1)));
-        this.S.post((IConstraint)new LessOrEqual(this.X[4], 3));
-        this.S.post((IConstraint)new IsEqual((IFunction)new FuncPlus(this.X[1], this.X[4]), 7));
-        this.S.post((IConstraint)new Implicate((IConstraint)new IsEqual(this.X[2], 1), (IConstraint)new NotEqual(this.X[4], 2)));
+        this.S = new ConstraintSystem(this.mgr);
+        final IConstraint c = (IConstraint)new AllDifferent(this.X);
+        this.S.post(c);
+        final IFunction[] f1 = new IFunction[this.N];
+        for (int j = 0; j < this.N; ++j) {
+            f1[j] = (IFunction)new FuncPlus(this.X[j], j);
+        }
+        this.S.post((IConstraint)new AllDifferent(f1));
+        final IFunction[] f2 = new IFunction[this.N];
+        for (int k = 0; k < this.N; ++k) {
+            f2[k] = (IFunction)new FuncPlus(this.X[k], -k);
+        }
+        this.S.post((IConstraint)new AllDifferent(f2));
         this.mgr.close();
     }
     
     public void printSol() {
-        for (int i = 0; i < 5; ++i) {
+        for (int i = 0; i < this.N; ++i) {
             System.out.print(String.valueOf(this.X[i].getValue()) + " ");
         }
         System.out.println();
@@ -54,7 +67,7 @@ public class HillClimbing
     }
     
     public static void main(final String[] args) {
-        final HillClimbing app = new HillClimbing();
+        final QueenCBLS app = new QueenCBLS(1000);
         app.stateModel();
         app.localSearch();
     }
