@@ -88,7 +88,7 @@ public class TabuSearch {
                     }
                 }
             }
-
+            
             Move m = cand.get(R.nextInt(cand.size()));
             x[m.i].setValuePropagate(m.v);
             tabu[m.i][m.v] = it + tbl;// dua move(i,v) vao DS tabu
