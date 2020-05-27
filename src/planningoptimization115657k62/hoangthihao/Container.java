@@ -22,6 +22,7 @@ public class Container {
 						  {0,0,0,0,0,1},
 						  {0,0,0,0,0,0}};
 
+  
   public void buildModel() {
 	  model = new Model("2D Binpacking");
 	  x = new IntVar[N];
