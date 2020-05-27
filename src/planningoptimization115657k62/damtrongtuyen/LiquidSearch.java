@@ -72,7 +72,7 @@ public class LiquidSearch {
         TabuSearch searcher = new TabuSearch();
         searcher.search(S,30, 10, 100000, 100);
         for (int i = 0; i < 20; i++) {
-            System.out.println(X[i]);
+            System.out.println(X[i].getValue());
         }
     }
 }
