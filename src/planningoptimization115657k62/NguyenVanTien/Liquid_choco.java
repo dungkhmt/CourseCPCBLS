@@ -1,8 +1,6 @@
 package planningoptimization115657k62.NguyenVanTien;
 
 import java.util.ArrayList;
-import java.util.Scanner;
-
 import org.chocosolver.solver.Model;
 import org.chocosolver.solver.variables.IntVar;
 
@@ -38,7 +36,7 @@ public class Liquid_choco {
 				for (int i = 0; i < a.get(y).size(); i++) {
 					temp[i] = x[k][a.get(y).get(i)];
 				}
-				model.scalar(temp, one1, "<", 3);
+				model.scalar(temp, one1, "<", a.get(y).size());
 			}
 		}
 
@@ -72,7 +70,6 @@ public class Liquid_choco {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		Liquid_choco app = new Liquid_choco();
-		int m, i = 0;
 		ArrayList<Integer> thung1 = new ArrayList<Integer>();
 
 		thung1.add(0);
