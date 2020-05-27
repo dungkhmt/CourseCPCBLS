@@ -43,7 +43,7 @@ public class Container {
     public Container() {
         init_default_data();
     }
-
+    
     public void init_default_data() {
         L = 6; W = 4;
         n = 6;
@@ -68,12 +68,32 @@ public class Container {
         // constraints
         for (int i = 0; i < n; i++) {
             S.post(new Implicate( new IsEqual(t[i], 0), 
-                new AND( new LessOrEqual(new FuncPlus(x[i], w[i]) , W), 
-                    new LessOrEqual(new FuncPlus(y[i], l[i]) , L) ) ));
+                new LessOrEqual(new FuncPlus(x[i], w[i]) , W))); 
+            S.post(new Implicate( new IsEqual(t[i], 0), 
+                new LessOrEqual(new FuncPlus(y[i], l[i]) , L)));
             S.post(new Implicate( new IsEqual(t[i], 1), 
-                new AND( new LessOrEqual(new FuncPlus(x[i], l[i]) , W), 
-                    new LessOrEqual(new FuncPlus(y[i], w[i]) , L))));
+                new LessOrEqual(new FuncPlus(x[i], l[i]) , W)));
+            S.post(new Implicate( new IsEqual(t[i], 1),     
+                new LessOrEqual(new FuncPlus(y[i], w[i]) , L)));
         }
+
+        // S.post(new IsEqual(x[0], 0));
+        // S.post(new IsEqual(y[0], 0));
+        // S.post(new IsEqual(t[0], 1));
+
+        // S.post(new IsEqual(x[1], 0));
+        // S.post(new IsEqual(y[1], 1));
+        // S.post(new IsEqual(t[1], 0));
+
+        // S.post(new IsEqual(x[2], 1));
+        // S.post(new IsEqual(y[2], 2));
+        // S.post(new IsEqual(t[2], 0));
+
+        // S.post(new IsEqual(x[3], 3));
+        // S.post(new IsEqual(y[3], 1));
+        // S.post(new IsEqual(t[3], 1));
+
+
 
         for (int i = 0; i < n - 1; ++i) 
             for (int j = i + 1; j < n; ++j) {
@@ -98,7 +118,7 @@ public class Container {
                 c3[0] = new LessOrEqual(new FuncPlus(x[i], w[i]),x[j]);
                 c3[1] = new LessOrEqual(new FuncPlus(x[j], l[j]),x[i]);
                 c3[2] = new LessOrEqual(new FuncPlus(y[i], l[i]),y[j]);
-                // c3[3] = new LessOrEqual(new FuncPlus(y[j], w[j]),y[i]);
+                // c3[2] = new LessOrEqual(new FuncPlus(y[j], w[j]),y[i]);
                 c4 = new OR(c3);
                 S.post(new Implicate(c2, c4));
 
@@ -136,12 +156,12 @@ public class Container {
         for (int i = 0; i < n; i++) {
             System.out.printf("(%d,%d,%d)", x[i].getValue(), y[i].getValue(), t[i].getValue());
         }
+        System.out.println();
     }
 
     public void verify() {
         int[][] c = new int[L][W];
         for (int i = 0; i < n; i++) {
-            System.out.printf("(%d,%d,%d)\n", x[i].getValue(), y[i].getValue(), t[i].getValue());
             if (t[i].getValue() == 0) {
                 for (int ii = y[i].getValue(); ii < Math.min(y[i].getValue() + l[i], L); ii++)
                     for (int jj = x[i].getValue(); jj < Math.min(x[i].getValue() + w[i], W); jj++)
@@ -154,13 +174,17 @@ public class Container {
         }
         for (int i = 0; i < L; i++) {
             for (int j = 0; j < W; j++)
-                System.out.printf("%d", c[i][j]);  
+                if (c[i][j] > 0)
+                    System.out.printf("%d", c[i][j]-1);  
+                else
+                    System.out.print(".");
             System.out.println();
         }
+        
     }
 
     public static void main(String[] args) {
-        int seed = 7;
+        int seed = 253;
         int max_iter = 100;
         int tabu_size = 1000;
         int max_stable = 10;
@@ -168,12 +192,12 @@ public class Container {
         Container prob = new Container();
 
         prob.state_model();
-    
-        // HillClimbingSearch searcher1 = new HillClimbingSearch(max_iter, seed);
-        // searcher1.satisfy_constraint(prob.S);
-        
-        TabuSearch searcher2 = new TabuSearch(tabu_size, max_stable, max_iter, seed);
-        searcher2.satisfy_constraint(prob.S, new AssignMove());
+        System.out.printf("%d\n", seed);
+        HillClimbingSearch searcher1 = new HillClimbingSearch(max_iter, seed);
+        searcher1.satisfy_constraint(prob.S);
+
+        // TabuSearch searcher2 = new TabuSearch(tabu_size, max_stable, max_iter);
+        // searcher2.satisfy_constraint(prob.S, new AssignMove());
 
         prob.print_results();
         prob.verify();
