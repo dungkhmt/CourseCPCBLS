@@ -1,4 +1,4 @@
-package _assigment;
+package planningoptimization115657k62.nguyennhathoang;
 
 import localsearch.baitap.MySum;
 import localsearch.constraints.basic.AND;
