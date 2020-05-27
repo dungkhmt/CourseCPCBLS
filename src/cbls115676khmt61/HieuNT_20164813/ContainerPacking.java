@@ -159,7 +159,7 @@ public class ContainerPacking {
 
 	private void search() {
 		final HillClimbingSearch searcher = new HillClimbingSearch();
-		searcher.search((IConstraint) this.S, 10000);
+		searcher.search((IConstraint) this.S, 1000);
 
 	}
 
@@ -172,14 +172,14 @@ public class ContainerPacking {
 		}
 		for (int i = 0; i < this.N; ++i) {
 			if (this.o[i].getValue() == 0) {
-				for (int j = this.x[i].getValue(); j < this.x[i].getValue() + this.w[i]; ++j) {
-					for (int k = this.y[i].getValue(); k < this.y[i].getValue() + this.l[i]; ++k) {
+				for (int j = this.x[i].getValue(); j < this.x[i].getValue() + this.w[i] && j < this.W; ++j) {
+					for (int k = this.y[i].getValue(); k < this.y[i].getValue() + this.l[i] && k < this.L; ++k) {
 						p[j][k] = (char) (i + 48);
 					}
 				}
 			} else {
-				for (int j = this.x[i].getValue(); j < this.x[i].getValue() + this.l[i]; ++j) {
-					for (int k = this.y[i].getValue(); k < this.y[i].getValue() + this.w[i]; ++k) {
+				for (int j = this.x[i].getValue(); j < this.x[i].getValue() + this.l[i] && j < this.W; ++j) {
+					for (int k = this.y[i].getValue(); k < this.y[i].getValue() + this.w[i] && k < this.L; ++k) {
 						p[j][k] = (char) (i + 48);
 					}
 				}
