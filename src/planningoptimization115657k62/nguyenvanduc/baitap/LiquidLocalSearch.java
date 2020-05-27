@@ -3,11 +3,13 @@ package planningoptimization115657k62.nguyenvanduc.baitap;
 import com.sun.org.apache.xpath.internal.functions.FuncSum;
 import localsearch.constraints.basic.IsEqual;
 import localsearch.constraints.basic.LessOrEqual;
+import localsearch.functions.basic.FuncMult;
 import localsearch.functions.basic.FuncPlus;
 import localsearch.functions.sum.Sum;
 import localsearch.functions.sum.SumFun;
 import localsearch.functions.sum.SumVarConstraints;
 import localsearch.model.ConstraintSystem;
+import localsearch.model.IFunction;
 import localsearch.model.LocalSearchManager;
 import localsearch.model.VarIntLS;
 import localsearch.selectors.MinMaxSelector;
@@ -93,11 +95,11 @@ public class LiquidLocalSearch {
 
         //3 <= tong suc chua
         for (int j = 0; j < N; j++) {
-            VarIntLS[] tmp = new VarIntLS[M];
+            IFunction[] f = new IFunction[M];
             for (int i = 0; i < M; i++) {
-                tmp[i] = X[i][j];
+                f[i] = new FuncMult(X[i][j], v[i]);
             }
-            S.post(new LessOrEqual(new Sum(tmp), c[j]));
+            S.post(new LessOrEqual(new Sum(f), c[j]));
         }
 
         mgr.close();
