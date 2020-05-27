@@ -35,13 +35,14 @@ public class container_choco {
 			}
 		}
 		
+		//thu tu truoc duoc ra truoc
 		for (int i = 0; i < N - 1; i++) {
-			model.ifThen(model.arithm(p[i][2], "=", 1),model.arithm(position[i],  "-", p[i][0], "=", w[i]));
-			model.ifThen(model.arithm(p[i][2], "=", 0),model.arithm(position[i],  "-", p[i][1], "=", l[i]));
+			model.ifThen(model.arithm(p[i][2], "=", 0),model.arithm(position[i],  "-", p[i][1], "=", w[i]));
+			model.ifThen(model.arithm(p[i][2], "=", 1),model.arithm(position[i],  "-", p[i][1], "=", l[i]));
 		}
 		
 		for (int i = 0; i < N-1; i++) {
-			model.arithm(position[i], ">=", position[i+1]);
+			model.arithm(position[i], ">=", position[i+1]).post();
 		}
 		
 		int j = 0;
