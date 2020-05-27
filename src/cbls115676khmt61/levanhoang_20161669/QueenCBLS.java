@@ -1,4 +1,4 @@
-package cbls115676khmt61.levanhoang_20161669;
+package src.cbls115676khmt61.levanhoang_20161669;
 
 import localsearch.constraints.alldifferent.AllDifferent;
 import localsearch.functions.basic.FuncPlus;
