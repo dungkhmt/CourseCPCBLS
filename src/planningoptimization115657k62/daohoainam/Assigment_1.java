@@ -197,7 +197,6 @@ public class Assigment_1 {
 		}
 	}
 	
-	
 	public void Solve() {
 		Solver solver = model.getSolver();
 		
@@ -211,8 +210,6 @@ public class Assigment_1 {
 		}
 	}
 		
-	
-	
 	public static void main(String args[]) {
 		Assigment_1 assigment_1 = new Assigment_1();
 		try {
@@ -221,7 +218,7 @@ public class Assigment_1 {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-//	
+		
 		assigment_1.test();
 		assigment_1.get_max();
 		assigment_1.creatConstraint();
@@ -229,17 +226,4 @@ public class Assigment_1 {
 		
 		
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-
-	
-	
-	
-
 }
