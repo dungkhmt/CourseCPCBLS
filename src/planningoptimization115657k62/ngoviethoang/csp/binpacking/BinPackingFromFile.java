@@ -48,7 +48,7 @@ public class BinPackingFromFile {
 	}
 	public void binpacking() {
 		String file = "./data/csp/BinPacking2D/bin-packing-2D-W10-H7-I6.txt";
-		readData(file);
+			readData(file);
 		model = new Model("BinPacking");
 		x = new IntVar[n][2];
 		r = new IntVar[n];
