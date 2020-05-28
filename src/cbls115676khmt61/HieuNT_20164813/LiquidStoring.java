@@ -1,3 +1,5 @@
+package cbls115676khmt61.HieuNT_20164813;
+
 import java.util.ArrayList;
 
 import cbls115676khmt61.HieuNT_20164813.search.AssignMove;
@@ -65,6 +67,8 @@ public class LiquidStoring {
 		tmp5.add(9);
 		tmp5.add(12);
 		conflicts.add(tmp5);
+		
+		CS = new ConstraintSystem(mgr);
 
 		for (int i = 0; i < conflicts.size(); i++) {
       IConstraint[] c = new IConstraint[conflicts.get(i).size()-1];
@@ -72,10 +76,8 @@ public class LiquidStoring {
           c[j-1] = new NotEqual(X[conflicts.get(i).get(j)], X[conflicts.get(i).get(j-1)]);
       }
       CS.post(new OR(c));
-  }
+		}
 
-		
-		CS = new ConstraintSystem(mgr);
 		for (int j = 0; j < N; j++) {
 			IFunction f = new ConditionalSum(X, W, j);
 			CS.post(new LessOrEqual(f, V[j]));
@@ -114,14 +116,10 @@ public class LiquidStoring {
     int tabu_size = 100;
     int max_stable = 10;
     app.stateModel();
-    
 
-    // HillClimbingSearch searcher1 = new HillClimbingSearch(max_iter, seed);
-    // searcher1.satisfy_constraint(prob.S);
     
     TabuSearch searcher2 = new TabuSearch(tabu_size, max_stable, max_iter, seed);
     searcher2.satisfy_constraint(app.CS, new AssignMove());
-    // prob.verify();
 
     app.printResults();
 	}

@@ -1,4 +1,5 @@
-package localsearch.applications.inclass;
+package cbls115676khmt61.ngodoannghia_20162905;
+
 
 import localsearch.constraints.basic.LessOrEqual;
 import localsearch.constraints.basic.LessThan;

@@ -9,7 +9,7 @@ import org.chocosolver.solver.variables.IntVar;
 
 
 public class BinPackage2D {
-  int N = 2;
+  int N = 6;
   int W = 4;
   int H = 6;
   IntVar[] x;
@@ -18,8 +18,8 @@ public class BinPackage2D {
   Model model;
   
 
-  int w[] = {1, 2, 3}; // chua khoi luong
-  int h[] = {3, 4, 6}; // chua trong luong
+  int w[] = {1,3,2,3,1,2}; // chua khoi luong
+  int h[] = {4,1,2,1,4,3}; // chua trong luong
   
  
 
