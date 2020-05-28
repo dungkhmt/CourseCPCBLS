@@ -154,8 +154,10 @@ public class Container {
 	}
 	
 	public void search() {
-		HillClimbingSearch h = new HillClimbingSearch();
-		h.search(S, 100000);
+//		HillClimbingSearch h = new HillClimbingSearch();
+//		h.search(S, 100000);
+		TabuSearch searcher = new TabuSearch(S);
+		searcher.search(10000, 4, 100);
 	}
 	
 	public static void main(String[] args) {

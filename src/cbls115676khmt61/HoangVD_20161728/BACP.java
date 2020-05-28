@@ -8,7 +8,7 @@ import localsearch.model.IConstraint;
 import localsearch.model.IFunction;
 import localsearch.model.LocalSearchManager;
 import localsearch.model.VarIntLS;
-import cbls115676khmt61.HuyLQ_20161813.HillClimbingSearch;
+
 
 public class BACP {
 	int N = 12, P = 4; //so mon hoc va so hoc ki danh so tu 0
@@ -25,6 +25,7 @@ public class BACP {
 	//model
 	LocalSearchManager mgr;
 	VarIntLS[] X;
+	
 	ConstraintSystem S;
 	IFunction[] numberCoursesPeriod; // so mon hoc moi hoc ky
 	IFunction[] numberCreditsPeriod; // so tin chi moi hoc ky
@@ -65,8 +66,10 @@ public class BACP {
 		}
 	}
 	public void search() {
-		HillClimbingSearch searcher = new HillClimbingSearch();
-		searcher.search(S, 10000);
+//		HillClimbingSearch searcher = new HillClimbingSearch();
+//		searcher.search(S, 10000);
+		TabuSearch searcher = new TabuSearch(S);
+		searcher.search(10000, 4, 100);
 	}
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
