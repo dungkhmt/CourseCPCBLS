@@ -1,8 +1,16 @@
 package cbls115676khmt61.HoangVD_20161728;
 
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 import java.util.Scanner;
 
+import javax.print.attribute.standard.MediaSize.Other;
 
 import localsearch.constraints.basic.Implicate;
 import localsearch.constraints.basic.IsEqual;
@@ -32,6 +40,8 @@ public class ExamSchedulingCBLS {
 	Conflict[] conflicts;	// cac cap mon thi khong thi cung kip
 	int[] room_capacities;	// suc chua cac phong thi
 	int time_slot;
+	long time_start;
+	long time_end;
 		
 		
 	LocalSearchManager mgr;
@@ -71,6 +81,7 @@ public class ExamSchedulingCBLS {
 	}
 	
 	public void stateModel() {
+		time_start = System.currentTimeMillis();
 		mgr = new LocalSearchManager();
 		X = new VarIntLS[no_subjects];
 		Y = new VarIntLS[no_subjects][no_rooms];
@@ -112,30 +123,66 @@ public class ExamSchedulingCBLS {
 		System.out.println(S.getVariables());
 		TabuSearch searcher = new TabuSearch(S);
 		searcher.search(10000, 4, 100);
+		time_end = System.currentTimeMillis();
 	}
 	
-	public void printSolution() {
-		for(int s = 0; s < no_subjects; s++) {
-			System.out.print("Mon " + s + " : kip " + X[s].getValue() + " phong: ");
-			for(int r = 0; r < no_rooms; r++) {
-				if(Y[s][r].getValue() == 1) {
-					System.out.print(r + " ");
+	public void printSolution(String outfile) {
+		try {
+			PrintWriter out = new PrintWriter(outfile);
+			for(int s = 0; s < no_subjects; s++) {
+				out.print("Mon " + s + " : kip " + X[s].getValue() + " phong: ");
+				for(int r = 0; r < no_rooms; r++) {
+					if(Y[s][r].getValue() == 1) {
+						out.print(r + " ");
+					}
 				}
+				out.println();
 			}
-			System.out.println();
+			out.print((time_end-time_start)/1000.0);
+			out.close();
+		}catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
 		}
+		
 	}
 	
 	public static void main(String[] args) {
+		String dataPath = "./data/scheduling";
+		File dir = new File(dataPath);
+		File[] fileList = dir.listFiles();
+		String[] filenames = new String[fileList.length];
+		for(int i = 0; i < fileList.length; i++) {
+			filenames[i] = fileList[i].toString();
+		}
+		int size = filenames.length;
+
+	      for(int i = 0; i<size-1; i++) {
+	         for (int j = i+1; j<filenames.length; j++) {
+	            if(filenames[i].compareTo(filenames[j])>0) {
+	               String temp = filenames[i];
+	               filenames[i] = filenames[j];
+	               filenames[j] = temp;
+	            }
+	         }
+	      }
 		ExamSchedulingCBLS eSheduling = new ExamSchedulingCBLS();
-		String input = "./data/scheduling/gc_100_1";
-		eSheduling.readData(input);
-		long time_start = System.currentTimeMillis();
-		eSheduling.stateModel();
-		eSheduling.search();
-		long time_end = System.currentTimeMillis();
-		System.out.print("\n"+(time_end - time_start)/1000.0);
-		eSheduling.printSolution();
+		for(String file: filenames) {
+//			String file = "./data/scheduling/gc_4_1";
+			String outFile = "./output/" + file.substring(2);
+			
+			eSheduling.readData(file.toString());
+			
+			eSheduling.stateModel();
+			eSheduling.search();
+			
+			
+			eSheduling.printSolution(outFile);
+			
+			System.out.println(file);
+		}
+		
+		
 	}
 
 }
