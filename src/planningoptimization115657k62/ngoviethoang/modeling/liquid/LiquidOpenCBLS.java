@@ -48,7 +48,8 @@ public class LiquidOpenCBLS {
 	}
 	public void solve() {
 		process();
-		startTime = System.currentTimeMillis();
+		
+
 		mgr = new LocalSearchManager();
 		X = new VarIntLS[K][N];
 		cs = new ConstraintSystem(mgr);
@@ -93,7 +94,7 @@ public class LiquidOpenCBLS {
 	}
 					   
 	public static void main(String[] args) {
-		LiquidChoco app = new LiquidChoco();
+		LiquidOpenCBLS app = new LiquidOpenCBLS();
 		app.solve();
 	}
 }
