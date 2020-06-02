@@ -56,6 +56,7 @@ public class TabuSearch {
 		bestViolations = c.violations();
 		ArrayList<Move> cand = new ArrayList<>();
 		int it = 0;
+		
 		while(it <= maxIter && bestViolations > 0){
 			int minDelta = Integer.MAX_VALUE;
 			for(int i = 0 ; i < N; i++) {
@@ -90,6 +91,53 @@ public class TabuSearch {
 			System.out.println("Step "+ it + " violations = " + c.violations() +" , bestViolations "+bestViolations);
 			it++;
 		}
+	}
+
+	
+	public boolean search_in_limit_time(int maxIter, int tblen, int maxStable, long wait_time) {
+		this.tbl = tblen;
+		bestViolations = c.violations();
+		ArrayList<Move> cand = new ArrayList<>();
+		int it = 0;
+		long time_end = System.currentTimeMillis() + wait_time;
+		while(it <= maxIter && bestViolations > 0){
+			int minDelta = Integer.MAX_VALUE;
+			for(int i = 0 ; i < N; i++) {
+				for(int v = x[i].getMinValue(); v <= x[i].getMaxValue(); v++) {
+					if(x[i].getValue() != v) {
+						int delta = c.getAssignDelta(x[i], v);
+						if(tabu[i][v] <= it || delta + c.violations() < bestViolations) {
+							if(delta < minDelta) {
+								cand.clear();
+								cand.add(new Move(i, v));
+								minDelta = delta;
+							}else if(delta == minDelta) {
+								cand.add(new Move(i, v));
+							}
+						}
+					}
+				}
+			}
+			Move m = cand.get(R.nextInt(cand.size()));
+			x[m.i].setValuePropagate(m.v);
+			tabu[m.i][m.v]  = it + tbl; // dua move(i,v) vao DS tabu
+			
+			if(c.violations() < bestViolations) {
+				bestViolations = c.violations();
+				nic = 0;
+			}else {
+				nic++;
+				if(nic >= maxStable) {
+					restart();
+				}
+			}
+			System.out.println("Step "+ it + " violations = " + c.violations() +" , bestViolations "+bestViolations);
+			it++;
+			if(System.currentTimeMillis() > time_end) {
+				return false;
+			}
+		}
+		return true;
 	}
 	
 	public static void main(String[] args) {

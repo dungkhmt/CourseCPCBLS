@@ -42,6 +42,7 @@ public class ExamSchedulingCBLS {
 	int time_slot;
 	long time_start;
 	long time_end;
+	long WAIT_TIME = 1000 * 30 * 60; // max time = 30 phut
 		
 		
 	LocalSearchManager mgr;
@@ -119,11 +120,13 @@ public class ExamSchedulingCBLS {
 		mgr.close();
 	}
 	
-	public void search() {
+	public boolean search() {
+		boolean hasSolution;
 		System.out.println(S.getVariables());
 		TabuSearch searcher = new TabuSearch(S);
-		searcher.search(10000, 4, 100);
+		hasSolution = searcher.search_in_limit_time(10000, 4, 100, WAIT_TIME);
 		time_end = System.currentTimeMillis();
+		return hasSolution;
 	}
 	
 	public void printSolution(String outfile) {
@@ -167,19 +170,51 @@ public class ExamSchedulingCBLS {
 	         }
 	      }
 		ExamSchedulingCBLS eSheduling = new ExamSchedulingCBLS();
+		File f = null;
+		boolean bool = false;
+		boolean hasSolution = false;
 		for(String file: filenames) {
 //			String file = "./data/scheduling/gc_4_1";
-			String outFile = "./output/" + file.substring(2);
-			
-			eSheduling.readData(file.toString());
-			
-			eSheduling.stateModel();
-			eSheduling.search();
-			
-			
-			eSheduling.printSolution(outFile);
 			
 			System.out.println(file);
+			for (int i = 0; i < 30; i++) {
+				try {
+			         // returns pathnames for files and directory
+					System.out.println(file.substring(18));
+			         f = new File("./output/data/scheduling/" + file.substring(18));
+			         
+			         // create
+			         bool = f.mkdirs();
+			         
+			         // print
+			         System.out.println("Directory created? "+bool);
+			         
+			      } catch(Exception e) {
+			         // if any error occurs
+			         e.printStackTrace();
+			      }
+				String outFile = "./output/data/scheduling/" + file.substring(18) + "/gen_" + (i+1);
+				eSheduling.readData(file.toString());
+				
+				eSheduling.stateModel();
+				hasSolution = eSheduling.search();
+				if(hasSolution) {
+					eSheduling.printSolution(outFile);
+				}else {
+					try {
+						PrintWriter out = new PrintWriter(outFile);
+						out.print("Not found solution in 30 minutes");
+						out.close();
+					}catch (Exception e) {
+						// TODO: handle exception
+						e.printStackTrace();
+					}
+				}
+				
+			}
+			
+			
+			
 		}
 		
 		
