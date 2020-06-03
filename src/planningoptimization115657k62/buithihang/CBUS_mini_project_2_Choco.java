@@ -1,6 +1,11 @@
 package test;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Random;
+import java.util.Scanner;
 
 import org.chocosolver.solver.Model;
 import org.chocosolver.solver.variables.IntVar;
@@ -8,20 +13,11 @@ import org.chocosolver.solver.variables.Variable;
 
 public class CBUS_mini_project_2_Choco {
 	int N,K;
-	int[][]d = {{0, 5, 9, 8, 2, 3, 8, 3, 1 },
-			{6, 0 ,2, 6, 9, 9, 7, 8, 4 },
-			{9, 9, 0, 2 ,4, 3, 9, 5, 9 },
-			{6, 2 ,4, 0, 9, 9, 7, 9, 2}, 
-			{9, 3 ,5, 5 ,0, 3 ,7, 8, 4 },
-			{4, 6 ,8 ,4, 6 ,0 ,5, 9, 9 },
-			{9, 6 ,3, 5, 4, 6,0 ,9 ,9}, 
-			{7, 8 ,1 ,4 ,1, 8, 5, 0, 6 },
-			{8, 6 ,2 ,9, 3 ,2 ,6, 9, 0 }
-				};
-	int[]q = {4,2,2};
+	int[][]d;
+	int[]q ;
 	int INF=Integer.MAX_VALUE;
 	int[] oneK;
-	Random r=new Random();
+	
 	
 	Model model = new Model("CBUS");
 	IntVar[] X;
@@ -31,41 +27,46 @@ public class CBUS_mini_project_2_Choco {
 	IntVar F;
 	IntVar[] Y;
 	
-	public CBUS_mini_project_2_Choco(int N,int K) {
-		this.N=N;
-		this.K=K;
-//		d=new int[2*N+1][2*N+1];
-//		q=new int[K+1];
-//		data_generator();
-		oneK = new int[K];
-		for(int i=0; i<K; i++) {
-			oneK[i] = 1;
-		}
+	public CBUS_mini_project_2_Choco(String file) {
+		readData("D:\\Program Files\\Eclipse\\TUH\\src\\data\\data-miniproject\\"+file);
 	}
 	
-	public void data_generator() {
-		while(true) {
-			int check_sum=0;
-			for(int i=1;i<=K;i++) {
-				q[i]=r.nextInt(N+1);
-				check_sum+=q[i];
+	public void readData(String file) {
+		try {
+			File fi = new File(file);
+			Scanner s = new Scanner(fi);
+			N = s.nextInt();
+			K = s.nextInt();
+			System.out.println(N + " "+K);
+			q = new int[K+1];
+			d = new int[2*N+1][2*N+1];
+			oneK = new int[K];
+			for(int i=0; i<K; i++) {
+				oneK[i] = 1;
 			}
-			if(check_sum>=N)break;
-		}
-		for(int i=1;i<=K;i++) {
-			System.out.print(q[i]+" ");
-		}System.out.println();
-		for(int i=0;i<=2*N;i++) {
-			for(int j=0;j<=2*N;j++) {
-				d[i][j]=r.nextInt(9)+1;
-				if(i==j)d[i][j]=0;
-				System.out.print(d[i][j]+" ");
+			
+			for (int i = 1; i <= K; i++) {
+				q[i] = s.nextInt();
+			}
+			
+			for(int i=1;i<=K;i++) {
+				System.out.print(q[i]+" ");
 			}System.out.println();
-		}System.out.println();
-		
+			
+			for(int i=0;i<=2*N;i++) {
+				for(int j=0;j<=2*N;j++) {
+					d[i][j]=s.nextInt();
+					System.out.print(d[i][j]+" ");
+				}System.out.println();
+			}System.out.println();
+			s.close();
+		} catch (IOException e){
+			System.out.println("An error occured.");
+			e.printStackTrace();
+		}
 	}
 	
-	public void solve() {
+	public void solve(String tenfile) {
 		X = new IntVar[2*N+K+1];
 		IR = new IntVar[2*N+2*K+1];
 		L = new IntVar[2*N+2*K+1];
@@ -77,7 +78,12 @@ public class CBUS_mini_project_2_Choco {
 		
 		for(int i=1; i<=2*N+2*K; i++) {
 			IR[i] = model.intVar("IR" + i,1,K);
-			L[i] = model.intVar("L" + i,0,100);
+			if(i <= 2*N+K) {
+				L[i] = model.intVar("L" + i,0,100);
+			}else {
+				L[i] = model.intVar("L" + i,1,100);
+			}
+			
 			W[i] = model.intVar("L" + i,0,N+1);
 		}
 		
@@ -180,15 +186,26 @@ public class CBUS_mini_project_2_Choco {
 			}
 		};
 		
-		System.out.println(best);
+		System.out.println("solution Choco: " + best);
 		System.out.println(res);
-		
-//		for(int i=1;i<=K;i++){
-//			System.out.print("route "+i+": "+0);
-//			duyet(i+2*N);
-//			System.out.print("->"+0+"\n");
-//			System.out.println("travel distance: "+L[2*N+K+i].getValue());
-//		}
+		writeresult("solution Choco: " + best + "\n" + res, tenfile);
+	}
+	
+	public void writeresult(String res, String file) {
+		BufferedWriter bw = null;
+		FileWriter fw = null;
+		try {
+			File f = new File("D:\\Program Files\\Eclipse\\TUH\\src\\data\\ketqua\\"+file);
+            //FileWriter fw = new FileWriter("D:\\Program Files\\Eclipse\\TUH\\src\\data\\ketqua\\"+file);
+            fw = new FileWriter(f.getAbsoluteFile(), true);
+			bw = new BufferedWriter(fw);
+			bw.write(res);
+            fw.append(res+"\n");
+            fw.close();
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        System.out.println("Success...");
 	}
 	
 	public String duyet(int i, String res) {
@@ -199,8 +216,10 @@ public class CBUS_mini_project_2_Choco {
 		return res;
 	}
 	
+	
+	
 	public static void main(String[] args) {
-		CBUS_mini_project_2_Choco app = new CBUS_mini_project_2_Choco(4,2);
-		app.solve();
+		CBUS_mini_project_2_Choco app = new CBUS_mini_project_2_Choco("1.txt");
+		app.solve("1.txt");
 	}
 }
