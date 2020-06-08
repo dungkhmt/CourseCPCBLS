@@ -3,7 +3,7 @@
 // Description:
 // Created by ngocjr7 on [16-04-2020 00:06:58]
 */
-package cbls115676khmt61.ngocbh_20164797.search;
+package cbls115676khmt61.NgocBH_20164797.search;
 
 import localsearch.model.IConstraint;
 import localsearch.model.IFunction;

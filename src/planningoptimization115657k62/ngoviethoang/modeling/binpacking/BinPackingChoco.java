@@ -5,6 +5,8 @@ import org.chocosolver.solver.Solver;
 import org.chocosolver.solver.variables.IntVar;
 
 public class BinPackingChoco {
+	long startTime;
+	long endTime;
 	int N = 6;
 	int H = 6;
 	int W = 4;
@@ -14,6 +16,7 @@ public class BinPackingChoco {
 	IntVar[][] X;
 	IntVar[] R;
 	public void solve() {
+		startTime = System.currentTimeMillis();
 		model = new Model("BinPacking");
 		X = new IntVar[N][2];
 		R = model.intVarArray(N,0,1);
@@ -199,6 +202,8 @@ public class BinPackingChoco {
 				}
 				System.out.println();
 			}
+			endTime = System.currentTimeMillis();
+			System.out.print("Run time: " + (endTime - startTime)/1000.0 +  "s");
 		}
 	}
 	public static void main(String[] args) {
