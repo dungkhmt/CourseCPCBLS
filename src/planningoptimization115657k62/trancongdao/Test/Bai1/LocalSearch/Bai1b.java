@@ -2,6 +2,7 @@ package OPenCBLS;
 
 import localsearch.constraints.basic.LessOrEqual;
 import localsearch.constraints.basic.NotEqual;
+import localsearch.constraints.multiknapsack.MultiKnapsack;
 import localsearch.functions.conditionalsum.ConditionalSum;
 import localsearch.model.ConstraintSystem;
 import localsearch.model.IConstraint;
@@ -37,14 +38,14 @@ public class Bai1 {
 			CS.post(c);
 		}
 
-		V = new IFunction[P];
+//		V = new IFunction[P];
 
-		for (int j = 0; j < P; j++) {
-			V[j] = new ConditionalSum(X, capa, j);
-
-			CS.post(new LessOrEqual(V[j], C[j]));
-		}
-
+//		for (int j = 0; j < P; j++) {
+//			V[j] = new ConditionalSum(X, capa, j);
+//
+//			CS.post(new LessOrEqual(V[j], C[j]));
+//		}
+		CS.post(new MultiKnapsack(X, capa, C));
 		lsm.close();
 
 	}
@@ -57,12 +58,14 @@ public class Bai1 {
 	public void InKetQua() {
 		for (int j = 0; j < P; j++) {
 			System.out.println("Thung: " + j + ": ");
+			int sum = 0;
 			for (int i = 0; i < N; i++)
 				if (X[i].getValue() == j) {
+					sum += capa[i];
 					System.out.print(i + ", ");
 				}
-
-			System.out.println("The tich  = " + V[j].getValue());
+			System.out.println("The tich  = " + sum);
+//			System.out.println("The tich  = " + V[j].getValue());
 		}
 	}
 
