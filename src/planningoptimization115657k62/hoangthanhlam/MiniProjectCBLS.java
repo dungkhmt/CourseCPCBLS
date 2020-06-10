@@ -174,8 +174,6 @@ public class MiniProjectCBLS {
 		for (int i = 0; i < K; i++) {
 			S.post(new LessOrEqual(T[N+K+i], y));
 		}
-		// Error
-		// S.post(new );
 		mgr.close();
 	}
 	

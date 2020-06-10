@@ -89,9 +89,10 @@ public class HillClimbingSearch {
 	            System.out.println("Step " + it + ", violations = " + c.violations());
 	            it++;
 	        }
-	    }
+	        
+	        
+	  }
 
-	  
 	  
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub

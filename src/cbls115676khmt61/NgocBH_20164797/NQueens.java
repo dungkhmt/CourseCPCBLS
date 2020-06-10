@@ -4,7 +4,7 @@
 * Created by ngocjr7 on [2020-03-28 21:16:09]
 */
 
-package cbls115676khmt61.ngocbh_20164797;
+package cbls115676khmt61.NgocBH_20164797;
 
 import localsearch.constraints.alldifferent.AllDifferent;
 import localsearch.functions.basic.FuncPlus;
@@ -13,9 +13,9 @@ import localsearch.model.IFunction;
 import localsearch.model.VarIntLS;
 import localsearch.selectors.MinMaxSelector;
 import localsearch.model.LocalSearchManager;
-import cbls115676khmt61.ngocbh_20164797.search.HillClimbingSearch;
-import cbls115676khmt61.ngocbh_20164797.search.TabuSearch;
-import cbls115676khmt61.ngocbh_20164797.search.AssignMove;
+import cbls115676khmt61.NgocBH_20164797.search.HillClimbingSearch;
+import cbls115676khmt61.NgocBH_20164797.search.TabuSearch;
+import cbls115676khmt61.NgocBH_20164797.search.AssignMove;
 
 public class NQueens {
 	int NUM_ITER = 10000; 

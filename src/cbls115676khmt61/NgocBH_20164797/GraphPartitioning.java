@@ -3,7 +3,7 @@
 * Description: 
 * Created by ngocjr7 on [2020-04-01 12:51:03]
 */
-    package cbls115676khmt61.ngocbh_20164797;
+    package cbls115676khmt61.NgocBH_20164797;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -22,11 +22,11 @@ import localsearch.model.ConstraintSystem;
 import localsearch.model.IFunction;
 import localsearch.model.LocalSearchManager;
 import localsearch.model.VarIntLS;
-import cbls115676khmt61.ngocbh_20164797.search.AssignMove;
-import cbls115676khmt61.ngocbh_20164797.search.HillClimbingSearch;
-import cbls115676khmt61.ngocbh_20164797.search.SwapMove;
-import cbls115676khmt61.ngocbh_20164797.search.TabuSearch;
-import cbls115676khmt61.ngocbh_20164797.search.LocalSearch;
+import cbls115676khmt61.NgocBH_20164797.search.AssignMove;
+import cbls115676khmt61.NgocBH_20164797.search.HillClimbingSearch;
+import cbls115676khmt61.NgocBH_20164797.search.SwapMove;
+import cbls115676khmt61.NgocBH_20164797.search.TabuSearch;
+import cbls115676khmt61.NgocBH_20164797.search.LocalSearch;
 
 public class GraphPartitioning {
     int n;
@@ -159,7 +159,7 @@ public class GraphPartitioning {
 
         prob.stateModel();
 
-        HillClimbingSearch searcher1 = new HillClimbingSearch(max_iter, seed);
+        // HillClimbingSearch searcher1 = new HillClimbingSearch(max_iter, seed);
         // searcher1.search_two_phase(prob.S, new AssignMove(), prob.obj, new SwapMove());
         // searcher1.minimize_objective_with_constraint(prob.obj,prob.S);
         // prob.search_alpha_beta(searcher1);
