@@ -52,7 +52,7 @@ public class CovidwithCSP {
 	}
 	
 	public void solve() {
-		ReadFile("/home/lnq/Desktop/20192/tulkh/dataproject/30s50c.txt");
+		ReadFile("/home/lnq/Desktop/20192/tulkh/dataproject/100s35c.txt");
 		Model model = new Model("covid with csp");
 		IntVar [][] X = new IntVar[M][N];
 		// X[i][j]=1 neu doan khach j duoc dua ve khu i
@@ -83,17 +83,19 @@ public class CovidwithCSP {
 		}
 		model.setObjective(Model.MINIMIZE, obj);
 		
-		model.getSolver().solve();
-		System.out.println("khoang cach min= "+obj.getValue());
-		for(int i=0;i<M;i++) {
-			System.out.print("cac nhom dua ve khu "+(i+1)+ ": ");
-			for(int j=0;j<N;j++) {
-				if(X[i][j].getValue()==1) {
-					System.out.print((j+1)+" ");
+		while(model.getSolver().solve()) {
+			System.out.println("khoang cach min= "+obj.getValue());
+			for(int i=0;i<M;i++) {
+				System.out.print("cac nhom dua ve khu "+(i+1)+ ": ");
+				for(int j=0;j<N;j++) {
+					if(X[i][j].getValue()==1) {
+						System.out.print((j+1)+" ");
+					}
 				}
+				System.out.println();
 			}
-			System.out.println();
 		}
+		
 	}
 	
 	public static void main(String[] args) {
