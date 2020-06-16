@@ -156,7 +156,17 @@ public class GraphPartitioningCost extends AbstractInvariant implements IFunctio
         }
         return delta;
     }
-
+    
+    public boolean isInstanceOf(int root , int nodeNeedSwap){
+        for(Edge e : A[root]){
+            int v = e.node;
+            if (v == nodeNeedSwap){
+                return true;
+            }
+        }
+        return false;
+    }
+    
     @Override
     public int getSwapDelta(VarIntLS z, VarIntLS y) {
         // TODO Auto-generated method stub
@@ -166,21 +176,22 @@ public class GraphPartitioningCost extends AbstractInvariant implements IFunctio
         if (map.get(y) == null) {
             return getAssignDelta(z, y.getValue());
         }
-        int nz = map.get(z);
-        int ny = map.get(y);
-        if (z.getValue() == y.getValue()) {
+        int nz = map.get(z); // điểm cần swap 1
+        int ny = map.get(y); // điểm cần swap 2
+        if (z.getValue() == y.getValue()) { // 2 điểm thuộc cùng 1 cụm
             return 0;
         }
         int delta = 0;
-        for (Edge e : A[nz]) {
-            int v = e.node;
-            if (v == ny) {
+        for (Edge e : A[nz]) { // duyệt các đỉnh kề của điểm nz
+            int v = e.node; // v là đỉnh kề của nz
+            if (v == ny){ // Nếu v là điểm swap 2 thì giữ nguyên delta
                 continue;
             }
-            if (x[nz].getValue() == x[v].getValue()) {
+            if (x[nz].getValue() == x[v].getValue()) { // Nếu 2 điểm này thuộc cùng 1 cụm
                 delta += e.w;
             } else {
-                delta -= e.w;
+                if(x[ny].getValue() == x[v].getValue()) // Nếu điểm kề v không thuộc cụm của điểm v thì delta ko thay đổi
+                    delta -= e.w;
             }
         }
         for (Edge e : A[ny]) {
@@ -191,7 +202,8 @@ public class GraphPartitioningCost extends AbstractInvariant implements IFunctio
             if (x[ny].getValue() == x[v].getValue()) {
                 delta += e.w;
             } else {
-                delta -= e.w;
+                if(x[nz].getValue() == x[v].getValue())
+                    delta -= e.w;
             }
         }
         return delta;
@@ -215,7 +227,7 @@ public class GraphPartitioningCost extends AbstractInvariant implements IFunctio
         LocalSearchManager mgr = new LocalSearchManager();
         VarIntLS[] x = new VarIntLS[N];
         for (int i = 0; i < N; i++) {
-            x[i] = new VarIntLS(mgr, 0, 1);
+            x[i] = new VarIntLS(mgr, 0, 2);
         }
         GraphPartitioningCost f = new GraphPartitioningCost(c, x);
         mgr.close();
@@ -227,7 +239,7 @@ public class GraphPartitioningCost extends AbstractInvariant implements IFunctio
             int idx = R.nextInt(N);
             int v = 1 - x[idx].getValue();
             int d = f.getAssignDelta(x[idx], v);
-            x[idx].setValuePropagate(v);// local move
+            x[idx].setValuePropagate(v); // local move
             if (cur + d != f.getValue()) {
                 System.out.println("BUG??????, cur = " + cur + ", delta = " + d + ", new f = " + f.getValue());
                 break;

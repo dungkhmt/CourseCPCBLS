@@ -30,7 +30,7 @@ public class HillClimbingSearch {
 		int it = 0;
 		ArrayList<Move> cand = new ArrayList<>();
 		while (it < MaxIter && S.violations() > 0) {
-			cand = exploreNeighbors(cand);
+			exploreNeighbors(cand);
 			
 			if (cand.size() == 0) {
 				System.out.println("Reach local minimum!");
@@ -44,14 +44,15 @@ public class HillClimbingSearch {
 		}
 	}
 	
-	ArrayList<Move> exploreNeighbors (ArrayList<Move> cand){
+	void exploreNeighbors (ArrayList<Move> cand){
 		cand.clear();
 		int minDelta = Integer.MAX_VALUE;
 		
 		for (int i = 0; i < x.length; i++)
 			for (int v = x[i].getMinValue(); v <= x[i].getMaxValue(); v++)
 				if (v != x[i].getValue()) {
-					int delta = S.getAssignDelta(x[i], v);
+					int delta = S.getAssignDelta(x[i], v); //tra lai su thay doi cua violation khi x[i] = v
+					System.out.println(delta);
 					if (delta <= 0) {
 						if (delta < minDelta) {
 							cand.clear();
@@ -63,6 +64,5 @@ public class HillClimbingSearch {
 						}
 					}
 				}
-		return cand;
 	}
 }

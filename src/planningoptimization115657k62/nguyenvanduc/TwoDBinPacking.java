@@ -49,7 +49,7 @@ public class TwoDBinPacking {
     }
 
     public void solve() {
-        load_data_from_file("data/BinPacking2D/bin-packing-2D-W10-H8-I6.txt");
+        load_data_from_file("data/BinPacking2D/bin-packing-2D-W19-H18-I21.txt");
        //print_input();
         Model model = new Model();
         IntVar[] o = model.intVarArray(n, 0, 1);
@@ -72,13 +72,15 @@ public class TwoDBinPacking {
                 model.or(model.or(c1, c2), model.or(c3, c4)).post();
             }
         }
+        model.getSolver().solve();
 
-        while(model.getSolver().solve()) {
+//        while(model.getSolver().solve()) {
             System.out.println("solution");
+            System.out.println("x-y-o");
             for (int i = 0; i < n; i++) {
                 System.out.println(x[i].getValue() + " " + y[i].getValue() + " " + o[i].getValue());
             }
-        }
+//        }
 
     }
 

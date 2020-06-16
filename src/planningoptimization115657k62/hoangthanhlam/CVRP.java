@@ -150,10 +150,10 @@ public class CVRP {
 			for (Point y = XR.startPoint(k); y != XR.endPoint(k); y = XR.next(y)) {
 				for (Point x: clientPoint) {
 					if (x != y && x != XR.next(y)) {
-						int deltaC = S.evaluateAddOnePoint(x, y);
-						System.out.println("deltaC = " + deltaC);
-						double deltaF = obj.evaluateAddOnePoint(x, y);
-						System.out.println("deltaF = " + deltaF);
+						int deltaC = S.evaluateOnePointMove(x, y);
+						// System.out.println("deltaC = " + deltaC);
+						double deltaF = obj.evaluateOnePointMove(x, y);
+						// System.out.println("deltaF = " + deltaF);
 						
 						if (!(deltaC < 0 || deltaC == 0 && deltaF < 0)) continue;
 						if (deltaC < minDeltaC || deltaC == minDeltaC && deltaF < minDeltaF) {
@@ -181,8 +181,8 @@ public class CVRP {
 				break;
 			}
 			Move m = candicate.get(R.nextInt(candicate.size()));
-			mgr.performAddOnePoint(m.x, m.y);
-			System.out.println("Step "+ it + ": XR = " + XR.toString() + "violations = " + S.violations() + ", obj = " + obj.getValue());
+			mgr.performOnePointMove(m.x, m.y);
+			System.out.println("Step "+ it + ":\n" + XR.toString() + "violations = " + S.violations() + ", obj = " + obj.getValue());
 			it++;
 		}
 	}

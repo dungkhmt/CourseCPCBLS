@@ -3,7 +3,7 @@
 // Description:
 // Created by ngocjr7 on [15-04-2020 15:09:07]
 */
-package cbls115676khmt61.ngocbh_20164797.search;
+package cbls115676khmt61.NgocBH_20164797.search;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -96,6 +96,7 @@ public class TabuSearch implements LocalSearch {
         ArrayList<Move> candidates = new ArrayList<Move>();
         candidates.add(new AssignMove(0,0,false));
         int minDelta = Integer.MAX_VALUE;
+
         for (int i = 0; i < y.length; i++) {
             for (int v = y[i].getMinValue(); v <= y[i].getMaxValue(); v++) 
                 if ( y[i].getValue() != v ) {
@@ -112,6 +113,7 @@ public class TabuSearch implements LocalSearch {
                     }
                 }
         }
+
         Move sel_m = candidates.get(rand.nextInt(candidates.size()));
         return sel_m;
     }
@@ -198,7 +200,8 @@ public class TabuSearch implements LocalSearch {
         int best_df = Integer.MAX_VALUE;
 
         for (int i = 0; i < y.length; i++) {
-            for (int v = y[i].getMinValue(); v <= y[i].getMaxValue(); v++) {
+            for (int v = y[i].getMinValue(); v <= y[i].getMaxValue(); v++) 
+                if ( v != y[i].getValue() ) {
                     int dc = c.getAssignDelta(y[i], v);
                     int df = f.getAssignDelta(y[i], v);
                     AssignMove move = new AssignMove(i, v);
@@ -252,16 +255,23 @@ public class TabuSearch implements LocalSearch {
                         }
             }
         }
-        // System.out.printf("%d %d %d\n",candidates.size(),best_df,best_dc);
         int sel_idx = rand.nextInt(candidates.size());
         Move sel_m = candidates.get(sel_idx);
         return sel_m;
+    }
+
+    void init_solution(VarIntLS[] x) {
+        for (int i = 0; i < x.length; ++i) {
+            final int v = this.rand.nextInt(x[i].getMaxValue() - x[i].getMinValue() + 1) + x[i].getMinValue();
+            x[i].setValuePropagate(v);
+        }
     }
 
     public void satisfy_constraint(IConstraint c, Move move_temp) {
         int it = 0;
         int nic = 0;
         VarIntLS[] y = c.getVariables();
+        init_solution(y);
         int[] bval = new int[y.length];
         assign_int(bval, y);
 
@@ -296,7 +306,9 @@ public class TabuSearch implements LocalSearch {
             } else {
                 nic++;
                 if ( nic >= max_stable ) {
+                    nic = 0;
                     restart(y);
+                    System.out.println("restarting");
                     if ( c.violations() < best ) {
                         best = c.violations();
                         assign_int(bval, y);
@@ -321,6 +333,7 @@ public class TabuSearch implements LocalSearch {
         varset.addAll(Arrays.asList(c.getVariables()));
         VarIntLS[] y = new VarIntLS[varset.size()];
         varset.toArray(y);
+        init_solution(y);
         int[] bval = new int[y.length];
         assign_int(bval, y);
 
@@ -388,6 +401,7 @@ public class TabuSearch implements LocalSearch {
         int nic = 0;
         VarIntLS[] y = f.getVariables();
         int[] bval = new int[y.length];
+        init_solution(y);
         assign_int(bval, y);
 
         int best = f.getValue();

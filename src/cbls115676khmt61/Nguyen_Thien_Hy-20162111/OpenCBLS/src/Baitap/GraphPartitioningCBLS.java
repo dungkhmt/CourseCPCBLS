@@ -60,6 +60,7 @@ public class GraphPartitioningCBLS {
         try {
             Scanner in = new Scanner(new File(fn));
             N = in.nextInt();
+            System.out.println(N);
             c = new int[N][N];
             for (int i = 0; i < N; i++) {
                 for (int j = 0; j < N; j++) {
@@ -76,23 +77,38 @@ public class GraphPartitioningCBLS {
         mgr = new LocalSearchManager();
         x = new VarIntLS[N];
         for (int i = 0; i < N; i++) {
-            x[i] = new VarIntLS(mgr, 0, 1);
+            x[i] = new VarIntLS(mgr, 0, 2);
         }
-        S = new IsEqual(new Sum(x), N / 2);
+        S = new IsEqual(new Sum(x), N);
         f = new GraphPartitioningCost(c, x);
         mgr.close();
     }
 
     public void generateInitSolutionBalance() {
         ArrayList<Integer> L = new ArrayList<Integer>();
-        for (int i = 0; i < N; i++) {
+        ArrayList<Integer> M = new ArrayList<Integer>();
+        
+        for(int i = 0 ; i < N ; i ++){
             L.add(i);
+            M.add(i);
         }
-        for (int k = 0; k < N / 2; k++) {
+        
+        for (int k = 0; k < N / 3; k++) {
             int idx = R.nextInt(L.size());
+            int idx_2 = R.nextInt(M.size());
+            while(idx == idx_2){
+                idx = R.nextInt(L.size());
+                idx_2 = R.nextInt(M.size());
+            }
             int v = L.get(idx);
+            int u = M.get(idx_2);
             x[v].setValuePropagate(1);
+            x[u].setValuePropagate(2);
             L.remove(idx);
+            M.remove(idx_2);
+        }
+        for(int i = 0 ; i < N ; i ++){
+            System.out.println(x[i].getValue() + " ");
         }
     }
 
@@ -135,6 +151,13 @@ public class GraphPartitioningCBLS {
                 System.out.print(i + " ");
             }
         }
+        
+        System.out.println();
+        for (int i = 0; i < N; i++) {
+            if (x[i].getValue() == 2) {
+                System.out.print(i + " ");
+            }
+        }
         System.out.println();
 
         for (int i = 0; i < N; i++) {
@@ -148,30 +171,21 @@ public class GraphPartitioningCBLS {
 
     public void search1(int maxIter) {
         generateInitSolutionBalance();
-
         printGraph();
-        //for(int i = 0; i < N/2; i++) x[i].setValuePropagate(1);
-        System.out.println("init obj = " + obj());
+        //System.out.println("init obj = " + obj());
         printCrossEdges();
-        ArrayList<SwapMove> cand = new ArrayList<SwapMove>();
+        ArrayList<SwapMove> cand = new ArrayList<>();
         int it = 0;
         int cur = f.getValue();
-        /*
-		int delta = f.getSwapDelta(x[2], x[3]);
-		x[2].swapValuePropagate(x[3]);
-		System.out.println("cur = " + cur + ", delta = " + delta + ", new = " + f.getValue()
-				 + ", x[" + 2 + "] <-> x[" + 3 + "]");
-		printCrossEdges();
-		if(true) return;
-         */
-
         while (it < maxIter) {
             cand.clear();
             int minDeltaF = Integer.MAX_VALUE;
             for (int i = 0; i < N; i++) {
                 for (int j = i + 1; j < N; j++) {
                     if (x[i].getValue() != x[j].getValue()) {
+                        //System.out.println(x[i].getValue() + " " + x[j].getValue());
                         int d = f.getSwapDelta(x[i], x[j]);
+                        System.out.println("x["+i+"]" + "<->" + "x["+j+"]" + " : " + d);
                         if (d < 0) {
                             if (d < minDeltaF) {
                                 minDeltaF = d;
@@ -184,20 +198,25 @@ public class GraphPartitioningCBLS {
                     }
                 }
             }
-            if (cand.size() == 0) {
+            
+            if (cand.isEmpty()) {
                 System.out.println("Reach local optimum");
                 break;
             }
+            
             SwapMove m = cand.get(R.nextInt(cand.size()));
             x[m.i].swapValuePropagate(x[m.j]);
-
+            
+            System.out.println("cur = " + cur + ", delta = " + minDeltaF + ", f = "
+                        + f.getValue() + ", x[" + m.i + "] <-> x[" + m.j + "]");
+            
             if (minDeltaF + cur != f.getValue()) {
                 System.out.println("BUG???, cur = " + cur + ", delta = " + minDeltaF + ", f = "
                         + f.getValue() + ", x[" + m.i + "] <-> x[" + m.j + "]");
                 break;
             }
             cur = f.getValue();
-            System.out.println("Step " + it + ", obj = " + obj());
+            //System.out.println("Step " + it + ", obj = " + obj());
             it++;
         }
     }
@@ -214,7 +233,7 @@ public class GraphPartitioningCBLS {
     }
 
     public void search2(int maxIter) {
-        ArrayList<AssignMove> cand = new ArrayList<AssignMove>();
+        ArrayList<AssignMove> cand = new ArrayList<>();
         int it = 0;
         while (it < maxIter) {
             cand.clear();
@@ -236,7 +255,7 @@ public class GraphPartitioningCBLS {
                 }
             }
 
-            if (cand.size() == 0) {
+            if (cand.isEmpty()) {
                 System.out.println("Reach  local optimum");
                 break;
             }
@@ -245,7 +264,7 @@ public class GraphPartitioningCBLS {
 
             x[m.i].setValuePropagate(m.v);
 
-            System.out.println("Step " + it + ", obj = " + obj());
+            //System.out.println("Step " + it + ", obj = " + obj());
             it++;
         }
     }
@@ -278,16 +297,23 @@ public class GraphPartitioningCBLS {
         avr = avr * 1.0 / nbRuns;
         System.out.println("minf = " + minf + " maxf = " + maxf + ", avr = " + avr);
     }
+    
+    void printSolution(){
+        for(int i = 0 ; i < N ; i ++){
+            System.out.println(x[i].getValue() + " ");
+        }
+    }
 
     public static void main(String[] args) {
         // TODO Auto-generated method stub
         GraphPartitioningCBLS app = new GraphPartitioningCBLS();
-        String fn = "data/GraphPartitioning/gp-1000.txt";
-        //app.genData(fn, 6, 8);
+        String fn = "gp-1000.txt";
+        app.genData(fn, 6 , 8);
         app.readData(fn);
         //app.runExpr();
         app.buildModel();
-        app.search1(10000);
+        app.search1(1000);
+        app.printSolution();
     }
 
 }

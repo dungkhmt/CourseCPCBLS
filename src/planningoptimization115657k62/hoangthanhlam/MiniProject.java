@@ -8,6 +8,7 @@ import localsearch.domainspecific.vehiclerouting.vrp.ConstraintSystemVR;
 import localsearch.domainspecific.vehiclerouting.vrp.IFunctionVR;
 import localsearch.domainspecific.vehiclerouting.vrp.VRManager;
 import localsearch.domainspecific.vehiclerouting.vrp.VarRoutesVR;
+import localsearch.domainspecific.vehiclerouting.vrp.constraints.leq.Leq;
 import localsearch.domainspecific.vehiclerouting.vrp.entities.ArcWeightsManager;
 import localsearch.domainspecific.vehiclerouting.vrp.entities.NodeWeightsManager;
 import localsearch.domainspecific.vehiclerouting.vrp.entities.Point;
@@ -26,6 +27,7 @@ public class MiniProject {
     
     int[] d;
     int[][] t;
+    int totalD;
 	
 	public MiniProject (int N, int K) {
 		this.N = N;
@@ -39,13 +41,17 @@ public class MiniProject {
 		for (int i = 0; i <= N; i++) {
 			d[i] = 1 + rd.nextInt(r);
 			for (int j = 0; j <= N; j++) {
-				if (i == j) t[i][j] = 0;
+				if (i == j || j == 0) t[i][j] = 0;
 				else {
 					t[i][j] = 1 + rd.nextInt(r);
 				}
 			}
 		}
 		d[0] = 0;
+		
+		totalD = 0;
+		for (int i = 0; i <= N; i++) totalD += d[i];
+		totalD -= 1;
 	}
 	
 	ArrayList<Point> start;
@@ -64,6 +70,8 @@ public class MiniProject {
 	
 	IFunctionVR obj;
 	IFunctionVR[] T;
+	IFunctionVR[] D;
+	IFunctionVR[] C;
 	Random R = new Random();
 	
 	public void printDataInput() {
@@ -139,13 +147,16 @@ public class MiniProject {
 		AccumulatedWeightNodesVR accN = new AccumulatedWeightNodesVR(XR, nwm);
 		
 		T = new IFunctionVR[K];
+		D = new IFunctionVR[K];
+		C = new IFunctionVR[K];
 		for (int i = 1; i <= K; i++) {
 			Point t = XR.endPoint(i);
-			IFunctionVR _d = new AccumulatedNodeWeightsOnPathVR(accN, t);
-			IFunctionVR _t = new AccumulatedEdgeWeightsOnPathVR(accE, t);
-			T[i-1] = new Plus(_d, _t);
+			D[i-1] = new AccumulatedNodeWeightsOnPathVR(accN, t);
+			S.post(new Leq(1, D[i-1]));
+			C[i-1] = new AccumulatedEdgeWeightsOnPathVR(accE, t);
+			T[i-1] = new PlusFunctionFunction(D[i-1], C[i-1]); // ???
 		}
-		obj = new MaxVR(T);
+		obj = new MaxVR(C);
 		mgr.close();
 	}
 	
@@ -178,10 +189,10 @@ public class MiniProject {
 			for (Point y = XR.startPoint(k); y != XR.endPoint(k); y = XR.next(y)) {
 				for (Point x: clientPoint) {
 					if (x != y && x != XR.next(y)) {
-						int deltaC = S.evaluateAddOnePoint(x, y);
-						System.out.println("deltaC = " + deltaC);
-						double deltaF = obj.evaluateAddOnePoint(x, y);
-						System.out.println("deltaF = " + deltaF);
+						int deltaC = S.evaluateOnePointMove(x, y);
+						// System.out.println("deltaC = " + deltaC);
+						double deltaF = obj.evaluateOnePointMove(x, y);
+						// System.out.println("deltaF = " + deltaF);
 						if (!(deltaC < 0 || deltaC == 0 && deltaF < 0)) continue;
 						if (deltaC < minDeltaC || deltaC == minDeltaC && deltaF < minDeltaF) {
 							candicate.clear();
@@ -208,14 +219,14 @@ public class MiniProject {
 				break;
 			}
 			Move m = candicate.get(R.nextInt(candicate.size()));
-			mgr.performAddOnePoint(m.x, m.y);
-			System.out.println("Step "+ it + ": XR = " + XR.toString() + "violations = " + S.violations() + ", obj = " + obj.getValue());
+			mgr.performOnePointMove(m.x, m.y);
+			System.out.println("Step "+ it + ":\n" + XR.toString() + "violations = " + S.violations() + ", obj = " + obj.getValue());
 			it++;
 		}
 	}
 	
 	public static void main (String[] args) {
-		MiniProject mini = new MiniProject(6, 2);
+		MiniProject mini = new MiniProject(20, 4);
 		mini.printDataInput();
 		mini.mapping();
 		mini.stateModel();

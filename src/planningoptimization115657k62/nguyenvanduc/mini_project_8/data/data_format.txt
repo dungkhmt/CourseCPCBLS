@@ -1,0 +1,11 @@
+N M  // N: so mon, M so phong
+d[0]  d[1] ... d[N-1]   // d[i] so luong sinh vien dki mon i
+c[0] ..... c[M-1]	// c[i] suc chua cua phong thu i
+Q     // so cap cac mon i, j conflict
+1 3 //conflict, 
+3 5
+1 6
+.... // Q cap
+
+
+

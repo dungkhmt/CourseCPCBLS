@@ -20,7 +20,7 @@ public class CSP {
 		}
 		IConstraint[] c = new IConstraint[6];
 		c[0] = new NotEqual(new FuncPlus(x[2], 3), x[1]);
-		c[1] = new localsearch.constraints.basic.LessOrEqual(x[3], x[4]);
+		c[1] = new LessOrEqual(x[3], x[4]);
 		c[2] = new IsEqual(new FuncPlus(x[2], x[3]), new FuncPlus(x[0], 1));
 		c[3] = new LessOrEqual(x[4], 3);
 		c[4] = new IsEqual(new FuncPlus(x[1], x[4]), 7);

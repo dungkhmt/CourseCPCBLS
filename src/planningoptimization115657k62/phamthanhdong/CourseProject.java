@@ -1,15 +1,11 @@
-//project 4
-
 package planningoptimization115657k62.phamthanhdong;
 
-
-
-import java.util.ArrayList;
+import planningoptimization115657k62.phamthanhdong.Init;
 import java.util.Scanner;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
-
+import java.io.IOException;
 
 import org.chocosolver.solver.Model;
 import org.chocosolver.solver.Solver;
@@ -17,27 +13,30 @@ import org.chocosolver.solver.variables.IntVar;
 
 
 public class CourseProject {
+	
 	// declare model 
 	Model model = new Model("Get the goods in the warehouse");
-	IntVar[][] roadmap; 
-	IntVar[] P;
+
+	
+	IntVar[][] matrix;
 	IntVar[] z;
-	IntVar[] path;
-	IntVar[] distance;
-	IntVar[] column;
-	
-	
+	IntVar[][] P;
+	IntVar[] flatten;
     int min_result = 0;
     
-	/* Declare global var */ 
-	int M = 5 ; //  number of shelves
-	int N = 3; // number of products
+	/* Declare global variable */ 
+	int M = 5; //  number of shelves
+	int N = 4; // number of products
 	int[][] Q; // matrix Q[i][j] is number of product ith in shelf j
 	int [][] d; //d[i][j] distance from point i to j 
 	int q[];  // q[i] is number of product ith employee needs
 	int max_units[];
-	int rows = M+1;
-	int columns = M+1;
+	int[] units_have_optimizer;
+	int[] oneP;
+	int rows =  M ; //  the times, because the employee at most visit M shelves 
+	int columns = M + 1; // the number of shelves
+	int max_S = - 1;
+	int min_S = 99999999;
 	
 
 	
@@ -45,7 +44,7 @@ public class CourseProject {
 	public void creat()  throws Exception{
 	
 		String filePath = new File("").getAbsolutePath();
-		// read file Q(i,j)
+		// read file Q(i,j) 
 		  Scanner sc = new Scanner(new BufferedReader(new FileReader(filePath+"/src/planningoptimization115657k62/phamthanhdong/Q.txt")));
 		      while(sc.hasNextLine()) {
 		    	  Q = new int[N][M];
@@ -62,9 +61,9 @@ public class CourseProject {
 		      d = new int[M+1][M+1];
 		      Scanner sc_d = new Scanner(new BufferedReader(new FileReader(filePath+"/src/planningoptimization115657k62/phamthanhdong/distance.txt")));
 		      while(sc_d.hasNextLine()) {
-		         for (int i=0; i<d.length; i++) {
+		         for (int i = 0; i < d.length; i++) {
 		            String[] line = sc_d.nextLine().trim().split(" ");
-		            for (int j=0; j<line.length; j++) {
+		            for (int j = 0; j < line.length; j++) {
 		              d[i][j] = Integer.parseInt(line[j]);
 		            }
 		         }
@@ -78,235 +77,370 @@ public class CourseProject {
 		      while(sc_q.hasNextInt()){
 		         q[i++] = sc_q.nextInt();
 		      }
-		   
 		      sc_q.close();
-   
 	}
 	
 	public void test() {
-		for(int i = 0; i < M; i++) {
+		for(int i = 0; i < Q.length; i++) {
 			System.out.println();
-			for(int j = 0; j < N; j++)
-				System.out.println(Q[i][j]);
+			for(int j = 0; j < M; j++)
+				System.out.print(Q[i][j] + " ");
 			
 		}
 		
-		for(int i = 0; i < N; i++)
-			System.out.println(max_units[i]);
-
+		System.out.println();
 	}
 	
 	public void getMaxUnits() {
-		max_units = new int[N];
-		for(int k = 0; k < N; k++)
+		max_units = new int[Q.length];
+		for(int k = 0; k < Q.length; k++)
 			for(int i = 0; i < M; i++ )
 				max_units[k] += Q[k][i];
 			
 	}
 	
-	/* make constraint */
-	public void creatConstraint() {
-
-		roadmap = new IntVar[rows][columns];
+	public void showInfor() {
+		System.out.println("Max unit all shelves have:");
+		for(int i = 0; i < max_units.length; i++)
+			System.out.print(max_units[i] + " ");
 		
-		// creat scalar columns and rows
-		int[] one_max_rows = new int[rows];
-		int[] one_max_columns = new int[columns];
-		for(int i = 0; i < columns; i++)
-			one_max_rows[i] = 1;
-		
-		for(int i = 0; i < rows; i++)
-			one_max_columns[i] = 1;
-		
-
-		/* Make Constraint */
-		
-		//make constrainst var in range[0,1]
-		for(int i = 0; i < rows; i ++)
-			for(int j = 0; j < columns; j++ )
-				roadmap[i][j] = model.intVar(0, 1);
-		
-		// make constrainst  at a time only a shelf be visited
-		// var sum in a row in range [0, 1] 
-		for(int i = 0; i <  rows; i++) {
-			model.scalar(roadmap[i],  one_max_columns, "<=", 1).post(); 
-		}
-
-		// make constraint one shelf be visited at most one time
-		for(int k = 0; k < columns; k++){
-			for(int q = 0; q < rows; q++)
-			    for(int p = 0; p < rows; p++)
-			    	if( p != q)
-			    		model.ifThen(model.arithm(roadmap[q][k], "=", 1), 
-			                                          model.arithm(roadmap[p][k], "=", 0));
-			}
-
-		model.arithm(roadmap[0][0], "=", 0).post();
-		
-
-		
-		// In order to the order visit shelves start from 0 and continue  ***
-		// make constrainst sum row ith >= sum row ith-1
-		// first get sum all rows
-		z = new IntVar[rows];
-		for(int i = 0; i < rows; i++)
-			z[i] = model.intVar(0, 1);
-		
-		for(int k = 0; k < rows; k++) {
-			model.ifThen(model.arithm(z[k], ">=", 0), model.sum(roadmap[k], "=", z[k]));
-		}
-		
-		model.arithm(z[0], "=", 1).post();
-		for(int i = 0; i < rows - 1; i++)
-			model.arithm(z[i], ">=", z[i+1]).post();
-		
-		column = new IntVar[rows];
-		for(int i = 0; i < rows; i++)
-			column[i] = model.intVar(0, 1);
-		for(int i = 0; i < rows; i++) {
-			model.ifThen(model.arithm(column[i], ">=", 0), model.arithm(column[i], "=",roadmap[i][0] ));
-			
-		}
-		
-		model.sum(column, "=", 1).post();
+		System.out.println();
+		System.out.println("The employee need");
+		for(int i = 0; i < q.length; i++)
+			System.out.print(q[i] + " ");
 		
 		
-	
-	// constraint units of product     ***
-		P = new IntVar[N];
-		for(int k = 0; k < N; k++)
-			P[k] = model.intVar(0, max_units[k]);
-		
-		for(int i = 0; i < N; i++) {
-			IntVar[][] P_sub = new IntVar[rows][columns];
-			for(int o = 0; o < rows; o++)
-				for(int r = 0; r < columns; r++)
-				P_sub[o][r] = model.intVar(0, 100);
-			
-			model.ifThen(model.arithm(P[i], ">=", 0), model.sum(P_sub[i], "=", P[i]));
-			model.arithm(P[i], ">=", q[i]).post();
-			
-			for(int temp = 0; temp < rows; temp++) // virtual oth shelf always have no need 
-				model.arithm(P_sub[i][0], "=", 0).post();
-			
-			for(int k = 0; k < rows; k++)
-				for(int j = 1;  j < columns; j++)
-					P_sub[i][j] = model.intScaleView(roadmap[i][j], Q[i][j-1] );	
-					
-		}
-		
-		// make Intvar to get path
-		path = new IntVar[M+2];
-		for(int i = 0; i < M+2; i++) {
-			path[i] = model.intVar(0, M);
-		}
-	
-		
-		model.arithm(path[0], "=", 0).post(); // the start point is always 0
-
-		for(int k = 1; k < rows; k++) {
-			IntVar[][] Path_sub = new IntVar[rows][columns];
-			for(int o = 0; o < rows; o++)
-				for(int r = 0; r < columns; r++)
-				Path_sub[o][r] = model.intVar(0, M);
-			
-			
-			model.sum(Path_sub[k-1], "=", path[k]).post();
-			
-			
-			for(int i = 0; i < rows; i++)
-				for(int j = 0; j < columns; j++) {
-					model.arithm(Path_sub[i][j], "=", model.intScaleView(roadmap[i][j], j)).post();	
-				}
-		
-		}
-		
-		// now we have path be like 0-1-2-3-5-0
-		// so that we make constraint to optimizer distance between them
-		
-		distance = new IntVar[M+1]; // at most have M+1 distance
-		for(int i = 0; i < M+1; i++)
-			distance[i] = model.intVar(0, 999999);
-		
-		for(int i = 0; i < M+1; i++) {
-			int j = i+1;
-			model.ifThen(model.arithm(distance[i], ">=", 0), model.arithm(distance[i], ">=", d[ path[i].getValue() ][ path[j].getValue() ]));
-		}
-			
-		
-		
+		System.out.println();
+		System.out.println();
 	}
+	
+	public void checkNeed() {
+		for(int i = 0; i < q.length; i++) {
+			if(q[i] > max_units[i]) {
+				System.out.println(" The need is greater than warehouse have :( ");
+				return;
+			}
+		}
+		System.out.println("Oh good! We have more than need !");
+	}
+	
+	public void findMaxBound() {
+		for(int i = 0; i < d.length; i++) {
+			for(int j = 0; j < columns; j ++)
+				max_S = Math.max(max_S, d[i][j] );
+		}
+		
+		max_S = max_S * (M+1);
+	}
+	
+	
+	
+	public void findMinBound() {
+		for(int i = 0; i < d.length; i++) {
+			for(int j = 0; j < columns; j ++) {
+				if(d[i][j] != 0)
+				min_S = Math.min(min_S, d[i][j] );
+				
+			}
+		}
+		
+		min_S = min_S * 2;
+		System.out.println("Min S:" + min_S);
+		System.out.println();
+	}
+	
+	
+	/* make constraint */
+	public void creatConstraint() {		
+		matrix = new IntVar[M][M+1];
+		
+		// make constraint the value of matrix must be in range[0:1]
+		for(int i = 0; i < matrix.length; i++) {
+			for(int j = 0; j < M+1; j++) {
+				matrix[i][j] = model.intVar("matrix[" + j + "," + i + "]", 0, 1);
+			}
+		}
+		
+		
+
+		  // create scalar columns and rows
+	    int[] one_max_rows = new int[rows];
+	    int[] one_max_columns = new int[columns];
+	    for(int i = 0; i < rows; i++)
+	        one_max_rows[i] = 1;
+	    
+	    for(int i = 0; i < columns; i++)
+	        one_max_columns[i] = 1;
+	    
+	    
+	    // make constraint  at a time only a shelf be visited
+	    // var sum in a row in range [0, 1] 
+	    for(int i = 0; i <  rows; i++) {
+	        model.scalar(matrix[i],  one_max_columns, "<=", 1).post(); 
+	    }
+
+
+
+	    // make constraint one shelf be visited at most one time
+	    for(int k = 0; k < columns; k++){
+	        for(int q = 0; q < rows; q++)
+	            for(int p = 0; p < rows; p++)
+	                if( p != q)
+	                    model.ifThen(model.arithm(matrix[q][k], "=", 1), 
+	                                                  model.arithm(matrix[p][k], "=", 0));
+	        }
+	    
+	    // make constraint to ensure the point 0 be not visited  EXCEPT the start and end point
+	    for(int i = 0; i < rows; i++) {
+	    	model.arithm(matrix[i][0], "=", 0).post();
+	    }
+	    
+	    // In order to the order visit shelves start from 0 and continue
+	    // make constraint sum row ith >= sum row ith-1
+	    // first get sum all rows
+	    z = new IntVar[rows];
+	    for(int i = 0; i < rows; i++)
+	        z[i] = model.intVar(0, 1);
+	    
+	    for(int k = 0; k < rows; k++) {
+	        for(int i = 0; i < columns; i++) {
+	            model.ifThen(model.arithm(z[k], ">=", 0), model.sum(matrix[k], "=", z[k]));
+	        
+	        }    
+	    }
+	    // at least one shelf be visited
+	    model.arithm(z[0], "=", 1).post();
+	    
+	    for(int i = 0; i < rows - 1; i++)
+	        model.arithm(z[i], ">=", z[i+1]).post();
+	
+
+	// make constraint units of product ***************
+	    P = new IntVar[N][rows];
+	    for(int k = 0; k < N; k++)
+	       for(int j = 0; j < rows; j++) {
+	    	   P[k][j] = model.intVar(0, max_units[k]);
+	       }
+	    for(int i = 0; i < N; i++) {
+	    	model.sum(P[i], ">=", q[i]).post();
+	    	model.sum(P[i], "<=", max_units[i]).post();
+	    }
+	    
+	    for(int i = 0; i < N; i++) {
+	        IntVar[][] P_sub = new IntVar[rows][columns];
+	        for(int o = 0; o < rows; o++)
+	            for(int r = 0; r < columns; r++)
+	            P_sub[o][r] = model.intVar(0, 1000);
+	        
+	        for(int r = 0; r < rows; r++){
+	        		model.sum(P_sub[r], "=", P[i][r]).post();
+	        }
+	        for(int k = 0; k < rows; k++) {
+	            for(int j = 1;  j < columns; j++)
+	             model.arithm(P_sub[k][j], "=", model.intScaleView(matrix[k][j], Q[i][j-1])).post();
+	            
+	            model.arithm(P_sub[k][0], "=", 0).post();
+	        
+	        }
+	    }
+	    
+	    // make constraint distance **********************
+	 
+	   flatten = new IntVar[(rows+1) * columns];
+	   for(int i = 0; i < flatten.length; i++) {
+		  flatten[i] = model.intVar("flatten[" + i + "]" , 0, 999);
+	  }
+	   
+	   
+	   for(int j = 0; j < columns; j++) {
+		   model.arithm(flatten[j], "=", 
+				   model.intScaleView(matrix[0][j], d[0][j] )).post();
+	   }
+	   
+	 
+	   for(int i = 0; i < matrix.length ; i++) {
+		   for(int j = 0; j < columns; j++) {
+				   if(i == matrix.length - 1) {
+					   model.arithm(flatten[(i+1) * columns + j], "=", 
+							   model.intScaleView(matrix[i][j], d[j][0] )).post();
+				   }
+				   
+				   else {
+					 
+					   IntVar b = model.intVar(1,2 );
+						  model.ifThen(model.arithm(z[i+1], "=", 0), model.arithm(b, "=", 1));
+						  model.ifThen(model.arithm(z[i+1], "=", 1), model.arithm(b, "=", 2));
+						  
+						  IntVar b_2 = model.intVar(1,2);
+						  model.ifThen(model.arithm(matrix[i][j], "=", 0), model.arithm(b_2, "=", 1));
+						  model.ifThen(model.arithm(matrix[i][j], "=", 1), model.arithm(b_2, "=", 2));
+						  
+						  IntVar c = model.intVar(0,4);
+						  model.arithm(b,"+",b_2,"=", c).post();
+						  
+						  IntVar d_ = model.intVar(5, 10);
+						  d_ = model.intScaleView(b, 5);
+						  
+						  
+						  
+						  IntVar d2 = model.intVar(1, 12);
+						  model.arithm(d_,"+",b_2,"=", d2).post();
+						  
+					  
+					   for(int k = 0; k < columns; k++) {
+						   model.ifThen(model.arithm(c, "=", 4), model.arithm(flatten[(i+1) * columns + k], "=", 
+						   model.intScaleView(matrix[i+1][k], d[j][k] )));
+						   
+						   if(k < columns -1)
+							   model.ifThen(model.arithm(d2, "=", 7), model.arithm(flatten[(i+1) * columns + k], "=", 0));
+						   if(k == columns -1)
+							   model.ifThen(model.arithm(d2, "=", 7), model.arithm(flatten[(i+1) * columns + k], "=", d[j][0]));
+				   
+					   }
+					   
+					   
+					   
+					   
+					   
+ 
+ 
+				   }
+			 
+		   }
+	   }
+	   
+	   //*******************************
+	}
+
+ 
 	
 	/* Solve problem */
 	public void Solve() {
+		IntVar OBJ = model.intVar("objective", min_S, max_S);	
 		Solver solver = model.getSolver();
-		
-		int[] scalar_dis = new int[M+1];
-		for(int i = 0; i < M+1; i++)
-			scalar_dis[i] = 1;
-		
-		IntVar OBJ = model.intVar("objective", 0, 99999999);		
-		model.scalar(distance, scalar_dis,"=", OBJ).post();
+		model.sum(flatten, "=", OBJ).post();
 		model.setObjective(Model.MINIMIZE, OBJ);
+
+
 		
-		
-		while(solver.solve()) {
-			 System.out.print("Path: ");
-			 System.out.print(path[0].getValue() + " ");
-			 for(int i = 1; i < path.length; i++) {
-				 System.out.print(path[i].getValue() + " ");
-				 if(path[i].getValue() == 0 && path[i-1].getValue() == 0) {
-					 break;
-				 } 
+	 while(solver.solve()) {
+				 System.out.println(OBJ);
+				 System.out.println("Path now:" + " ");
+				 for(int i = 0; i < matrix.length; i++) {
+					 for(int j = 0; j < columns; j++ ) {
+						 if(matrix[i][j].getValue() == 1) {
+							
+						 System.out.print(j + " ");
+						 }
+					 }
+				 }
+				 System.out.println();
+				 for(int i = 0; i < matrix.length; i++) {
+					 System.out.println();
+					 for(int j = 0; j < columns; j++ ) {
+							
+						 System.out.print(matrix[i][j].getValue() + " ");
+						 }
+					 }
 				 
-			 }
-			 System.out.println();
-			 
-			 for(int i = 0; i < rows; i++) {
-				 System.out.println();
-				 for(int j = 0; j < columns ; j++) {
-					 System.out.print(roadmap[i][j].getValue() + " ");
-					 
+				 
+				 
+				 
+				 units_have_optimizer = new int[N];
+				 for(int k = 0; k  < units_have_optimizer.length; k++)
+					 units_have_optimizer[k] = 0;
+				 
+				 for(int k = 0; k  < units_have_optimizer.length; k++) {
+					 for(int i = 0; i < matrix.length; i++) {
+						 for(int j = 1; j < columns; j++ ) {
+							 if(matrix[i][j].getValue() == 1) {
+								 units_have_optimizer[k] += Q[k][j-1];
+			
+							 }
+						 }
+					 }
 				 }
-			 }
-			 System.out.println();
-			 int min_result = d[path[0].getValue()][path[1].getValue()];
-				 for(int i = 1; i < M+1; i++) {
-
-						 min_result += d[path[i].getValue()][path[i+1].getValue()];
+				 System.out.println();
+				 System.out.println("Sum units of shelves be visited:");
+				 for(int k = 0; k  < units_have_optimizer.length; k++) {
+					 System.out.print(units_have_optimizer[k] + " ");
+					
+				 }
+				 
+				 System.out.println();
+				 int t_;
+				 for( t_ = 0; t_  < units_have_optimizer.length; t_++) {
+					 if (units_have_optimizer[t_] < q[t_]){
+						 System.out.println("What wrong :(");
+						 break;
+					 }
+				 }
+				 if(t_ == units_have_optimizer.length) {
+					 System.out.println("Oh, good all constraint be satisfied!");
+				 }
+				 
+				 System.out.println();
+				 
+				 System.out.println();
+				 
+				 
+				 for(int k = 0; k < N; k++) {
+					 System.out.println();
+				       for(int j = 0; j < rows; j++) {
+				    	   System.out.print(P[k][j].getValue() + " ");
+				       }
+				 
 				 }
 				 System.out.println();
-				 System.out.println("cost_min:" + min_result);
-				
-				
-		}
+				 System.out.println("----------");
+				 
+				 
+				 
+				 
+				 System.out.println();
+					   
+		
+			 }
 
-		
-		
-		 
 		System.out.println();
+		
+		solver.printStatistics();
+
         System.out.println("                            ---------- Group 7 -------------              ");
         
 	} 
 	
 	public static void main(String args[]) {
+		
+//		Init Init = new Init();
+//		try {
+//			Init.Gen();
+//		} catch (IOException e1) {
+//			e1.printStackTrace();
+//		}
+//		
 		CourseProject  courseProject= new CourseProject();
 		try {
 			courseProject.creat();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
+		courseProject.findMaxBound();
+		courseProject.findMinBound();
 		courseProject.getMaxUnits();
+		courseProject.showInfor();
+		courseProject.checkNeed();
 	//	courseProject.test();
 		try {
-		courseProject.creatConstraint();
-	courseProject.Solve();
+	
+			courseProject.creatConstraint();
+			courseProject.Solve();
 		} 
 		catch(OutOfMemoryError oome){
 			System.out.println("oh");
-			System.gc();
+			Runtime.getRuntime().gc();			
 		}
+		Runtime.getRuntime().gc();			
 	}
+	
 }
-

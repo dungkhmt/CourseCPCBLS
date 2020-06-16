@@ -47,7 +47,7 @@ public class NQueen {
             VarIntLS sel_x = mms.selectMostViolatingVariable();
             int sel_v = mms.selectMostPromissingValue(sel_x);
             sel_x.setValuePropagate(sel_v);// local move
-            System.out.println("Step " + it + ", S = " + S.violations());
+            //System.out.println("Step " + it + ", S = " + S.violations());
             it++;
         }
         printSol();
@@ -60,7 +60,7 @@ public class NQueen {
     }
 
     public static void main(String[] args) {
-        NQueen ob = new NQueen(70);
+        NQueen ob = new NQueen(10);
         ob.stateModel();
         ob.search();
         System.out.println("\n");
