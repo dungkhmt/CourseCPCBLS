@@ -25,8 +25,8 @@ public class CourseProject {
     int min_result = 0;
     
 	/* Declare global variable */ 
-	int M = 15; //  number of shelves
-	int N = 5; // number of products
+	int M = 20; //  number of shelves
+	int N = 35; // number of products
 	int[][] Q; // matrix Q[i][j] is number of product ith in shelf j
 	int [][] d; //d[i][j] distance from point i to j 
 	int q[];  // q[i] is number of product ith employee needs
@@ -146,8 +146,7 @@ public class CourseProject {
 		System.out.println("Min S:" + min_S);
 		System.out.println();
 	}
-	
-	
+
 	/* make constraint */
 	public void creatConstraint() {		
 		matrix = new IntVar[M][M+1];
@@ -295,13 +294,7 @@ public class CourseProject {
 							   model.ifThen(model.arithm(d2, "=", 7), model.arithm(flatten[(i+1) * columns + k], "=", d[j][0]));
 				   
 					   }
-					   
-					   
-					   
-					   
-					   
- 
- 
+
 				   }
 			 
 		   }
@@ -310,8 +303,7 @@ public class CourseProject {
 	   //*******************************
 	}
 
- 
-	
+
 	/* Solve problem */
 	public void Solve() {
 		IntVar OBJ = model.intVar("objective", min_S, max_S);	
@@ -410,12 +402,12 @@ public class CourseProject {
 	
 	public static void main(String args[]) {
 		
-//		GeneralData generalData = new GeneralData();
-//		try {
-//			generalData.Gen();
-//		} catch (IOException e1) {
-//			e1.printStackTrace();
-//		}
+		GeneralData generalData = new GeneralData();
+		try {
+			generalData.Gen();
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
 		
 		CourseProject  courseProject= new CourseProject();
 		try {

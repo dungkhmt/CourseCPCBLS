@@ -3,7 +3,7 @@
 // Description:
 // Created by ngocjr7 on [22-05-2020 16:21:41]
 */
-package cbls115676khmt61.ngocbh_20164797;
+package cbls115676khmt61.NgocBH_20164797;
 
 import localsearch.constraints.basic.LessOrEqual;
 import localsearch.constraints.basic.NotEqual;
@@ -13,11 +13,11 @@ import localsearch.model.ConstraintSystem;
 import localsearch.model.IConstraint;
 import localsearch.model.LocalSearchManager;
 import localsearch.model.VarIntLS;
-import cbls115676khmt61.ngocbh_20164797.search.AssignMove;
-import cbls115676khmt61.ngocbh_20164797.search.HillClimbingSearch;
-import cbls115676khmt61.ngocbh_20164797.search.SwapMove;
-import cbls115676khmt61.ngocbh_20164797.search.TabuSearch;
-import cbls115676khmt61.ngocbh_20164797.search.LocalSearch;
+import cbls115676khmt61.NgocBH_20164797.search.AssignMove;
+import cbls115676khmt61.NgocBH_20164797.search.HillClimbingSearch;
+import cbls115676khmt61.NgocBH_20164797.search.SwapMove;
+import cbls115676khmt61.NgocBH_20164797.search.TabuSearch;
+import cbls115676khmt61.NgocBH_20164797.search.LocalSearch;
 
 public class LiquidStoring {
     int m;

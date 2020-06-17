@@ -3,8 +3,9 @@
 * Description: 
 * Created by ngocjr7 on [2020-03-28 21:16:09]
 */
-package cbls115676khmt61.ngocbh_20164797;
+package cbls115676khmt61.NgocBH_20164797;
 
+import cbls115676khmt61.NgocBH_20164797.search.HillClimbingSearch;
 import localsearch.constraints.basic.Implicate;
 import localsearch.constraints.basic.IsEqual;
 import localsearch.constraints.basic.LessOrEqual;
@@ -13,7 +14,6 @@ import localsearch.functions.basic.FuncPlus;
 import localsearch.model.ConstraintSystem;
 import localsearch.model.LocalSearchManager;
 import localsearch.model.VarIntLS;
-import cbls115676khmt61.ngocbh_20164797.search.HillClimbingSearch;
 
 public class CSP {
     int NUM_ITER=1000;

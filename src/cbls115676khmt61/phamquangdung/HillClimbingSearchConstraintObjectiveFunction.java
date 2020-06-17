@@ -159,7 +159,7 @@ public class HillClimbingSearchConstraintObjectiveFunction {
 		//IFunction f1 = new FuncMult(cv, 1000);
 		//IFunction f2 = new FuncMult(f, 1);
 		//IFunction F = new FuncPlus(f1, f2);
-		
+		d
 		IFunction F = new FuncPlus(new FuncMult(new ConstraintViolations(S), 1000), new FuncMult(f, 1));
 		
 		mgr.close();

@@ -1,4 +1,4 @@
-package cbls115676khmt61.ngocbh_20164797;
+package cbls115676khmt61.NgocBH_20164797;
 
 import org.chocosolver.solver.Model;
 import org.chocosolver.solver.variables.IntVar;
